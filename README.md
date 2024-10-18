@@ -1,4 +1,4 @@
 Trabajo Final Grupal 
 Rodriguez Ivan
-Martín Gonzales Buitrón
+Martín Gonzalez Buitrón
 Ignacio Lattenero

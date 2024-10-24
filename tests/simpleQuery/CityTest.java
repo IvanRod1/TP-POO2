@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 class CityTest {
 	
@@ -46,5 +47,7 @@ class CityTest {
 	void searchTest() {
 		assertEquals(filterCity.search(filterCity.getBookings()).size(),0);
 	}
+	
+	//https://app.diagrams.net/#G13TvpcHyre5ERkbsvbK3zEDtO_prz292d#%7B%22pageId%22%3A%22IJnjRaB4pmjr1oVIuCE5%22%7D
 
 }

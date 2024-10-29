@@ -43,6 +43,7 @@ class CityTest {
 
 	}
 	
+	
 	@Test
 	void searchTest() {
 		assertEquals(filterCity.search(filterCity.getBookings()).size(),0);

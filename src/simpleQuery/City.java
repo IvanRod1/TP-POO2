@@ -7,7 +7,6 @@ public class City extends SimpleQuery {
 	
 	public City(String city) {
 		this.name = city;
-		this.bookings = new ArrayList<Booking>();
 	}
 
 	public String getCity() {
@@ -20,16 +19,6 @@ public class City extends SimpleQuery {
 		this.name = cityName;
 	}
 
-	public ArrayList<Booking> getBookings() {
-		// TODO Auto-generated method stub
-		return this.bookings;
-	}
-
-	public void addBooking(Booking booking) {
-		// TODO Auto-generated method stub
-		this.bookings.add(booking);
-		
-	}
 	
 	@Override
 	public ArrayList<Booking> search(ArrayList<Booking> bookings){

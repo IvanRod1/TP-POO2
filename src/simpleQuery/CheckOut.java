@@ -23,8 +23,8 @@ public class CheckOut extends SimpleQuery{
 		return this.date;
 	}
 	
-	public CheckOut() {
-		this.date = null;
+	public CheckOut(LocalDate date) {
+		this.date = date;
 	}
 	public void setDate(LocalDate fecha) {
 		this.date = fecha;

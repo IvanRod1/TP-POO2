@@ -18,17 +18,17 @@ class CheckOutTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		bookingTest = new Booking();
-		checkoutTest = new CheckOut();
+		checkoutTest = new CheckOut(LocalDate.now());
 	}
 
 	@Test
 	void newCheckOutTest() {
-		CheckOut checkout = new CheckOut();
+		CheckOut checkout = new CheckOut(LocalDate.now());
 	}
 	
 	@Test
 	void getCheckOutDate() {
-		assertEquals(checkoutTest.getDate(),null);
+		assertEquals(checkoutTest.getDate(),LocalDate.now());
 	}
 	
 	@Test

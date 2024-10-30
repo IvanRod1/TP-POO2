@@ -20,8 +20,7 @@ class MaxPriceTest {
 	@Test
 	void newMaxPriceTest() {
 		
-		MaxPrice filter = new MaxPrice(1000);
-		
+		MaxPrice filter = new MaxPrice(1000);	
 	}
 	
 	@Test

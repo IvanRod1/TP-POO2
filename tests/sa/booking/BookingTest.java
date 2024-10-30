@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sa.payments.PaymentMethod;
+import sa.policies.CostFree;
+import sa.policies.ICancellationPolicy;
 import sa.properties.Property;
 import sa.subscriptions.INotifyObserver;
 import sa.users.Owner;
@@ -35,6 +37,7 @@ public class BookingTest {
 	private INotifyObserver		subscriber1;
 	private INotifyObserver		subscriber2;
 
+	private CostFree			policy;
 	private Property			property;
 	private Owner				owner;
 	private Tenant				tenant1;
@@ -59,7 +62,8 @@ public class BookingTest {
 		this.stateAvailable		= mock(ReserveAvailable.class);
 		this.stateApproved		= mock(ReserveApproved.class);
 		this.stateCompleted		= mock(ReserveCompleted.class);
-		
+
+		this.policy				= spy(CostFree.class);
 		this.property			= mock(Property.class);
 		this.owner				= mock(Owner.class);
 		this.tenant1 	  		= mock(Tenant.class);
@@ -120,5 +124,34 @@ public class BookingTest {
 		this.booking.setState(this.booking.getState().next());
 		assertEquals(this.stateApproved, this.booking.getState());
 	}
+
+	@Test
+	public void testSetCancellationPolicy() {
+		assertNull(this.booking.getPolicy());
+		verifyNoInteractions(this.policy);
+		this.booking.setCancellationPolicy((ICancellationPolicy) this.policy);
+		assertEquals(this.policy, this.booking.getPolicy());
+		verifyNoInteractions(this.policy);
+	}
+
+	@Test
+	public void testApplyPolicy() {
+		assertNull(this.booking.getPolicy());
+		verifyNoInteractions(this.policy);
+		this.booking.setCancellationPolicy((ICancellationPolicy) this.policy);
+		this.booking.applyPolicy();
+		verify(this.policy).activate();
+	}
+
+	@Test
+	public void testPrice() {
+	}
 	
+	@Test
+	public void testPriceBetween() {
+	}
+	
+	@Test
+	public void testCancelBooking() {
+	}
 }

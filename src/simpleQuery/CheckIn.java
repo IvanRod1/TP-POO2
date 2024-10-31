@@ -25,7 +25,7 @@ public class CheckIn extends SimpleQuery{
 	public ArrayList<Booking> search(ArrayList<Booking> bookings) {
 		ArrayList<Booking> aux = new ArrayList<Booking>();
 		for(int i=0;i<bookings.size();i++) {
-			if(this.date.isAfter(bookings.get(i).getCheckIn()) || this.date.isEqual(bookings.get(i).getCheckIn())) {
+			if(this.getDate().isAfter(bookings.get(i).getCheckIn()) || this.getDate().isEqual(bookings.get(i).getCheckIn())) {
 				aux.add(bookings.get(i));
 			}
 		}

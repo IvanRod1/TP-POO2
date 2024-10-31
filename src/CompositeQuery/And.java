@@ -19,7 +19,7 @@ public class And extends CompositeQuery {
 
 		ArrayList<Booking> filter1 = this.query1.search(bookings);
 
-		ArrayList<Booking> filter2 = this.query2.search(bookings);
+		ArrayList<Booking> filter2 = this.query2.search(bookings); 
 
 		
 		//Creo un set de bookings, que me permita juntar los bookings fueron filtrados por ambos filtros	

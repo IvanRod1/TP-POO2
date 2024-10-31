@@ -17,7 +17,7 @@ public class MinPrice {
 
 		ArrayList<Booking> aux = new ArrayList<Booking>();
 		for(int i=0;i<bookings.size();i++) {
-			if(bookings.get(i).getValue() >= this.value) {
+			if(bookings.get(i).getValue() >= this.getValue()) {
 				aux.add(bookings.get(i));
 			}
 		}

@@ -10,7 +10,7 @@ public class MaxGuest extends SimpleQuery {
 		ArrayList<Booking> aux = new ArrayList<Booking>();
 		
 		for(int i=0;i<bookings.size();i++) {
-			if(bookings.get(i).getMaxGuest() >= this.value) {
+			if(bookings.get(i).getMaxGuest() >= this.getMaxGuests()) {
 				aux.add(bookings.get(i));
 			}
 		}

@@ -13,13 +13,13 @@ public class CheckOut extends SimpleQuery{
 		for(int i=0;i<bookings.size();i++)
 		{
 			//bookings.get(i).getCheckOut().isBefore(this.checkout)
-			if(this.date.isBefore(bookings.get(i).getCheckOut())|| bookings.get(i).getCheckOut().isEqual(this.date)) {
+			if(this.getDate().isBefore(bookings.get(i).getCheckOut())|| bookings.get(i).getCheckOut().isEqual(this.getDate())) {
 				aux.add(bookings.get(i));
 			}
 		}
 		return aux;
 	}
-	public Object getDate() {
+	public LocalDate getDate() {
 		return this.date;
 	}
 	

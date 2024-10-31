@@ -21,5 +21,13 @@ public class MaxGuest extends SimpleQuery {
 	public MaxGuest(int max) {
 		this.value = max;
 	}
+	
+	public void setMaxGuest(int i) {
+		this.value = i;
+	}
+	
+	public int getMaxGuests() {
+		return this.value;
+	}
 
 }

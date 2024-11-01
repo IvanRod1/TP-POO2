@@ -1,4 +1,4 @@
-package simpleQuery;
+package sa.searcher.simpleQuery;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,12 +11,28 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import sa.booking.Booking;
+import sa.searcher.simpleQuery.CheckIn;
+
 class CheckInTest {
 
 	private CheckIn checkinTest;
+	
+	private Booking bookingMock;
+	private ArrayList<Booking> aux;
+	
+	
+	
+	
 	@BeforeEach
 	void setUp() throws Exception {
-		checkinTest = new CheckIn(LocalDate.now());
+	   checkinTest = new CheckIn(LocalDate.now());
+	   bookingMock = mock(Booking.class);
+	   aux = new ArrayList<Booking>();
+	    
+	   when(bookingMock.getCheckIn()).thenReturn(LocalDate.of(2024, 12, 20));
+	   aux.add(bookingMock);
+		
 
 	}
 
@@ -37,12 +53,9 @@ class CheckInTest {
 	
 	@Test
 	void checkInSearchTest() {
-		Booking bookingMock = mock(Booking.class);
-		ArrayList<Booking> aux = new ArrayList<Booking>();
+	
 		
 		checkinTest.setDate(LocalDate.of(2024, 12, 24));
-		when(bookingMock.getCheckIn()).thenReturn(LocalDate.of(2024, 12, 20));
-		aux.add(bookingMock);
 		
 		assertEquals(checkinTest.search(aux).size(), 1);
 		

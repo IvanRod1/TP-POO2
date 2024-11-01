@@ -1,7 +1,8 @@
-package simpleQuery;
+package sa.searcher.simpleQuery;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -11,14 +12,26 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import sa.booking.Booking;
+import sa.searcher.simpleQuery.CheckOut;
+
 class CheckOutTest {
 
 	private CheckOut checkoutTest;
 	private Booking bookingTest;
+	
+	private ArrayList<Booking> aux;
+	
+	
 	@BeforeEach
 	void setUp() throws Exception {
-		bookingTest = new Booking();
+		bookingTest = mock(Booking.class);
 		checkoutTest = new CheckOut(LocalDate.now());
+		
+		aux = new ArrayList<Booking>();
+		
+		when(bookingTest.getCheckOut()).thenReturn(LocalDate.of(2024, 3, 9));
+		aux.add(bookingTest);
 	}
 
 	@Test
@@ -40,19 +53,11 @@ class CheckOutTest {
 	
 	@Test
 	void checkOutSearchTest() {
-		Booking bookingSpy = spy(bookingTest);
-		CheckOut checkOutSpy = spy(checkoutTest);
-		ArrayList<Booking> aux = new ArrayList<Booking>();
 		
-		when(bookingSpy.getCheckOut()).thenReturn(LocalDate.of(2024, 3, 9));
-		//when(checkOutSpy.getDate()).thenReturn(LocalDate.of(2024, 3, 11));
-		checkOutSpy.setDate(LocalDate.of(2024, 3, 15));
 		
-		aux.add(bookingSpy);
+		checkoutTest.setDate(LocalDate.of(2024, 3, 15));
 		
-		assertEquals(checkOutSpy.search(aux).size(),0);
-		//System.out.println(checkOutSpy.getDate());
-		//System.out.print(bookingSpy.getCheckOut());
+		assertEquals(checkoutTest.search(aux).size(),0);
 		
 		
 		

@@ -1,4 +1,4 @@
-package simpleQuery;
+package sa.searcher.simpleQuery;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -9,12 +9,30 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import sa.booking.Booking;
+import sa.searcher.simpleQuery.MaxPrice;
+
 class MaxPriceTest {
 
 	private MaxPrice maxPriceFilter;
+	
+	private Booking bookingMock;
+	private ArrayList<Booking> aux;
+	
+	
+	
 	@BeforeEach
 	void setUp() throws Exception {
+		//SUT
 		maxPriceFilter = new MaxPrice(15000);
+		
+		
+		//DOC
+		bookingMock = mock(Booking.class);
+	    aux = new ArrayList<Booking>();
+	    
+	    when(bookingMock.getValue()).thenReturn(100000);
+		aux.add(bookingMock);
 	}
 
 	@Test
@@ -25,13 +43,13 @@ class MaxPriceTest {
 	
 	@Test
 	void maxPriceSearchTest() {
-		Booking bookingMock = mock(Booking.class);
-		ArrayList<Booking> aux = new ArrayList<Booking>();
-		
-		when(bookingMock.getValue()).thenReturn(100000);
-		aux.add(bookingMock);
 		
 		assertEquals(maxPriceFilter.search(aux).size(),0);
+	}
+	@Test
+	void getValueTest() {
+		assertEquals(maxPriceFilter.getValue(),15000);
+
 	}
 
 }

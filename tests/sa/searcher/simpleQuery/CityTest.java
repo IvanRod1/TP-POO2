@@ -1,4 +1,4 @@
-package simpleQuery;
+package sa.searcher.simpleQuery;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -11,15 +11,25 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import sa.booking.Booking;
+import sa.searcher.simpleQuery.City;
+
 class CityTest {
 	
 	private City filterCity;
 	private Booking bookingTest;
 	
+	private ArrayList<Booking> aux;
+	
 	@BeforeEach
 	void setUp() throws Exception {
 		filterCity = new City("Ciudad");
-		bookingTest = new Booking();
+		bookingTest = mock(Booking.class);
+		
+		aux = new ArrayList<Booking>();
+		
+		when(bookingTest.getCity()).thenReturn("Varela");
+		aux.add(bookingTest);
 		
 	}
 
@@ -43,18 +53,10 @@ class CityTest {
 	
 	@Test
 	void searchTest() {
-		ArrayList<Booking> listaAux = new ArrayList<Booking>();
-		Booking bookingSpy = spy(bookingTest);
-		City citySpy = spy(filterCity);
-		
-		when(bookingSpy.getCity()).thenReturn("Varela");
-		when(citySpy.getCity()).thenReturn("Varela");
-		
-		citySpy.setCity("Varela");
-		
-		listaAux.add(bookingSpy);
-		
-		assertEquals(citySpy.search(listaAux).size(),1);
+				
+		filterCity.setCity("Varela");
+				
+		assertEquals(filterCity.search(aux).size(),1);
 		
 	}
 	

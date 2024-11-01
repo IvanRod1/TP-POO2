@@ -1,7 +1,9 @@
-package simpleQuery;
+package sa.searcher.simpleQuery;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+
+import sa.booking.Booking;
 
 public class CheckOut extends SimpleQuery{
 

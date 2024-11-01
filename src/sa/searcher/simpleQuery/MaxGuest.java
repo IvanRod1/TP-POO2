@@ -1,6 +1,8 @@
-package simpleQuery;
+package sa.searcher.simpleQuery;
 
 import java.util.ArrayList;
+
+import sa.booking.Booking;
 
 public class MaxGuest extends SimpleQuery {
 

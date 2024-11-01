@@ -1,6 +1,8 @@
-package simpleQuery;
+package sa.searcher.simpleQuery;
 
 import java.util.ArrayList;
+
+import sa.booking.Booking;
 
 public class City extends SimpleQuery {
 	private String name;
@@ -31,6 +33,10 @@ public class City extends SimpleQuery {
 			}
 		}
 		return aux;
+	}
+	
+	public String funAux() {
+		return this.getCity();
 	}
 	
 }

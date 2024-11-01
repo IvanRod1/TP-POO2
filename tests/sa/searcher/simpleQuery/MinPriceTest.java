@@ -1,4 +1,4 @@
-package simpleQuery;
+package sa.searcher.simpleQuery;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -9,13 +9,29 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import sa.booking.Booking;
+import sa.searcher.simpleQuery.MinPrice;
+
 class MinPriceTest {
 
 	private MinPrice minPriceFilter;
 	
+	private Booking bookingMock;
+	private ArrayList<Booking> aux;
+	
 	@BeforeEach
 	void setUp() throws Exception {
+		//SUT
 		minPriceFilter = new MinPrice();
+		
+		//DOC
+		bookingMock = mock(Booking.class);
+		aux = new ArrayList<Booking>();
+		
+		when(bookingMock.getValue()).thenReturn(1040);
+		aux.add(bookingMock);
+		
+		
 	}
 
 	@Test
@@ -42,11 +58,6 @@ class MinPriceTest {
 	@Test
 	void minPriceSearchTest() {
 		
-		Booking bookingMock = mock(Booking.class);
-		
-		ArrayList<Booking> aux = new ArrayList<Booking>();
-		when(bookingMock.getValue()).thenReturn(1040);
-		aux.add(bookingMock);
 		minPriceFilter.setValue(1020);
 		
 		assertEquals(minPriceFilter.search(aux).size(),1);

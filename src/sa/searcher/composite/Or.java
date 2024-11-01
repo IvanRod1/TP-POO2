@@ -1,11 +1,12 @@
-package CompositeQuery;
+package sa.searcher.composite;
 
 import simpleQuery.*;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import simpleQuery.Booking;
+import sa.booking.Booking;
+import sa.searcher.simpleQuery.IQuery;
 
 public class Or extends CompositeQuery {
 	

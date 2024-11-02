@@ -1,6 +1,5 @@
 package sa.searcher.composite;
 
-import simpleQuery.*;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;

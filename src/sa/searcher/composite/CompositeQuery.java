@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 import sa.booking.Booking;
 import sa.searcher.simpleQuery.IQuery;
-import simpleQuery.*;
+
 
 public abstract class CompositeQuery implements IQuery{
 

@@ -24,6 +24,7 @@ public class MaxGuest extends SimpleQuery {
 		this.value = max;
 	}
 	
+
 	public void setMaxGuest(int i) {
 		this.value = i;
 	}

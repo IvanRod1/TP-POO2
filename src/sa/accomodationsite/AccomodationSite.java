@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import sa.properies.Property;
+import sa.properties.Property;
 import sa.user.Owner;
 import sa.user.Tenant;
 
@@ -69,8 +69,14 @@ public class AccomodationSite {
 	public List<Booking> getVacantProperties() {
 		
 		return this.getBookings().stream()
-	               .filter(bookingActual -> bookingActual.getState() instanceof ReserveAvailable)
+	               .filter(actualBooking -> actualBooking.getState() instanceof ReserveAvailable)
 	               .toList();
+	}
+	
+	public List<Booking> getApprovedBookings() {
+		return this.getBookings().stream()
+								 .filter(actualBooking -> actualBooking.getState() instanceof ReserveApproved)
+								 .toList();
 	}
 	
 	public List<Booking> bookingHistory(Tenant tenant) {
@@ -85,7 +91,7 @@ public class AccomodationSite {
 		 * */
 	
 		return this.getBookings().stream()
-								 .filter(bookingActual -> bookingActual.getTenant().equals(tenant))
+								 .filter(actualBooking -> actualBooking.getTenant().equals(tenant))
 								 .toList();
 		
 		
@@ -106,7 +112,7 @@ public class AccomodationSite {
 		LocalDate today = LocalDate.now();
 		
 		return this.bookingHistory(tenant).stream()
-						  	  		      .filter(bookingActual -> bookingActual.getCheckIn().isAfter(today))
+						  	  		      .filter(actualBooking -> actualBooking.getCheckIn().isAfter(today))
 						  	  		      .toList();
 		
 	}
@@ -114,7 +120,7 @@ public class AccomodationSite {
 	public Set<String> allBookingCities(Tenant tenant) {
 		
 		return this.bookingHistory(tenant).stream()
-								 		  .map(bookingActual -> bookingActual.getProperty().getCity())
+								 		  .map(actualBooking -> actualBooking.getProperty().getCity())
 								 		  .collect(Collectors.toSet());
 		
 		

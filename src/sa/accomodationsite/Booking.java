@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import sa.properies.PaymentMethodEnum;
-import sa.properies.Property;
+import sa.properties.PaymentMethodEnum;
+import sa.properties.Property;
 import sa.user.Tenant;
 
 public class Booking {

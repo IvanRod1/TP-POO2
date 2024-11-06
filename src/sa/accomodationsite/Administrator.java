@@ -7,10 +7,10 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DynamicTest;
 
-import sa.properies.AmenityEnum;
-import sa.properies.Property;
-import sa.properies.PropertyEnum;
-import sa.properies.Rankeable;
+import sa.properties.AmenityEnum;
+import sa.properties.Property;
+import sa.properties.PropertyEnum;
+import sa.properties.Rankeable;
 import sa.user.Owner;
 import sa.user.Tenant;
 import sa.user.User;
@@ -98,18 +98,20 @@ public class Administrator extends User {
 	}
 	
 	public List<Property> propertiesToBeReserve() {
-		return null;
 		/**
 		 * recorro la lista de bookings le pregunto su estado, si es available lo guardo en una lista, es la lista de bookings, 
 		 * pregunto si el actual esta disponible, le pido el property y guardo a la propery en una lista que es la que voy a devolver
 		 * 
 		 * 
 		 * */
+		
+		return this.getAccomodationSite().getVacantProperties().stream()
+															   .map(actualBooking -> actualBooking.getProperty())
+															   .toList();
+										
 	}
 	
 	public double occupancyRate() {
-		return 0.0;
-		
 		
 		/**
 		 * agarro la lista de bookings y le pregunto el estado, si el estado es approve, entonces voy a sumar 1, 
@@ -118,9 +120,15 @@ public class Administrator extends User {
 		 * 
 		 * 
 		 * */
+		
+		if (this.getAccomodationSite().getBookings().size() == 0) {
+	        return 0.0; 
+	    }
+		
+		return ((double) this.getAccomodationSite().getApprovedBookings().size() /
+				 this.getAccomodationSite().getBookings().size()) * 100;
+		
 	}
-	
-	
 	
 }
 

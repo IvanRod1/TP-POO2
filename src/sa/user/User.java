@@ -3,8 +3,8 @@ package sa.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import sa.properies.Rankeable;
-import sa.properies.Review;
+import sa.properties.Rankeable;
+import sa.properties.Review;
 
 public abstract class User implements Rankeable {
 	protected String fullName;

@@ -1,4 +1,4 @@
-package sa.properies;
+package sa.properties;
 
 public class Review {
 	private String review;

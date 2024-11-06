@@ -3,7 +3,7 @@ package sa.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import sa.properies.Property;
+import sa.properties.Property;
 
 public class Owner extends User {
 	

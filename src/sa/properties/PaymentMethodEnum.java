@@ -1,4 +1,4 @@
-package sa.properies;
+package sa.properties;
 
 public enum PaymentMethodEnum {
 

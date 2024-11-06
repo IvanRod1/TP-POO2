@@ -16,8 +16,8 @@ import sa.accomodationsite.AccomodationSite;
 import sa.accomodationsite.Booking;
 import sa.accomodationsite.ReserveAvailable;
 import sa.accomodationsite.ReserveState;
-import sa.properies.PaymentMethodEnum;
-import sa.properies.Property;
+import sa.properties.PaymentMethodEnum;
+import sa.properties.Property;
 import sa.user.Tenant;
 
 public class AccomodationSiteTest {
@@ -33,13 +33,17 @@ public class AccomodationSiteTest {
 
 	Tenant tenant;
 	
-	ReserveState state;
+	ReserveState state1;
+	ReserveState state2;
 	List<Booking> bookings;
 	Set<String> cities;
 	Booking genericBooking;
 	Booking anotherBooking;
 	
 	Booking lookedBooking;
+	
+	List<Booking> approvedBookings;
+	List<Booking> availableBookings;
 	
 	// SUT:
 	
@@ -65,13 +69,20 @@ public class AccomodationSiteTest {
 		
 		*/
 				when(property.getCity()).thenReturn("Buenos Aires");
+				
 		
 		 
-		state =  mock(ReserveAvailable.class);
-		genericBooking = new Booking(property, checkIn, checkOut, pricePerDayWeekday, pricePerDayHighSeason, pricePerDayLongSeason, state, tenant);
-		//anotherBooking = new Booking(property, checkIn, checkOut, pricePerDayHighSeason, pricePerDayHighSeason, pricePerDayHighSeason, state, tenant);
+		state1 =  mock(ReserveAvailable.class);
+		state2 = mock(ReserveApproved.class);
+		genericBooking = new Booking(property, checkIn, checkOut, pricePerDayWeekday, pricePerDayHighSeason, pricePerDayLongSeason, state1, tenant);
+		anotherBooking = new Booking(property, checkIn, checkOut, pricePerDayHighSeason, pricePerDayHighSeason, pricePerDayHighSeason, state2, tenant);
+		
 		bookings = new ArrayList<Booking>();
 		bookings.add(genericBooking);
+		bookings.add(anotherBooking);
+		
+		availableBookings = new ArrayList<Booking>();
+		availableBookings.add(genericBooking);
 		
 		cities = new HashSet<String>();
 		cities.add(property.getCity());
@@ -81,6 +92,10 @@ public class AccomodationSiteTest {
 		accomodationSite = new AccomodationSite();
 		
 		accomodationSite.addBooking(genericBooking);
+		accomodationSite.addBooking(anotherBooking);
+		
+		approvedBookings = new ArrayList<Booking>();
+		approvedBookings.add(anotherBooking);
 		
 	}
 	
@@ -96,9 +111,9 @@ public class AccomodationSiteTest {
 		 * idea: este metodo tambien puede agregar al Owner de la propiedad a la lista de Owners
 		 * */
 		
-		accomodationSite.createBooking(property, checkIn, checkOut, pricePerDayWeekday, pricePerDayHighSeason, pricePerDayLongSeason, state, tenant); 
+		accomodationSite.createBooking(property, checkIn, checkOut, pricePerDayWeekday, pricePerDayHighSeason, pricePerDayLongSeason, state1, tenant); 
 		
-		assertEquals(accomodationSite.getBookings().size(), 2);
+		assertEquals(accomodationSite.getBookings().size(), 3);
 		
 	}
 	
@@ -137,7 +152,7 @@ public class AccomodationSiteTest {
 		
 		//assertEquals(vacantProperties.size(), 1);
 		//assertEquals(accomodationSite.getVacantProperties().size(), 0);
-		assertEquals(accomodationSite.getVacantProperties(), bookings);
+		assertEquals(accomodationSite.getVacantProperties(), availableBookings);
 		
 		}
 		
@@ -159,6 +174,11 @@ public class AccomodationSiteTest {
 		//assertEquals(accomodationSite.allBookingCities(tenant).size(), 1);
 		
 		assertEquals(accomodationSite.allBookingCities(tenant), cities);
+	}
+	
+	@Test
+	void getApprovedBookingsTest() {
+		assertEquals(accomodationSite.getApprovedBookings(), approvedBookings);
 	}
 
 }

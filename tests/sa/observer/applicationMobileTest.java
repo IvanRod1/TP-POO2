@@ -37,5 +37,7 @@ class applicationMobileTest {
 		appMobileObserver.setScreen(screenTest);
 		appMobileObserver.update(bookingTest); 
 	}
+	
+	
 
 }

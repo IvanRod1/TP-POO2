@@ -1,3 +1,12 @@
 *.project
 *.classpath
 /bin/
+# clases dummy a ignorar porque generan conflicto en el merge
+
+src/sa/accomodationsite/ReserveApproved.java
+src/sa/accomodationsite/ReserveAvailable.java
+src/sa/accomodationsite/ReserveState.java
+src/sa/accomodationsite/Searcher.java
+src/sa/properties/PaymentMethodEnum.java
+src/sa/properties/PropertyEnum.java
+src/sa/properties/AmenityEnum.java

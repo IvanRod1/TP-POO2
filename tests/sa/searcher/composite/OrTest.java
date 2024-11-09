@@ -84,6 +84,8 @@ class OrTest {
 	void newOrTest() {
 		
 		orTest = new Or(query1,query2);
+		
+		assertNotNull(orTest);
 	}
 	
 	@Test

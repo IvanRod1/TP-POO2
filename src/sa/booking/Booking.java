@@ -1,14 +1,18 @@
 package sa.booking;
+import sa.cancellation.*;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import sa.payments.PaymentMethod;
-import sa.policies.CostFree;
-import sa.policies.ICancellationPolicy;
+//import sa.policies.CostFree;
+//import sa.policies.ICancellationPolicy;
+
 import sa.properties.Property;
-import sa.subscriptions.INotifyObserver;
+//import sa.subscriptions.INotifyObserver;
+import sa.observer.interfaces.INotifyObserver;
 import sa.users.Tenant;
 
 public class Booking implements INotifyConfiguration {
@@ -74,7 +78,7 @@ public class Booking implements INotifyConfiguration {
 
 	public void applyPolicy() {
 		// TODO Auto-generated method stub
-		this.policy.activate();
+		this.policy.activate(this);
 	}
 
 	public double price(LocalDate date) {
@@ -114,4 +118,5 @@ public class Booking implements INotifyConfiguration {
 		// TODO Auto-generated method stub
 		this.subscribers.stream().forEach(o -> o.update(this));
 	}
+
 }

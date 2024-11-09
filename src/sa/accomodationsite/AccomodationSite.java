@@ -1,6 +1,7 @@
 package sa.accomodationsite;
 
 import java.time.LocalDate;
+
 import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -14,6 +15,8 @@ import sa.properties.Property;
 import sa.properties.PropertyType;
 import sa.users.Owner;
 import sa.users.Tenant;
+import sa.booking.*;
+import sa.searcher.*;
 
 public class AccomodationSite {
 	
@@ -30,7 +33,7 @@ public class AccomodationSite {
 		this.bookings = new ArrayList<Booking>();
 		this.tenants = new ArrayList<Tenant>();
 		this.owners = new ArrayList<Owner>();
-		this.searcher = new Searcher();
+		this.searcher = new Searcher();   // No existe constructor searcher
 	}
 	
 	public void createBooking(Property property, LocalDate checkIn, LocalDate checkOut,

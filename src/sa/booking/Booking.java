@@ -135,4 +135,9 @@ public class Booking implements INotifyConfiguration {
 		return this.property.getCity();
 	}
 
+	public int getMaxGuest() {
+		//Lo agrego Ivan
+		return this.property.getMaxGuests();
+	}
+
 }

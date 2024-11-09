@@ -87,6 +87,11 @@ public class Property implements Rankeable {
 								.average()
 				                .orElse(0.0);
 	}
+
+	public int getMaxGuests() {
+		//Lo agrego Ivan
+		return this.maxGuests;
+	}
  
 }
 

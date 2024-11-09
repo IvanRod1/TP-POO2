@@ -7,8 +7,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import sa.searcher.*;
 
+import sa.properties.AmenityType;
 import sa.properties.Property;
+import sa.properties.PropertyType;
 import sa.users.Owner;
 import sa.users.Tenant;
 
@@ -17,6 +20,8 @@ public class AccomodationSite {
 	private List<Booking> bookings;
 	private List<Tenant> tenants;
 	private List<Owner> owners;
+	private List<PropertyType> allowedProperties;
+	private List<AmenityType> allowedAmenities;
 	private IQuery searcher;
 	
 	private Administrator administrator;
@@ -34,14 +39,35 @@ public class AccomodationSite {
 		Booking bookingACrear = new Booking(property, checkIn, checkOut, pricePerDayWeekday, 
 											pricePerDayHighSeason, pricePerDayLongSeason, state, tenant);
 		
-		this.bookings.add(bookingACrear);
-	}
-	
-	public void eliminateBooking(Booking booking) {
+		if(this.verifyPropertyType(property) && this.verifyAmenityType(property)) {
+			
+			this.bookings.add(bookingACrear);
+		} else {
+			 new RuntimeException("la propiedad o el servicio dados no son válidos para el sitio web");
+		}
 		
-		this.bookings.remove(booking);
+		
 	}
 	
+	
+	private boolean verifyAmenityType(Property property) {
+		/**
+		 * verifica si el tipo de la propiedad dada pertenece al tipo de propiedad aceptado por el sitio web
+		 * 
+		 * */
+		return this.getAllowedAmenities().includes(property.getAmenities());
+	}
+
+	private boolean verifyPropertyType(Property property) {
+		/**
+		 * verifica si el tipo de los servicios de la propiedad dada pertenecen al tipo de servicios aceptado por el sitio web
+		 * 
+		 * */
+		
+		return this.getAllowedProperties().stream()
+			      						  .anyMatch(propertyType -> propertyType.equals(property.getType()));
+	}
+
 	public List<Booking> getBookings() {
 		return this.bookings;
 	}
@@ -50,9 +76,31 @@ public class AccomodationSite {
 		this.bookings.add(booking);
 	}
 	
+	public List<PropertyType> getAllowedProperties() {
+		return this.allowedProperties;
+	}
+	
+	public List<AmenityType> getAllowedAmenities() {
+		return this.allowedAmenities;
+	}
+	
+	public void setAllowedProperties(PropertyType allowedProperty) {
+		
+		this.getAllowedProperties().add(allowedProperty);
+		
+		
+	}
+	
+	public void setAllowedAmenities(AmenityType allowedAmenity) {
+		
+		this.getAllowedAmenities().add(allowedAmenity);
+		
+	}
+	
+	
 	public void viewProperty(Booking booking) {
 		
-		 booking.getProperty().summary();
+		 
 		 /*
 		  * el sumario es un print screen ln para simular la visualizacion de la propiedad
 		  * */
@@ -62,7 +110,11 @@ public class AccomodationSite {
 			 * que serian los atributos de la property.
 			 * mock de propiedad stub y mock de booking, hago set property y le paso el property mock 
 			 * es un void
+			 * 
+			 * testear que booking no sea null y con un verify de times(1)
 			 * */
+		
+		booking.getProperty().summary();
 		 
 	}
 	
@@ -137,8 +189,7 @@ public class AccomodationSite {
 		
 	}
 	
-	public List<Booking> searcher(String city, LocalDate checkIn, LocalDate checkOut) {
-		return bookings;
+	public List<Booking> search(IQuery query) {
 		/**
 		 * voy a tener una lista de bookings, es la del accomodation site, voy a tener que hacer un recorrido sobre 
 		 * la lista de bookings de acomodation site y voy a tener que utilizar el composite query AND
@@ -146,30 +197,23 @@ public class AccomodationSite {
 		 * 
 		 * */
 		
-		/*IQuery filtroCity = new City(city);
-		IQuery filtroCheckIn = new ChechIn(LocalDate In);
-		IQuery filtroCheckOut = new ChechOut(LocalDate Out);
-		
-		IQuery firstPartQuery = new And(filtroCity, filtroCheckIn);
-		IQuery secondPartQuery = new And(filtroCheckOut, firstPartQuery);
-		
-		return secondPartQuery.search(this.getBookings());*/
-		
-		
-	}
+		if (this.searcher == null) {
+			/**
+			 * si el usuario no establece un criterio de busqueda, se retornan todos los bookings de la pagina.
+			 * */
+			
+			return this.getBookings();
+			
+		}
+			
+			this.searcher = query;
+			
+			return this.searcher.search(this.getBookings());
+			
 	
-	public void cancelBooking(Booking booking) {
-		
-		/**
-		 * tengo que hacer que el estado de cada booking entienda el mensajke cancelBoking, booking.getState().cancelBooking()
-		 * hablarlos con martin el jueves
-		 * 
-		 * */
 	}
-	
-	public void reserveBooking(Booking booking) {
-		
-	}
+
+
 	
 		
 }

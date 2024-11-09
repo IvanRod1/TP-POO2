@@ -19,27 +19,28 @@ import java.util.List;
 import sa.payments.PaymentMethod;
 import sa.policies.CostFree;
 import sa.policies.ICancellationPolicy;
+import sa.policies.NoCancellation;
 import sa.properties.Property;
-import sa.subscriptions.INotifyObserver;
-import sa.users.Owner;
+//import sa.subscriptions.INotifyObserver;
+//import sa.users.Owner;
 import sa.users.Tenant;
 
 
 public class BookingTest {
 
 	private Booking				booking;
-	private Booking				bookingReal;
+//	private Booking				bookingReal;
 	private ReserveAvailable	stateAvailable;
 	private ReserveApproved		stateApproved;
 	private ReserveCompleted	stateCompleted;
 	
 	private List<Tenant> 			tenants 	  	= new ArrayList<Tenant>();
 	private List<PaymentMethod> 	paymentMethods 	= new ArrayList<PaymentMethod>();
-	private List<INotifyObserver> 	subscribers	  	= new ArrayList<INotifyObserver>();
+//	private List<INotifyObserver> 	subscribers	  	= new ArrayList<INotifyObserver>();
 	private List<Period> 			periods	  		= new ArrayList<Period>();
 
-	private INotifyObserver		subscriber1;
-	private INotifyObserver		subscriber2;
+//	private INotifyObserver		subscriber1;
+//	private INotifyObserver		subscriber2;
 
 	private CostFree			policy;
 	private Property			property;
@@ -47,7 +48,7 @@ public class BookingTest {
 	private Period				period1;
 	private Period				period2;
 	private Period				period3;
-	private Owner				owner;
+//	private Owner				owner;
 	private Tenant				tenant1;
 	private Tenant				tenant2;
 	
@@ -61,8 +62,6 @@ public class BookingTest {
 	private double 					pricePerDayHighSeason;
 	private double 					pricePerDayLongWeekend;
 
-	private Integer					bookingCounter;
-	
 	
 	@BeforeEach
 	public void setUp() {
@@ -77,13 +76,13 @@ public class BookingTest {
 		this.period1			= mock(Period.class);
 		this.period2			= mock(Period.class);
 		this.period3			= mock(Period.class);
-		this.owner				= mock(Owner.class);
+//		this.owner				= mock(Owner.class);
 		this.tenant1 	  		= mock(Tenant.class);
 		this.tenant2 	  		= mock(Tenant.class);
 		this.paymentMethod1 	= mock(PaymentMethod.class);
 		this.paymentMethod2 	= mock(PaymentMethod.class);
-		this.subscriber1	  	= mock(INotifyObserver.class);
-		this.subscriber2	  	= mock(INotifyObserver.class);
+//		this.subscriber1	  	= mock(INotifyObserver.class);
+//		this.subscriber2	  	= mock(INotifyObserver.class);
 
 		this.periods.add(period1);
 		this.periods.add(period2);
@@ -91,8 +90,8 @@ public class BookingTest {
 		this.tenants.add(tenant2);
 		this.paymentMethods.add(paymentMethod1);
 		this.paymentMethods.add(paymentMethod2);
-		this.subscribers.add(subscriber1);
-		this.subscribers.add(subscriber2);
+//		this.subscribers.add(subscriber1);
+//		this.subscribers.add(subscriber2);
 
 		this.checkIn			= LocalDate.of(2024, 11, 30);
 		this.checkOut			= LocalDate.of(2024, 12, 30);
@@ -100,7 +99,6 @@ public class BookingTest {
 		this.pricePerDayWeekday		= 5;
 		this.pricePerDayHighSeason	= 6;
 		this.pricePerDayLongWeekend	= 7;
-		this.bookingCounter			= 0;
 
 		when(this.stateAvailable.next()).thenReturn(stateApproved);
 		when(this.stateApproved.next()).thenReturn(stateCompleted);
@@ -110,6 +108,7 @@ public class BookingTest {
 		
 		// SUT (System Under Test): objeto a testear
 		this.booking = new Booking(   stateAvailable
+									, policy
 									, pricer
 									, property
 									, checkIn
@@ -136,6 +135,7 @@ public class BookingTest {
 //		assertNotNull(this.bookingReal);
 //	}
 
+
 	@Test
 	public void testSetState() {
 		assertNotNull(this.booking.getState());
@@ -156,20 +156,20 @@ public class BookingTest {
 
 	@Test
 	public void testSetCancellationPolicy() {
-		assertNull(this.booking.getPolicy());
+		assertNotNull(this.booking.getPolicy());
 		verifyNoInteractions(this.policy);
-		this.booking.setCancellationPolicy((ICancellationPolicy) this.policy);
-		assertEquals(this.policy, this.booking.getPolicy());
-		verifyNoInteractions(this.policy);
+		NoCancellation noCPolicy = spy(NoCancellation.class);
+		this.booking.setCancellationPolicy(noCPolicy);
+		assertEquals(noCPolicy, this.booking.getPolicy());
+		verifyNoInteractions(noCPolicy);
 	}
 
 	@Test
 	public void testApplyPolicy() {
-		assertNull(this.booking.getPolicy());
+		assertNotNull(this.booking.getPolicy());
 		verifyNoInteractions(this.policy);
-		this.booking.setCancellationPolicy((ICancellationPolicy) this.policy);
 		this.booking.applyPolicy();
-		verify(this.policy).activate();
+		verify(this.policy, times(1)).activate();
 	}
 
 	@Test
@@ -188,6 +188,7 @@ public class BookingTest {
 		ReserveAvailable spyState = mock(ReserveAvailable.class);
 		this.booking.setState(spyState);
 		assertEquals(spyState, this.booking.getState());
+		verifyNoInteractions(spyState);
 		verify(spyState, times(0)).cancelReserve();
 		this.booking.cancelReserve();
 		verify(spyState, times(1)).cancelReserve();

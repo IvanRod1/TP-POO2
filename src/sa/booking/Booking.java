@@ -3,6 +3,7 @@ import sa.cancellation.*;
 
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,6 +118,11 @@ public class Booking implements INotifyConfiguration {
 	public void updateObservers() {
 		// TODO Auto-generated method stub
 		this.subscribers.stream().forEach(o -> o.update(this));
+	}
+
+	public LocalDate getCheckIn() {
+		// TODO Auto-generated method stub
+		return this.checkIn;
 	}
 
 }

@@ -9,8 +9,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import sa.properties.Property;
-import sa.user.Owner;
-import sa.user.Tenant;
+import sa.users.Owner;
+import sa.users.Tenant;
 
 public class AccomodationSite {
 	

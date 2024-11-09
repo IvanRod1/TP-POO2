@@ -16,7 +16,7 @@ import sa.accomodationsite.ReserveApproved;
 import sa.accomodationsite.ReserveAvailable;
 import sa.accomodationsite.ReserveState;
 import sa.properties.Property;
-import sa.user.Tenant;
+import sa.users.Tenant;
 
 
 	

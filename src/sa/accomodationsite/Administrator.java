@@ -11,9 +11,9 @@ import sa.properties.AmenityEnum;
 import sa.properties.Property;
 import sa.properties.PropertyEnum;
 import sa.properties.Rankeable;
-import sa.user.Owner;
-import sa.user.Tenant;
-import sa.user.User;
+import sa.users.Owner;
+import sa.users.Tenant;
+import sa.users.User;
 
 public class Administrator extends User {
 	

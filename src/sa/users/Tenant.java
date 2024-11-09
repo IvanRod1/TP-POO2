@@ -1,4 +1,4 @@
-package sa.user;
+package sa.users;
 
 public class Tenant extends User {
 	

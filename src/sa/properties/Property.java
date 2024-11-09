@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import sa.user.Owner;
+import sa.users.Owner;
 
 public class Property implements Rankeable {
 	

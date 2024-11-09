@@ -8,9 +8,10 @@ import sa.payments.PaymentMethod;
 import sa.policies.CostFree;
 import sa.policies.ICancellationPolicy;
 import sa.properties.Property;
+import sa.subscriptions.INotifyObserver;
 import sa.users.Tenant;
 
-public class Booking {
+public class Booking implements INotifyConfiguration {
 
 	private LocalDate				checkIn;
 	private LocalDate				checkOut;
@@ -19,6 +20,7 @@ public class Booking {
 	private ICancellationPolicy		policy;
 	private Pricer					pricer;
 	private List<PaymentMethod>		paymentMethods;
+	private List<INotifyObserver>	subscribers;
 
 	public Booking(Property property, LocalDate checkIn, LocalDate checkOut, List<PaymentMethod> paymentMethods,
 			double pricePerDayWeekday, List<Period> periods) {
@@ -30,11 +32,12 @@ public class Booking {
 		this.checkIn			= checkIn;
 		this.checkOut			= checkOut;
 		this.property			= property;
+		this.subscribers 		= new ArrayList<INotifyObserver>();
 	}
 
 	// Para hacer DOC del state available
 	public Booking(ReserveAvailable stateAvailable, CostFree policy, Pricer pricer, Property property, LocalDate checkIn, LocalDate checkOut,
-			List<PaymentMethod> paymentMethods, double pricePerDayWeekday, List<Period> periods) {
+			List<PaymentMethod> paymentMethods, double pricePerDayWeekday, List<Period> periods, List<INotifyObserver> os) {
 		// TODO Auto-generated constructor stub
 		this.state 			= (IReserveState) stateAvailable;
 		this.pricer 		= pricer;
@@ -45,6 +48,7 @@ public class Booking {
 		this.checkIn		= checkIn;
 		this.checkOut		= checkOut;
 		this.property		= property;
+		this.subscribers 	= os;
 	}
 
 
@@ -91,5 +95,23 @@ public class Booking {
 	public void reserve(Tenant t) {
 		// TODO Auto-generated method stub
 		this.state.requestReserve(t);		
+	}
+
+	@Override
+	public void registerObserver(INotifyObserver o) {
+		// TODO Auto-generated method stub
+		this.subscribers.add(o);
+	}
+
+	@Override
+	public void unregisterObserver(INotifyObserver o) {
+		// TODO Auto-generated method stub
+		this.subscribers.remove(o);
+	}
+
+	@Override
+	public void updateObservers() {
+		// TODO Auto-generated method stub
+		this.subscribers.stream().forEach(o -> o.update(this));
 	}
 }

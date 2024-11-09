@@ -21,7 +21,7 @@ import sa.policies.CostFree;
 import sa.policies.ICancellationPolicy;
 import sa.policies.NoCancellation;
 import sa.properties.Property;
-//import sa.subscriptions.INotifyObserver;
+import sa.subscriptions.INotifyObserver;
 //import sa.users.Owner;
 import sa.users.Tenant;
 
@@ -36,11 +36,11 @@ public class BookingTest {
 	
 	private List<Tenant> 			tenants 	  	= new ArrayList<Tenant>();
 	private List<PaymentMethod> 	paymentMethods 	= new ArrayList<PaymentMethod>();
-//	private List<INotifyObserver> 	subscribers	  	= new ArrayList<INotifyObserver>();
+	private List<INotifyObserver> 	subscribers	  	= new ArrayList<INotifyObserver>();
 	private List<Period> 			periods	  		= new ArrayList<Period>();
 
-//	private INotifyObserver		subscriber1;
-//	private INotifyObserver		subscriber2;
+	private INotifyObserver		subscriber1;
+	private INotifyObserver		subscriber2;
 
 	private CostFree			policy;
 	private Property			property;
@@ -81,8 +81,8 @@ public class BookingTest {
 		this.tenant2 	  		= mock(Tenant.class);
 		this.paymentMethod1 	= mock(PaymentMethod.class);
 		this.paymentMethod2 	= mock(PaymentMethod.class);
-//		this.subscriber1	  	= mock(INotifyObserver.class);
-//		this.subscriber2	  	= mock(INotifyObserver.class);
+		this.subscriber1	  	= mock(INotifyObserver.class);
+		this.subscriber2	  	= mock(INotifyObserver.class);
 
 		this.periods.add(period1);
 		this.periods.add(period2);
@@ -90,8 +90,8 @@ public class BookingTest {
 		this.tenants.add(tenant2);
 		this.paymentMethods.add(paymentMethod1);
 		this.paymentMethods.add(paymentMethod2);
-//		this.subscribers.add(subscriber1);
-//		this.subscribers.add(subscriber2);
+		this.subscribers.add(subscriber1);
+		this.subscribers.add(subscriber2);
 
 		this.checkIn			= LocalDate.of(2024, 11, 30);
 		this.checkOut			= LocalDate.of(2024, 12, 30);
@@ -115,7 +115,8 @@ public class BookingTest {
 									, checkOut
 									, paymentMethods
 									, pricePerDayWeekday
-									, periods );
+									, periods
+									, subscribers );
 
 //		this.bookingReal = new Booking(   property
 //										, checkIn
@@ -202,5 +203,31 @@ public class BookingTest {
 		verify(spyState, times(0)).requestReserve(this.tenant1);
 		this.booking.reserve(this.tenant1);
 		verify(spyState, times(1)).requestReserve(this.tenant1);
+	}
+
+	@Test
+	public void testRegisterObserver() {
+		assertEquals(2, this.subscribers.size());
+		INotifyObserver subscriber3 = mock(INotifyObserver.class);
+		this.booking.registerObserver(subscriber3);
+		assertEquals(3, this.subscribers.size());
+		
+	}
+
+	@Test
+	public void testUnregisterObserver() {
+		assertEquals(2, this.subscribers.size());
+		this.booking.unregisterObserver(this.subscriber1);
+		assertEquals(1, this.subscribers.size());
+		
+	}
+
+	@Test
+	public void testUpdateObservers() {
+		verifyNoInteractions(this.subscriber1);
+		verifyNoInteractions(this.subscriber2);
+		this.booking.updateObservers();
+		verify(this.subscriber1, times(1)).update(this.booking);
+		verify(this.subscriber2, times(1)).update(this.booking);
 	}
 }

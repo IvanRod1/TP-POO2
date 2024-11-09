@@ -14,7 +14,7 @@ public class CostFree implements ICancellationPolicy{
 			System.out.println("No pagas nada");
 		}
 		else {
-			System.out.println("Solo pagas el equivalente a dos dias de alquiler $:"+ booking.price() * 2 );
+			System.out.println("Solo pagas el equivalente a dos dias de alquiler $:"+ booking.price(booking.getCheckIn()) * 2 );
 		}
 	}
 	

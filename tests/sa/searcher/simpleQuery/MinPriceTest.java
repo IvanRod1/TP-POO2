@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +29,10 @@ class MinPriceTest {
 		bookingMock = mock(Booking.class);
 		aux = new ArrayList<Booking>();
 		
-		when(bookingMock.getValue()).thenReturn(1040);
+		LocalDate fechaAuxiliar = LocalDate.of(2024, 11, 20);
+	    when(bookingMock.getCheckIn()).thenReturn(fechaAuxiliar);
+	    
+		when(bookingMock.price(bookingMock.getCheckIn())).thenReturn((double) 1040);
 		aux.add(bookingMock);
 		
 		

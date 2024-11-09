@@ -13,7 +13,7 @@ public class MaxPrice extends SimpleQuery {
 		
 		ArrayList<Booking> aux = new ArrayList<Booking>();
 		for(int i=0;i<bookings.size();i++) {
-			if(bookings.get(i).price() <= this.getValue()){  //chequear
+			if(bookings.get(i).price(bookings.get(i).getCheckIn()) <= this.getValue()){  //chequear
 				aux.add(bookings.get(i));
 			}
 		}

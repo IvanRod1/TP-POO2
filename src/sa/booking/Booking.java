@@ -130,4 +130,9 @@ public class Booking implements INotifyConfiguration {
 		return this.checkOut;
 	}
 
+	public String getCity() {
+		//Lo agrego Ivan
+		return this.property.getCity();
+	}
+
 }

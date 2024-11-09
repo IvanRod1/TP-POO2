@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -50,9 +51,17 @@ class OrTest {
 		when(bookingTarget2.getCity()).thenReturn("Santa Fe");
 		when(bookingTarget3.getCity()).thenReturn("Corrientes");
 		
-		when(bookingTarget1.getValue()).thenReturn(18000);
-		when(bookingTarget2.getValue()).thenReturn(15000);
-		when(bookingTarget3.getValue()).thenReturn(19000);
+		LocalDate fechaAux1 = LocalDate.of(2024, 10, 10);
+		LocalDate fechaAux2 = LocalDate.of(2024, 9, 12);
+		LocalDate fechaAux3 = LocalDate.of(2024, 12, 20);
+		
+		when(bookingTarget1.getCheckIn()).thenReturn(fechaAux1);
+		when(bookingTarget2.getCheckIn()).thenReturn(fechaAux2);
+		when(bookingTarget3.getCheckIn()).thenReturn(fechaAux3);
+		
+		when(bookingTarget1.price(bookingTarget1.getCheckIn())).thenReturn((double) 15000);
+		when(bookingTarget2.price(bookingTarget2.getCheckIn())).thenReturn((double) 17000);
+		when(bookingTarget3.price(bookingTarget3.getCheckIn())).thenReturn((double) 20000);
 		
 		when(bookingTarget1.getMaxGuest()).thenReturn(5);
 		when(bookingTarget2.getMaxGuest()).thenReturn(4);

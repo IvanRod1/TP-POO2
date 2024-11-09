@@ -28,5 +28,9 @@ public class MaxPrice extends SimpleQuery {
 		return this.value;
 	}
 	
+	public void setValue(int value) {
+		this.value = value;
+	}
+	
 
 }

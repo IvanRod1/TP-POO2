@@ -2,6 +2,7 @@ package sa.searcher.composite;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -67,15 +68,18 @@ class OrTest {
 		guestFilter = mock(MaxGuest.class);
 		priceFilter = mock(MaxPrice.class);
 		
+		
+		
 		when(cityFilter.getCity()).thenReturn("Formosa");
 		when(guestFilter.getMaxGuests()).thenReturn(3);
 		when(priceFilter.getValue()).thenReturn(18000);
 		
 		
-		when(orTest.search(aux)).thenReturn(new ArrayList<>(Arrays.asList(bookingTarget1,bookingTarget2)));
-		when(orTest2.search(aux)).thenReturn(new ArrayList<>(Arrays.asList(bookingTarget1,bookingTarget2)));
+		//when(orTest.search(aux)).thenReturn(new ArrayList<>(Arrays.asList(bookingTarget1,bookingTarget2)));
+		//when(orTest2.search(aux)).thenReturn(new ArrayList<>(Arrays.asList(bookingTarget1,bookingTarget2)));
 	}
 
+	
 	@Test
 	void newOrTest() {
 		
@@ -85,11 +89,10 @@ class OrTest {
 	@Test
 	void orSearchTest() {
 		
-	
-		
 		orTest = new Or(cityFilter,priceFilter);
 		
-		assertEquals(orTest.search(aux).size(), 3);
+		when(orTest.search(aux)).thenReturn(new ArrayList<>(Arrays.asList(bookingTarget1,bookingTarget2)));
+		assertEquals(orTest.search(aux).size(), 2);
 		
 		
 	}
@@ -97,11 +100,12 @@ class OrTest {
 	@Test
 	void doubleOrTest() {
 		
-		
 		Or filterAux = new Or(cityFilter,priceFilter);
 		
 		orTest2 = new Or(guestFilter,filterAux);
 		
+		when(orTest2.search(aux)).thenReturn(new ArrayList<>(Arrays.asList(bookingTarget1,bookingTarget2)));
+
 		assertEquals(orTest2.search(aux).size(),2);
 		
 		

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -58,9 +59,17 @@ class AndTest {
 		when(bookingTarget2.getMaxGuest()).thenReturn(4);
 		when(bookingNoTarget.getMaxGuest()).thenReturn(8);
 		
-		when(bookingTarget1.getValue()).thenReturn(15000);
-		when(bookingTarget2.getValue()).thenReturn(17000);
-		when(bookingNoTarget.getValue()).thenReturn(20000);
+		LocalDate fechaAux1 = LocalDate.of(2024, 10, 10);
+		LocalDate fechaAux2 = LocalDate.of(2024, 9, 12);
+		LocalDate fechaAux3 = LocalDate.of(2024, 12, 20);
+		
+		when(bookingTarget1.getCheckIn()).thenReturn(fechaAux1);
+		when(bookingTarget2.getCheckIn()).thenReturn(fechaAux2);
+		when(bookingNoTarget.getCheckIn()).thenReturn(fechaAux3);
+		
+		when(bookingTarget1.price(bookingTarget1.getCheckIn())).thenReturn((double) 15000);
+		when(bookingTarget2.price(bookingTarget2.getCheckIn())).thenReturn((double) 17000);
+		when(bookingNoTarget.price(bookingNoTarget.getCheckIn())).thenReturn((double) 20000);
 		
 		filtroCity = mock(City.class);
 		filtroGuest = mock(MaxGuest.class);

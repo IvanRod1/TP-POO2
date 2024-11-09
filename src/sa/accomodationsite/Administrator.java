@@ -8,8 +8,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DynamicTest;
 
 import sa.properties.AmenityEnum;
+import sa.properties.AmenityType;
 import sa.properties.Property;
 import sa.properties.PropertyEnum;
+import sa.properties.PropertyType;
 import sa.properties.Rankeable;
 import sa.users.Owner;
 import sa.users.Tenant;
@@ -56,21 +58,27 @@ public class Administrator extends User {
 		
 	}
 	
-	public void allowedPropertyTypes(List<PropertyEnum> properyEnums) {
+	public void addAllowedPropertyTypes(PropertyType allowedProperty) {
 		
 		/**
 		 * 
-		 * da de alta los tipos de inmuebles, no sabemos como hacerlo
+		 * da de alta los tipos de inmuebles, le delega al accomodationSite y el accomodation site chekea 
+		 * si es un tipo valido dentro de sus tipos de propiedades habilitados.
+		 * 
 		 * 
 		 * */
+		
+		this.getAccomodationSite().setAllowedProperties(allowedProperty);
 	}
 	
-	public void allowedAmenities(List<AmenityEnum> amenities) {
+	public void allowedAmenities(AmenityType allowedAmenity) {
 		/**
 		 * 
-		 * da de alta los tipos de inmuebles, no sabemos como hacerlo
-		 * 
+		 * da de alta los tipos de inmuebles, le delega al accomodationSite y el accomodation site chekea 
+		 * si es un tipo valido dentro de sus tipos de propiedades habilitados.
+		 *  
 		 * */
+		this.getAccomodationSite().setAllowedAmenities(allowedAmenity);
 		
 	}
 	

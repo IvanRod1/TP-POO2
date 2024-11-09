@@ -8,12 +8,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
+import sa.booking.IReserveState;
 
 class applicationMobileTest {
 
 	private ApplicationMobile appMobileObserver;
 	private ObjectScreen screenTest;
 	private Booking bookingTest;
+	private IReserveState estado;
 	@BeforeEach
 	void setUp() throws Exception {
 		//SUT
@@ -24,7 +26,8 @@ class applicationMobileTest {
 		//when(appMobileObserver.getScreen()).thenReturn(screenTest);
 		
 		bookingTest = mock(Booking.class);
-		when(bookingTest.getState()).thenReturn("Available");
+		estado = mock(IReserveState.class);
+		when(bookingTest.getState()).thenReturn(estado);
 		
 	}
 

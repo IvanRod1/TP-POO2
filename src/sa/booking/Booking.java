@@ -121,8 +121,13 @@ public class Booking implements INotifyConfiguration {
 	}
 
 	public LocalDate getCheckIn() {
-		// TODO Auto-generated method stub
+		//Lo agrego Ivan
 		return this.checkIn;
+	}
+
+	public LocalDate getCheckOut() {
+		//Lo agrego Ivan
+		return this.checkOut;
 	}
 
 }

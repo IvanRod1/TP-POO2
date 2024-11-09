@@ -32,6 +32,7 @@ public class AccomodationSiteTest {
 	double pricePerDayLongSeason;
 
 	Tenant tenant;
+	Tenant tenant2;
 	
 	ReserveState state1;
 	ReserveState state2;
@@ -61,6 +62,9 @@ public class AccomodationSiteTest {
 		pricePerDayHighSeason = 70.0;
 		pricePerDayLongSeason = 50.0;
 		tenant = mock(Tenant.class);
+		tenant2 = mock(Tenant.class);
+		state1 =  mock(ReserveAvailable.class);
+		state2 = mock(ReserveApproved.class);
 		
 		/**
 		 *  Asigno los mock Stubs acá arriba para que las variables no entren como null en el sut,
@@ -68,34 +72,25 @@ public class AccomodationSiteTest {
 			pero no directamente al SUT. NO BORRAR.
 		
 		*/
-				when(property.getCity()).thenReturn("Buenos Aires");
-				
 		
-		 
-		state1 =  mock(ReserveAvailable.class);
-		state2 = mock(ReserveApproved.class);
-		genericBooking = new Booking(property, checkIn, checkOut, pricePerDayWeekday, pricePerDayHighSeason, pricePerDayLongSeason, state1, tenant);
-		anotherBooking = new Booking(property, checkIn, checkOut, pricePerDayHighSeason, pricePerDayHighSeason, pricePerDayHighSeason, state2, tenant);
+		when(property.getCity()).thenReturn("Buenos Aires");
 		
-		bookings = new ArrayList<Booking>();
-		bookings.add(genericBooking);
-		bookings.add(anotherBooking);
+		accomodationSite = new AccomodationSite();
+		accomodationSite.createBooking(property, checkIn, checkOut, pricePerDayWeekday, pricePerDayHighSeason, pricePerDayLongSeason, state1, tenant); 
+		accomodationSite.createBooking(property, checkIn, checkOut, pricePerDayWeekday, pricePerDayHighSeason, pricePerDayLongSeason, state2, tenant2); 
 		
 		availableBookings = new ArrayList<Booking>();
-		availableBookings.add(genericBooking);
+		availableBookings.add(accomodationSite.getBookings().getFirst());
+		
+		bookings = new ArrayList<Booking>();
+		bookings.add(accomodationSite.bookingHistory(tenant).get(0));
+		
+		approvedBookings = new ArrayList<Booking>();
+		approvedBookings.add(accomodationSite.getBookings().get(1));
 		
 		cities = new HashSet<String>();
 		cities.add(property.getCity());
-		
-		// SUT, el accomodationSite:
-		
-		accomodationSite = new AccomodationSite();
-		
-		accomodationSite.addBooking(genericBooking);
-		accomodationSite.addBooking(anotherBooking);
-		
-		approvedBookings = new ArrayList<Booking>();
-		approvedBookings.add(anotherBooking);
+
 		
 	}
 	
@@ -111,9 +106,9 @@ public class AccomodationSiteTest {
 		 * idea: este metodo tambien puede agregar al Owner de la propiedad a la lista de Owners
 		 * */
 		
-		accomodationSite.createBooking(property, checkIn, checkOut, pricePerDayWeekday, pricePerDayHighSeason, pricePerDayLongSeason, state1, tenant); 
 		
-		assertEquals(accomodationSite.getBookings().size(), 3);
+		
+		assertEquals(accomodationSite.getBookings().size(), 2);
 		
 	}
 	
@@ -152,6 +147,8 @@ public class AccomodationSiteTest {
 		
 		//assertEquals(vacantProperties.size(), 1);
 		//assertEquals(accomodationSite.getVacantProperties().size(), 0);
+		//accomodationSite.createBooking(property, checkIn, checkOut, pricePerDayWeekday, pricePerDayHighSeason, pricePerDayLongSeason, state1, tenant); 
+		
 		assertEquals(accomodationSite.getVacantProperties(), availableBookings);
 		
 		}

@@ -89,7 +89,7 @@ class ReserveAvailableTest {
 		verifyNoInteractions(this.tenant);
 		this.stateAvailable.cancelReserve(this.booking);
 		verify(this.tenant, times(1)).reserveCancelled(this.booking);
-		verify(this.booking, times(1)).nextRequest();
+		verify(this.booking, times(1)).triggerNextRequest();
 	}
 
 }

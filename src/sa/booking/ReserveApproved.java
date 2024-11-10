@@ -1,10 +1,25 @@
 package sa.booking;
 
+import sa.users.Owner;
 import sa.users.Tenant;
 
 public class ReserveApproved implements IReserveState {
 
-	private IReserveState	next = (IReserveState) new ReserveCompleted();
+	private IReserveState	next;
+	private IReserveState	previous;
+	
+	public ReserveApproved(ReserveAvailable statePrevious) {
+		// TODO Auto-generated constructor stub
+		this.next 	  = new ReserveCompleted();
+		this.previous = statePrevious;
+	}
+
+	// Para hacer DOC del state approved
+	public ReserveApproved(ReserveCompleted stateNext, ReserveAvailable statePrevious) {
+		// TODO Auto-generated constructor stub
+		this.next 	  = stateNext;
+		this.previous = statePrevious;
+	}
 
 	@Override
 	public IReserveState next() {
@@ -13,21 +28,17 @@ public class ReserveApproved implements IReserveState {
 	}
 
 	@Override
-	public void approbeReserve(Booking b) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void requestReserve(Booking b) {}
+	@Override
+	public void approveReserve(Booking b) {}
 
 	@Override
-	public void cancelReserve() {
+	public void cancelReserve(Booking b) {
 		// TODO Auto-generated method stub
-		
+		b.getTenant().reserveCancelled(b);
+		b.getProperty().getOwner().reserveCancelled(b);
+		b.triggerNextRequest();
 	}
 
-	@Override
-	public void requestReserve(Tenant t) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

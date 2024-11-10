@@ -201,8 +201,7 @@ public class BookingTest {
 		verifyNoInteractions(this.owner);
 		assertTrue(this.waitingTenants.isEmpty());
 		this.booking.reserve(this.tenant1);
-		assertEquals(1, this.waitingTenants.size());
-		assertTrue(this.waitingTenants.containsAll(Arrays.asList(this.tenant1)));
+		assertTrue(this.waitingTenants.isEmpty());
 		verify(this.stateAvailable, times(1)).requestReserve(this.booking);
 		verify(this.property, times(1)).getOwner();
 		verify(this.owner, times(1)).reserveRequestedOn(this.booking);
@@ -232,6 +231,7 @@ public class BookingTest {
 		this.booking.cancelReserve();
 		verify(this.stateAvailable, times(1)).cancelReserve(this.booking);
 		assertEquals(this.stateAvailable, this.booking.getState());
+		assertNull(this.booking.getTenant());
 	}
 
 	@Test
@@ -241,17 +241,15 @@ public class BookingTest {
 		verify(this.stateAvailable, times(0)).requestReserve(this.booking);
 		assertTrue(this.waitingTenants.isEmpty());
 		this.booking.reserve(this.tenant1);
-		assertEquals(1, this.waitingTenants.size());
-		assertTrue(this.waitingTenants.containsAll(Arrays.asList(this.tenant1)));
 		verify(this.stateAvailable, times(1)).requestReserve(this.booking);
 		this.booking.reserve(this.tenant2);
-		assertEquals(2, this.waitingTenants.size());
-		assertTrue(this.waitingTenants.containsAll(Arrays.asList(this.tenant1, this.tenant2)));
-		verify(this.stateAvailable, times(2)).requestReserve(this.booking);
-		this.booking.cancelReserve();
 		assertEquals(1, this.waitingTenants.size());
+		assertEquals(this.stateAvailable, this.booking.getState());
 		assertTrue(this.waitingTenants.containsAll(Arrays.asList(this.tenant2)));
-		verify(this.stateAvailable, times(3)).requestReserve(this.booking);
+		verify(this.stateAvailable, times(1)).requestReserve(this.booking);
+		this.booking.cancelReserve();
+		assertEquals(0, this.waitingTenants.size());
+		verify(this.stateAvailable, times(2)).requestReserve(this.booking);
 	}
 
 	@Test

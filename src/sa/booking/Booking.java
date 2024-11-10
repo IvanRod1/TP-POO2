@@ -10,7 +10,7 @@ import sa.policies.ICancellationPolicy;
 import sa.properties.Property;
 import sa.subscriptions.INotifyObserver;
 import sa.users.Tenant;
-import sa.users.User;
+
 
 public class Booking implements INotifyConfiguration {
 
@@ -56,15 +56,9 @@ public class Booking implements INotifyConfiguration {
 		this.waitingTenants	= wT;
 	}
 
-
 	public IReserveState getState() {
 		// TODO Auto-generated method stub
 		return this.state;
-	}
-
-	protected void setState(IReserveState state) {
-		// TODO Auto-generated method stub
-		this.state = state;
 	}
 
 	public void setCancellationPolicy(ICancellationPolicy policy) {
@@ -121,33 +115,44 @@ public class Booking implements INotifyConfiguration {
 		this.waitingTenants.add(t);
 		this.triggerNextRequest();
 	}
-
-	private void triggerNextRequest() {
-		this.tenant = this.waitingTenants.getFirst();
-		this.state.requestReserve(this);
-	}
-
+	
 	public void approveReserve() { // El Owner aprueba al Tenent solicitado.
 		// TODO Auto-generated method stub
 		this.state.approveReserve(this);
 	}
-
+	
 	public void cancelReserve() {
 		// TODO Auto-generated method stub
 		this.state.cancelReserve(this);
+		this.tenant = null; // TODO: Caso borde: había tenant, se cancela y no espera nadie. Qué se hace con esa referencia vieja?
+		this.triggerNextRequest();
 	}
 
-	protected Tenant getTenant() {
+	// Private methods
+	private boolean hasAHoldingTenant() {
+		// TODO Auto-generated method stub
+		return this.tenant != null;
+	}
+	
+	private boolean someoneIsWaiting() {
+		return !this.waitingTenants.isEmpty();
+	}
+
+	// Package methods - (no-modifier) only package path visibility
+	void setState(IReserveState state) {
+		// TODO Auto-generated method stub
+		this.state = state;
+	}
+
+	void triggerNextRequest() {
+		if (!this.hasAHoldingTenant() && this.someoneIsWaiting()) {
+			this.tenant = this.waitingTenants.removeFirst();
+			this.state.requestReserve(this);
+		}
+	}
+	Tenant getTenant() {
 		// TODO Auto-generated method stub
 		return this.tenant;
-	}
-
-	protected void nextRequest() {
-		// TODO Auto-generated method stub
-		this.tenant = this.waitingTenants.removeFirst();
-		if (!this.waitingTenants.isEmpty()) {
-			this.triggerNextRequest();
-		}
 	}
 	
 }

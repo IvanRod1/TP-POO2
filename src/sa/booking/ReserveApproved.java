@@ -10,7 +10,7 @@ public class ReserveApproved implements IReserveState {
 	
 	public ReserveApproved(ReserveAvailable statePrevious) {
 		// TODO Auto-generated constructor stub
-		this.next 	  = new ReserveCompleted();
+		this.next 	  = new ReserveCompleted(statePrevious, this);
 		this.previous = statePrevious;
 	}
 

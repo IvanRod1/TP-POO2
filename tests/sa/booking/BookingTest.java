@@ -12,8 +12,11 @@ import static org.mockito.Mockito.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import net.bytebuddy.asm.Advice.This;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import sa.payments.PaymentMethod;
@@ -22,6 +25,7 @@ import sa.policies.ICancellationPolicy;
 import sa.policies.NoCancellation;
 import sa.properties.Property;
 import sa.subscriptions.INotifyObserver;
+import sa.users.Owner;
 //import sa.users.Owner;
 import sa.users.Tenant;
 
@@ -29,12 +33,12 @@ import sa.users.Tenant;
 public class BookingTest {
 
 	private Booking				booking;
-//	private Booking				bookingReal;
+	private Booking				bookingReal;
 	private ReserveAvailable	stateAvailable;
 	private ReserveApproved		stateApproved;
 	private ReserveCompleted	stateCompleted;
 	
-	private List<Tenant> 			tenants 	  	= new ArrayList<Tenant>();
+	private List<Tenant> 			waitingTenants 	= new ArrayList<Tenant>();
 	private List<PaymentMethod> 	paymentMethods 	= new ArrayList<PaymentMethod>();
 	private List<INotifyObserver> 	subscribers	  	= new ArrayList<INotifyObserver>();
 	private List<Period> 			periods	  		= new ArrayList<Period>();
@@ -48,7 +52,7 @@ public class BookingTest {
 	private Period				period1;
 	private Period				period2;
 	private Period				period3;
-//	private Owner				owner;
+	private Owner				owner;
 	private Tenant				tenant1;
 	private Tenant				tenant2;
 	
@@ -66,7 +70,7 @@ public class BookingTest {
 	@BeforeEach
 	public void setUp() {
 		// DOC (Depended-On-Component): nuestros doubles
-		this.stateAvailable		= mock(ReserveAvailable.class);
+		this.stateAvailable		= spy(ReserveAvailable.class);
 		this.stateApproved		= mock(ReserveApproved.class);
 		this.stateCompleted		= mock(ReserveCompleted.class);
 
@@ -76,7 +80,7 @@ public class BookingTest {
 		this.period1			= mock(Period.class);
 		this.period2			= mock(Period.class);
 		this.period3			= mock(Period.class);
-//		this.owner				= mock(Owner.class);
+		this.owner				= mock(Owner.class);
 		this.tenant1 	  		= mock(Tenant.class);
 		this.tenant2 	  		= mock(Tenant.class);
 		this.paymentMethod1 	= mock(PaymentMethod.class);
@@ -87,7 +91,6 @@ public class BookingTest {
 		this.periods.add(period1);
 		this.periods.add(period2);
 		this.periods.add(period3);
-		this.tenants.add(tenant2);
 		this.paymentMethods.add(paymentMethod1);
 		this.paymentMethods.add(paymentMethod2);
 		this.subscribers.add(subscriber1);
@@ -105,6 +108,7 @@ public class BookingTest {
 		when(this.stateCompleted.next()).thenReturn(stateAvailable);
 		when(this.pricer.price(this.checkIn)).thenReturn(pricePerDayWeekday);
 		when(this.pricer.priceBetween(this.checkIn, this.checkOut)).thenReturn(pricePerDayWeekday+pricePerDayHighSeason+pricePerDayLongWeekend);
+		when(this.property.getOwner()).thenReturn(this.owner);
 		
 		// SUT (System Under Test): objeto a testear
 		this.booking = new Booking(   stateAvailable
@@ -116,14 +120,15 @@ public class BookingTest {
 									, paymentMethods
 									, pricePerDayWeekday
 									, periods
-									, subscribers );
+									, subscribers
+									, waitingTenants );
 
-//		this.bookingReal = new Booking(   property
-//										, checkIn
-//										, checkOut
-//										, paymentMethods
-//										, pricePerDayWeekday
-//										, periods );
+		this.bookingReal = new Booking(   property
+										, checkIn
+										, checkOut
+										, paymentMethods
+										, pricePerDayWeekday
+										, periods );
 	}
 
 	@Test
@@ -131,11 +136,16 @@ public class BookingTest {
 		assertNotNull(this.booking);
 	}
 
-//	@Test
-//	public void testConstructorReal() {
-//		assertNotNull(this.bookingReal);
-//	}
+	@Test
+	public void testConstructorReal() {
+		assertNotNull(this.bookingReal);
+	}
 
+
+	@Test
+	public void testGetProperty() {
+		assertEquals(this.property, this.booking.getProperty());
+	}
 
 	@Test
 	public void testSetState() {
@@ -143,7 +153,7 @@ public class BookingTest {
 		this.booking.setState(this.stateApproved);
 		assertEquals(this.stateApproved, this.booking.getState());
 	}
-
+	
 	@Test
 	public void testFromAvailableToApproved() {
 //		this.booking.setState(this.stateAvailable);
@@ -185,24 +195,63 @@ public class BookingTest {
 	}
 	
 	@Test
-	public void testCancelReserve() {
-		ReserveAvailable spyState = mock(ReserveAvailable.class);
-		this.booking.setState(spyState);
-		assertEquals(spyState, this.booking.getState());
-		verifyNoInteractions(spyState);
-		verify(spyState, times(0)).cancelReserve();
-		this.booking.cancelReserve();
-		verify(spyState, times(1)).cancelReserve();
+	public void testReserve() {
+		verifyNoInteractions(this.stateAvailable);
+		verifyNoInteractions(this.property);
+		verifyNoInteractions(this.owner);
+		assertTrue(this.waitingTenants.isEmpty());
+		this.booking.reserve(this.tenant1);
+		assertEquals(1, this.waitingTenants.size());
+		assertTrue(this.waitingTenants.containsAll(Arrays.asList(this.tenant1)));
+		verify(this.stateAvailable, times(1)).requestReserve(this.booking);
+		verify(this.property, times(1)).getOwner();
+		verify(this.owner, times(1)).reserveRequestedOn(this.booking);
 	}
 
 	@Test
-	public void testReserve() {
-		ReserveAvailable spyState = mock(ReserveAvailable.class);
-		this.booking.setState(spyState);
-		assertEquals(spyState, this.booking.getState());
-		verify(spyState, times(0)).requestReserve(this.tenant1);
+	public void testApproveReserve() {
+		verifyNoInteractions(this.stateAvailable);
+		verify(this.stateAvailable, times(0)).requestReserve(this.booking);
 		this.booking.reserve(this.tenant1);
-		verify(spyState, times(1)).requestReserve(this.tenant1);
+		verify(this.stateAvailable, times(1)).requestReserve(this.booking);
+		verify(this.stateAvailable, times(0)).approveReserve(this.booking);
+		verify(this.stateAvailable, times(0)).next();
+		assertEquals(this.stateAvailable, this.booking.getState());
+		this.booking.approveReserve();
+		verify(this.stateAvailable, times(1)).approveReserve(this.booking);
+		verify(this.stateAvailable, times(1)).next();
+		assertEquals(this.stateAvailable.next(), this.booking.getState());
+	}
+	
+	@Test
+	public void testCancelReserve() {
+		verifyNoInteractions(this.stateAvailable);
+		verify(this.stateAvailable, times(0)).cancelReserve(this.booking);
+		assertEquals(this.stateAvailable, this.booking.getState());
+		this.booking.reserve(this.tenant1);
+		this.booking.cancelReserve();
+		verify(this.stateAvailable, times(1)).cancelReserve(this.booking);
+		assertEquals(this.stateAvailable, this.booking.getState());
+	}
+
+	@Test
+	public void testTriggerNextRequest() {
+		verifyNoInteractions(this.stateAvailable);
+		assertEquals(this.stateAvailable, this.booking.getState());
+		verify(this.stateAvailable, times(0)).requestReserve(this.booking);
+		assertTrue(this.waitingTenants.isEmpty());
+		this.booking.reserve(this.tenant1);
+		assertEquals(1, this.waitingTenants.size());
+		assertTrue(this.waitingTenants.containsAll(Arrays.asList(this.tenant1)));
+		verify(this.stateAvailable, times(1)).requestReserve(this.booking);
+		this.booking.reserve(this.tenant2);
+		assertEquals(2, this.waitingTenants.size());
+		assertTrue(this.waitingTenants.containsAll(Arrays.asList(this.tenant1, this.tenant2)));
+		verify(this.stateAvailable, times(2)).requestReserve(this.booking);
+		this.booking.cancelReserve();
+		assertEquals(1, this.waitingTenants.size());
+		assertTrue(this.waitingTenants.containsAll(Arrays.asList(this.tenant2)));
+		verify(this.stateAvailable, times(3)).requestReserve(this.booking);
 	}
 
 	@Test
@@ -211,7 +260,6 @@ public class BookingTest {
 		INotifyObserver subscriber3 = mock(INotifyObserver.class);
 		this.booking.registerObserver(subscriber3);
 		assertEquals(3, this.subscribers.size());
-		
 	}
 
 	@Test

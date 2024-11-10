@@ -10,6 +10,7 @@ import sa.policies.ICancellationPolicy;
 import sa.properties.Property;
 import sa.subscriptions.INotifyObserver;
 import sa.users.Tenant;
+import sa.users.User;
 
 public class Booking implements INotifyConfiguration {
 
@@ -21,11 +22,13 @@ public class Booking implements INotifyConfiguration {
 	private Pricer					pricer;
 	private List<PaymentMethod>		paymentMethods;
 	private List<INotifyObserver>	subscribers;
+	private Tenant 					tenant;
+	private List<Tenant> 			waitingTenants;
 
 	public Booking(Property property, LocalDate checkIn, LocalDate checkOut, List<PaymentMethod> paymentMethods,
 			double pricePerDayWeekday, List<Period> periods) {
 		// TODO Auto-generated constructor stub
-		this.state 				= (IReserveState) new ReserveAvailable();
+		this.state 				= new ReserveAvailable();
 		this.pricer		 		= new Pricer(pricePerDayWeekday, periods);
 		this.policy				= (ICancellationPolicy) new CostFree();
 		this.paymentMethods		= paymentMethods;
@@ -33,13 +36,14 @@ public class Booking implements INotifyConfiguration {
 		this.checkOut			= checkOut;
 		this.property			= property;
 		this.subscribers 		= new ArrayList<INotifyObserver>();
+		this.waitingTenants		= new ArrayList<Tenant>();
 	}
 
 	// Para hacer DOC del state available
 	public Booking(ReserveAvailable stateAvailable, CostFree policy, Pricer pricer, Property property, LocalDate checkIn, LocalDate checkOut,
-			List<PaymentMethod> paymentMethods, double pricePerDayWeekday, List<Period> periods, List<INotifyObserver> os) {
+			List<PaymentMethod> paymentMethods, double pricePerDayWeekday, List<Period> periods, List<INotifyObserver> os, List<Tenant> wT) {
 		// TODO Auto-generated constructor stub
-		this.state 			= (IReserveState) stateAvailable;
+		this.state 			= stateAvailable;
 		this.pricer 		= pricer;
 		this.pricer.setBasePrice(pricePerDayWeekday);
 		periods.stream().forEach(p -> this.pricer.addSpecialPeriod(p));
@@ -49,6 +53,7 @@ public class Booking implements INotifyConfiguration {
 		this.checkOut		= checkOut;
 		this.property		= property;
 		this.subscribers 	= os;
+		this.waitingTenants	= wT;
 	}
 
 
@@ -87,15 +92,6 @@ public class Booking implements INotifyConfiguration {
 		return this.pricer.priceBetween(startDate, endDate);
 	}
 
-	public void cancelReserve() {
-		// TODO Auto-generated method stub
-		this.state.cancelReserve();
-	}
-
-	public void reserve(Tenant t) {
-		// TODO Auto-generated method stub
-		this.state.requestReserve(t);		
-	}
 
 	@Override
 	public void registerObserver(INotifyObserver o) {
@@ -114,4 +110,44 @@ public class Booking implements INotifyConfiguration {
 		// TODO Auto-generated method stub
 		this.subscribers.stream().forEach(o -> o.update(this));
 	}
+
+	public Property getProperty() {
+		// TODO Auto-generated method stub
+		return this.property;
+	}
+
+	public void reserve(Tenant t) {
+		// TODO Auto-generated method stub
+		this.waitingTenants.add(t);
+		this.triggerNextRequest();
+	}
+
+	private void triggerNextRequest() {
+		this.tenant = this.waitingTenants.getFirst();
+		this.state.requestReserve(this);
+	}
+
+	public void approveReserve() { // El Owner aprueba al Tenent solicitado.
+		// TODO Auto-generated method stub
+		this.state.approveReserve(this);
+	}
+
+	public void cancelReserve() {
+		// TODO Auto-generated method stub
+		this.state.cancelReserve(this);
+	}
+
+	protected Tenant getTenant() {
+		// TODO Auto-generated method stub
+		return this.tenant;
+	}
+
+	protected void nextRequest() {
+		// TODO Auto-generated method stub
+		this.tenant = this.waitingTenants.removeFirst();
+		if (!this.waitingTenants.isEmpty()) {
+			this.triggerNextRequest();
+		}
+	}
+	
 }

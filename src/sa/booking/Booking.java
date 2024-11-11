@@ -81,7 +81,7 @@ public class Booking implements INotifyConfiguration {
 
 	public void applyPolicy() {
 		// TODO Auto-generated method stub
-		this.policy.activate(this);
+		this.policy.activate(LocalDate.now(),this);
 	}
 
 	public double price(LocalDate date) {

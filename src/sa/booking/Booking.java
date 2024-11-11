@@ -26,7 +26,7 @@ public class Booking implements INotifyConfiguration {
 	private List<Tenant> 			waitingTenants;
 
 	public Booking(Property property, LocalDate checkIn, LocalDate checkOut, List<PaymentMethod> paymentMethods,
-			double pricePerDayWeekday, List<Period> periods) {
+			double pricePerDayWeekday, List<SpecialPeriod> periods) {
 		// TODO Auto-generated constructor stub
 		this.state 				= new ReserveAvailable();
 		this.pricer		 		= new Pricer(pricePerDayWeekday, periods);
@@ -41,7 +41,7 @@ public class Booking implements INotifyConfiguration {
 
 	// Para hacer DOC del state available
 	public Booking(ReserveAvailable stateAvailable, CostFree policy, Pricer pricer, Property property, LocalDate checkIn, LocalDate checkOut,
-			List<PaymentMethod> paymentMethods, double pricePerDayWeekday, List<Period> periods, List<INotifyObserver> os, List<Tenant> wT) {
+			List<PaymentMethod> paymentMethods, double pricePerDayWeekday, List<SpecialPeriod> periods, List<INotifyObserver> os, List<Tenant> wT) {
 		// TODO Auto-generated constructor stub
 		this.state 			= stateAvailable;
 		this.pricer 		= pricer;
@@ -153,6 +153,11 @@ public class Booking implements INotifyConfiguration {
 	Tenant getTenant() {
 		// TODO Auto-generated method stub
 		return this.tenant;
+	}
+
+	List<PaymentMethod> getPaymentMethods() {
+		// TODO Auto-generated method stub
+		return this.paymentMethods;
 	}
 	
 }

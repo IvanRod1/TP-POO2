@@ -39,7 +39,7 @@ public class BookingTest {
 	private List<Tenant> 			waitingTenants 	= new ArrayList<Tenant>();
 	private List<PaymentMethod> 	paymentMethods 	= new ArrayList<PaymentMethod>();
 	private List<INotifyObserver> 	subscribers	  	= new ArrayList<INotifyObserver>();
-	private List<Period> 			periods	  		= new ArrayList<Period>();
+	private List<SpecialPeriod> 	periods	  		= new ArrayList<SpecialPeriod>();
 
 	private INotifyObserver		subscriber1;
 	private INotifyObserver		subscriber2;
@@ -47,9 +47,9 @@ public class BookingTest {
 	private CostFree			policy;
 	private Property			property;
 	private Pricer				pricer;
-	private Period				period1;
-	private Period				period2;
-	private Period				period3;
+	private SpecialPeriod		period1;
+	private SpecialPeriod		period2;
+	private SpecialPeriod		period3;
 	private Owner				owner;
 	private Tenant				tenant1;
 	private Tenant				tenant2;
@@ -59,7 +59,6 @@ public class BookingTest {
 
 	private LocalDate 				checkIn;
 	private LocalDate				checkOut;
-//	private List<PaymentMethod>		allowedPaymentMethods;
 	private double 					pricePerDayWeekday;
 	private double 					pricePerDayHighSeason;
 	private double 					pricePerDayLongWeekend;
@@ -75,9 +74,9 @@ public class BookingTest {
 		this.policy				= spy(CostFree.class);
 		this.property			= mock(Property.class);
 		this.pricer				= mock(Pricer.class);
-		this.period1			= mock(Period.class);
-		this.period2			= mock(Period.class);
-		this.period3			= mock(Period.class);
+		this.period1			= mock(SpecialPeriod.class);
+		this.period2			= mock(SpecialPeriod.class);
+		this.period3			= mock(SpecialPeriod.class);
 		this.owner				= mock(Owner.class);
 		this.tenant1 	  		= mock(Tenant.class);
 		this.tenant2 	  		= mock(Tenant.class);
@@ -96,7 +95,6 @@ public class BookingTest {
 
 		this.checkIn			= LocalDate.of(2024, 11, 30);
 		this.checkOut			= LocalDate.of(2024, 12, 30);
-//		this.allowedPaymentMethods // se repite?
 		this.pricePerDayWeekday		= 5;
 		this.pricePerDayHighSeason	= 6;
 		this.pricePerDayLongWeekend	= 7;
@@ -139,6 +137,11 @@ public class BookingTest {
 		assertNotNull(this.bookingReal);
 	}
 
+
+	@Test
+	public void testGetPaymentMethods() {
+		assertEquals(this.paymentMethods, this.booking.getPaymentMethods());
+	}
 
 	@Test
 	public void testGetProperty() {

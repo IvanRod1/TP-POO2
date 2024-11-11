@@ -35,8 +35,4 @@ public class City extends SimpleQuery {
 		return aux;
 	}
 	
-	public String funAux() {
-		return this.getCity();
-	}
-	
-}
+} 

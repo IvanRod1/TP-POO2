@@ -1,6 +1,7 @@
 package sa.accomodationsite;
 
 import static org.junit.Assert.assertThrows;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -20,8 +21,9 @@ import sa.booking.ReserveApproved;
 import sa.booking.IReserveState;
 import sa.booking.Period;
 import sa.booking.ReserveCompleted;
-import sa.payments.PaymentMethod;
-import sa.properties.PaymentMethodEnum;
+//import sa.payments.PaymentMethod;
+//import sa.properties.PaymentMethodEnum;
+import sa.booking.*;
 import sa.properties.Property;
 import sa.properties.PropertyType;
 import sa.users.Tenant;

@@ -22,7 +22,7 @@ class CostFreeTest {
 		bookingTest = mock(Booking.class);
 		
 		when(bookingTest.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 15));
-		when(bookingTest.price()).thenReturn((double) 9000);
+		when(bookingTest.price(bookingTest.getCheckIn())).thenReturn((double) 9000);
 	}
 
 	@Test

@@ -1,7 +1,6 @@
 package sa.accomodationsite;
 
 import java.time.LocalDate;
-//import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -10,7 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-//import sa.searcher.*;
+
 import sa.searcher.simpleQuery.IQuery;
 import sa.booking.Booking;
 import sa.booking.Period;

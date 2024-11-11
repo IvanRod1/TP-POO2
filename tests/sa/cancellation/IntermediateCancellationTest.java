@@ -20,8 +20,9 @@ class IntermediateCancellationTest {
 	void setUp() throws Exception {
 		//DOCS
 		bookingTest = mock(Booking.class);
-		when(bookingTest.price()).thenReturn((double) 123000);
+		
 		when(bookingTest.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 24));
+		when(bookingTest.price(bookingTest.getCheckIn())).thenReturn((double) 123000);
 		
 		//SUT
 		intermediateCancellation = new IntermediateCancellation();

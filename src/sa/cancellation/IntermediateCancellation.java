@@ -18,9 +18,9 @@ public class IntermediateCancellation implements ICancellationPolicy{
 			System.out.println("No pagas nada");
 			//this.date.plusDays(19).isAfter(booking.getCheckIn()) 
 		}else if(date.plusDays(10).isBefore(booking.getCheckIn())) {
-			System.out.println("Se paga la mitad "+booking.price(booking.getCheckIn())/2);
+			System.out.println("Se paga la mitad "+booking.priceBetween(booking.getCheckIn(),booking.getCheckOut())/2);
 		}else {
-			System.out.println("Se paga todo "+booking.price(booking.getCheckIn()));
+			System.out.println("Se paga todo "+booking.priceBetween(booking.getCheckIn(),booking.getCheckOut()));
 		}
 	}
 

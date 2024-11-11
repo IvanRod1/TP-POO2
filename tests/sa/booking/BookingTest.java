@@ -175,7 +175,7 @@ public class BookingTest {
 		assertNotNull(this.booking.getPolicy());
 		verifyNoInteractions(this.policy);
 		this.booking.applyPolicy();
-		verify(this.policy, times(1)).activate();
+		verify(this.policy, times(1)).activate(this.booking);
 	}
 
 	@Test

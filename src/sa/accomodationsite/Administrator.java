@@ -50,9 +50,10 @@ public class Administrator extends User {
 		 * 
 		 * */
 		Owner newOwner = new Owner("Nacho", 123, "foo@gmail.com");
+		PropertyType propertyType = new PropertyType("casa", "con pileta");
 		
 		Property newProperty = new Property(500.0, "Argentina", "Córdoba", "Carlos Paz 123", 12, 
-											"Casa frente al dique", 20, PropertyEnum.House, newOwner);
+											"Casa frente al dique", 20, propertyType, newOwner);
 		
 		Tenant newTenant = new Tenant("Nacho", 456, "bar@gmail.com");
 		

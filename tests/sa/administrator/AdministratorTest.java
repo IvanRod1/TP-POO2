@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test;
 
 import sa.accomodationsite.AccomodationSite;
 import sa.accomodationsite.Administrator;
-import sa.accomodationsite.Booking;
-import sa.accomodationsite.ReserveApproved;
-import sa.accomodationsite.ReserveAvailable;
-import sa.accomodationsite.ReserveState;
+import sa.booking.Booking;
+import sa.booking.ReserveApproved;
+import sa.booking.ReserveAvailable;
+import sa.booking.IReserveState;
 import sa.properties.Property;
 import sa.users.Tenant;
 
@@ -50,12 +50,12 @@ class AdministratorTest {
 	
 	List<Property> availableProperties;
 	
-	ReserveState reserveAvailable1;
-	ReserveState reserveAvailable2;
-	ReserveState reserveAvailable3;
+	IReserveState reserveAvailable1;
+	IReserveState reserveAvailable2;
+	IReserveState reserveAvailable3;
 	
-	ReserveState reserveApproved1;
-	ReserveState reserveApproved2;
+	IReserveState reserveApproved1;
+	IReserveState reserveApproved2;
 	
 	List<Booking> approvedBookings;
 	

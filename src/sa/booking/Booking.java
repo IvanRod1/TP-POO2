@@ -26,6 +26,7 @@ public class Booking implements INotifyConfiguration {
 	private Pricer					pricer;
 	private List<PaymentMethod>		paymentMethods;
 	private List<INotifyObserver>	subscribers;
+	private Tenant actualTenant;
 
 	public Booking(Property property, LocalDate checkIn, LocalDate checkOut, List<PaymentMethod> paymentMethods,
 			double pricePerDayWeekday, List<Period> periods) {
@@ -54,6 +55,7 @@ public class Booking implements INotifyConfiguration {
 		this.checkOut		= checkOut;
 		this.property		= property;
 		this.subscribers 	= os;
+		this.actualTenant = null;
 	}
 
 
@@ -138,6 +140,16 @@ public class Booking implements INotifyConfiguration {
 	public int getMaxGuest() {
 		//Lo agrego Ivan
 		return this.property.getMaxGuests();
+	}
+
+	public Property getProperty() {
+		//Lo agrego Ivan
+		return this.property;
+	}
+
+	public Tenant getTenant() {
+		//Lo agrego Ivan
+		return this.actualTenant;
 	}
 
 }

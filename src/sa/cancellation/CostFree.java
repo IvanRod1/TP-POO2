@@ -6,9 +6,9 @@ import sa.booking.Booking;
 
 public class CostFree implements ICancellationPolicy{
 
-	private LocalDate date;
+
 	@Override
-	public void activate(Booking booking) {
+	public void activate(LocalDate date,Booking booking) {
 		/*
 		 * Este metodo se encarga de verificar si en el momento de activacion de la cancelacion 		   
 		 * fue 10 dias antes que el inicio del alquiler. En el caso de que sea asi, se notifica 
@@ -16,7 +16,7 @@ public class CostFree implements ICancellationPolicy{
 		 * a dos dias de alquiler, se notificara por pantalla el valor
 		 * 
 		 * */
-		if(this.date.isBefore(booking.getCheckIn().minusDays(10))) {
+		if(date.isBefore(booking.getCheckIn().minusDays(10))) {
 			System.out.println("No pagas nada");
 		}
 		else {
@@ -24,9 +24,6 @@ public class CostFree implements ICancellationPolicy{
 		}
 	}
 	
-	public void setDate(LocalDate d) {
-		this.date = d;
-	}
 	
 
 

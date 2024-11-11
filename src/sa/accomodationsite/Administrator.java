@@ -1,16 +1,17 @@
 package sa.accomodationsite;
 
 import java.util.Comparator;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DynamicTest;
 
-import sa.properties.AmenityEnum;
+//import sa.properties.AmenityType;
 import sa.properties.AmenityType;
 import sa.properties.Property;
-import sa.properties.PropertyEnum;
+//import sa.properties.PropertyEnum;
 import sa.properties.PropertyType;
 import sa.properties.Rankeable;
 import sa.users.Owner;

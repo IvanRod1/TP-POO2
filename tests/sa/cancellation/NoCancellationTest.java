@@ -1,13 +1,16 @@
 package sa.cancellation;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import sa.booking.Booking;
 
@@ -30,10 +33,14 @@ class NoCancellationTest {
 	@Test
 	void newNoCancellation() {
 		noCancellation = new NoCancellation();
+		assertNotNull(noCancellation);
 	}
 	@Test
 	void activateNoCancellation() {
-		noCancellation.activate(bookingTest);
+		NoCancellation spy = Mockito.spy(noCancellation);
+		spy.activate(LocalDate.now(),bookingTest);
+		verify(spy, atLeastOnce()).activate(LocalDate.now(), bookingTest);
+
 	}
 
 }

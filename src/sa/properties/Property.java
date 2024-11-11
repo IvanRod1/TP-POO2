@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.bytebuddy.asm.Advice.This;
 import sa.users.Owner;
 
 public class Property implements Rankeable {
@@ -16,15 +17,15 @@ public class Property implements Rankeable {
 	private String description;
 	private int maxPicture;
 	private List<LocalDate> bookedDays;
-	private List<AmenityEnum> amenities;
-	private PropertyEnum type;
+	private List<AmenityType> amenities;
+	private PropertyType type;
 	private List<Picture> pictures;
 	private Owner owner;
 	private List<Review> reviews;
 	
 	
 	public Property(double area, String country, String city, String address, int maxGuess, String description, int maxPicture,
-					PropertyEnum type, Owner owner) {
+				   PropertyType type, Owner owner) {
 		this.area = area;
 		this.country = country;
 		this.city = city;
@@ -34,7 +35,7 @@ public class Property implements Rankeable {
 		this.maxPicture = maxPicture;
 		this.type = type;
 		this.owner = owner;
-		this.amenities = new ArrayList<AmenityEnum>();
+		this.amenities = new ArrayList<AmenityType>();
 		this.bookedDays = new ArrayList<LocalDate>();
 		this.pictures = new ArrayList<Picture>();
 		this.reviews = new ArrayList<Review>();
@@ -92,6 +93,16 @@ public class Property implements Rankeable {
 		//Lo agrego Ivan
 		return this.maxGuests;
 	}
+
+	public Object getAmenities() {
+		return this.amenities;
+	}
+
+
+	public PropertyType getPropertyType() {
+		return this.type;
+	}
+	
  
 }
 

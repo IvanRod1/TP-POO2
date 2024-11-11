@@ -1,22 +1,28 @@
 package sa.accomodationsite;
 
 import java.time.LocalDate;
-
-import java.time.chrono.ChronoLocalDate;
+//import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import sa.searcher.*;
 
+
+//import sa.searcher.*;
+import sa.searcher.simpleQuery.IQuery;
+import sa.booking.Booking;
+import sa.booking.Period;
+import sa.booking.ReserveAvailable;
+import sa.booking.ReserveApproved;
 import sa.properties.AmenityType;
+import sa.payments.PaymentMethod;
 import sa.properties.Property;
 import sa.properties.PropertyType;
 import sa.users.Owner;
 import sa.users.Tenant;
-import sa.booking.*;
-import sa.searcher.*;
+
 
 public class AccomodationSite {
 	
@@ -33,20 +39,19 @@ public class AccomodationSite {
 		this.bookings = new ArrayList<Booking>();
 		this.tenants = new ArrayList<Tenant>();
 		this.owners = new ArrayList<Owner>();
-		this.searcher = new Searcher();   // No existe constructor searcher
 	}
 	
-	public void createBooking(Property property, LocalDate checkIn, LocalDate checkOut,
-							  double pricePerDayWeekday, double pricePerDayHighSeason, double pricePerDayLongSeason, ReserveState state, Tenant tenant) {
+	public void createBooking(Property property, LocalDate checkIn, LocalDate checkOut, List<PaymentMethod> paymentMethods,
+							  double pricePerDayWeekday, List<Period> periods) {
 		
-		Booking bookingACrear = new Booking(property, checkIn, checkOut, pricePerDayWeekday, 
-											pricePerDayHighSeason, pricePerDayLongSeason, state, tenant);
+		Booking newBooking = new Booking(property, checkIn, checkOut, paymentMethods,
+											pricePerDayWeekday, periods);
 		
 		if(this.verifyPropertyType(property) && this.verifyAmenityType(property)) {
 			
-			this.bookings.add(bookingACrear);
+			this.bookings.add(newBooking);
 		} else {
-			 new RuntimeException("la propiedad o el servicio dados no son válidos para el sitio web");
+			throw new RuntimeException("la propiedad o el servicio dados no son válidos para el sitio web");
 		}
 		
 		
@@ -58,7 +63,7 @@ public class AccomodationSite {
 		 * verifica si el tipo de la propiedad dada pertenece al tipo de propiedad aceptado por el sitio web
 		 * 
 		 * */
-		return this.getAllowedAmenities().includes(property.getAmenities());
+		return this.getAllowedAmenities().containsAll((Collection<?>) property.getAmenities());
 	}
 
 	private boolean verifyPropertyType(Property property) {
@@ -68,7 +73,7 @@ public class AccomodationSite {
 		 * */
 		
 		return this.getAllowedProperties().stream()
-			      						  .anyMatch(propertyType -> propertyType.equals(property.getType()));
+			      						  .anyMatch(propertyType -> propertyType.equals(property.getPropertyType().type()));
 	}
 
 	public List<Booking> getBookings() {
@@ -200,12 +205,12 @@ public class AccomodationSite {
 		 * 
 		 * */
 		
-		if (this.searcher == null) {
+	//	if (this.searcher == null) {
 			/**
 			 * si el usuario no establece un criterio de busqueda, se retornan todos los bookings de la pagina.
 			 * */
 			
-			return this.getBookings();
+		/*	return this.getBookings();
 			
 		}
 			
@@ -213,7 +218,8 @@ public class AccomodationSite {
 			
 			return this.searcher.search(this.getBookings());
 			
-	
+	*/
+		return null;
 	}
 	
 	

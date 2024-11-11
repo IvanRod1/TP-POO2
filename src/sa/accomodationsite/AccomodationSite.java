@@ -1,6 +1,7 @@
 package sa.accomodationsite;
 
 import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -16,7 +17,8 @@ import sa.booking.Period;
 import sa.booking.ReserveAvailable;
 import sa.booking.ReserveApproved;
 import sa.properties.AmenityType;
-import sa.payments.PaymentMethod;
+//import sa.payments.PaymentMethod;
+import sa.booking.*;
 import sa.properties.Property;
 import sa.properties.PropertyType;
 import sa.users.Owner;

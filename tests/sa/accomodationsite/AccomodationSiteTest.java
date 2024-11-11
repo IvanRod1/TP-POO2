@@ -1,5 +1,6 @@
 package sa.accomodationsite;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -13,29 +14,39 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import sa.accomodationsite.AccomodationSite;
-import sa.accomodationsite.Booking;
-import sa.accomodationsite.ReserveAvailable;
-import sa.accomodationsite.ReserveState;
+
+import sa.booking.ReserveAvailable;
+import sa.booking.ReserveApproved;
+import sa.booking.IReserveState;
+import sa.booking.Period;
+import sa.booking.ReserveCompleted;
+import sa.payments.PaymentMethod;
 import sa.properties.PaymentMethodEnum;
 import sa.properties.Property;
+import sa.properties.PropertyType;
 import sa.users.Tenant;
+import sa.booking.Booking;
 
 public class AccomodationSiteTest {
 	
 	// setUp:
 	
 	Property property;
+	Property invalidProperty;
+	PropertyType invalidType;
 	LocalDate checkIn;
 	LocalDate checkOut;
 	double pricePerDayWeekday;
 	double pricePerDayHighSeason;
 	double pricePerDayLongSeason;
+	
 
 	Tenant tenant;
 	Tenant tenant2;
 	
-	ReserveState state1;
-	ReserveState state2;
+	IReserveState state1;
+	IReserveState state2;
+	IReserveState state3;
 	List<Booking> bookings;
 	Set<String> cities;
 	Booking genericBooking;
@@ -45,6 +56,11 @@ public class AccomodationSiteTest {
 	
 	List<Booking> approvedBookings;
 	List<Booking> availableBookings;
+	List<PaymentMethod> paymentsMethods;
+	PaymentMethod paymentMethod;
+	List<Period> periods;
+	Period period;
+	PropertyType validType; 
 	
 	// SUT:
 	
@@ -56,6 +72,9 @@ public class AccomodationSiteTest {
 	public void setUp() throws Exception {
 		
 		property = mock(Property.class);
+		invalidProperty = mock(Property.class);
+		invalidType = mock(PropertyType.class);
+		validType = mock(PropertyType.class);
 		checkIn = LocalDate.now().plusDays(1);
 		checkOut = mock(LocalDate.class);
 		pricePerDayWeekday = 100.0;
@@ -65,6 +84,14 @@ public class AccomodationSiteTest {
 		tenant2 = mock(Tenant.class);
 		state1 =  mock(ReserveAvailable.class);
 		state2 = mock(ReserveApproved.class);
+		state3 = mock(ReserveCompleted.class);
+		paymentsMethods = new ArrayList<PaymentMethod>();
+		paymentMethod = mock(PaymentMethod.class);
+		paymentsMethods.add(paymentMethod);
+		periods = new ArrayList<Period>();
+		period = mock(Period.class);
+		periods.add(period);
+		
 		
 		/**
 		 *  Asigno los mock Stubs acá arriba para que las variables no entren como null en el sut,
@@ -74,10 +101,19 @@ public class AccomodationSiteTest {
 		*/
 		
 		when(property.getCity()).thenReturn("Buenos Aires");
+		when(invalidProperty.getPropertyType()).thenReturn(invalidType);
+		when(invalidType.type()).thenReturn("casa");
+		when(property.getPropertyType()).thenReturn(validType);
+		when(validType.type()).thenReturn("duplex");
+		
+		when(property.getAmenities()).thenReturn("luz, agua");
+		when(invalidProperty.getAmenities()).thenReturn("gas");
 		
 		accomodationSite = new AccomodationSite();
-		accomodationSite.createBooking(property, checkIn, checkOut, pricePerDayWeekday, pricePerDayHighSeason, pricePerDayLongSeason, state1, tenant); 
-		accomodationSite.createBooking(property, checkIn, checkOut, pricePerDayWeekday, pricePerDayHighSeason, pricePerDayLongSeason, state2, tenant2); 
+		accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods,
+									   pricePerDayWeekday, periods); 
+		accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods,
+				   					   pricePerDayWeekday, periods); 
 		
 		availableBookings = new ArrayList<Booking>();
 		availableBookings.add(accomodationSite.getBookings().getFirst());
@@ -177,6 +213,18 @@ public class AccomodationSiteTest {
 	void getApprovedBookingsTest() {
 		assertEquals(accomodationSite.getApprovedBookings(), approvedBookings);
 	}
+	
+	/*@Test
+	void createBookingTest() {
+		
+		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            accomodationSite.createBooking(invalidProperty, checkIn, checkOut, pricePerDayWeekday,
+                pricePerDayHighSeason, pricePerDayLongSeason, state3, tenant);
+		  });
+		
+		assertEquals("la propiedad o el servicio dados no son válidos para el sitio web", exception.getMessage());
+		
+	}*/
 
 }
 

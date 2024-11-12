@@ -92,7 +92,7 @@ public class Property implements Rankeable {
 		return this.maxGuests;
 	}
 
-	public Object getAmenities() {
+	public List<AmenityType> getAmenities() {
 		return this.amenities;
 	}
 

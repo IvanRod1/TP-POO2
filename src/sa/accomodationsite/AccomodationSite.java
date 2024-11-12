@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
-
 import sa.searcher.simpleQuery.IQuery;
 import sa.booking.Booking;
 import sa.booking.Period;
@@ -40,8 +38,14 @@ public class AccomodationSite {
 		this.owners = new ArrayList<Owner>();
 	}
 	
+	
 	public void createBooking(Property property, LocalDate checkIn, LocalDate checkOut, List<PaymentMethod> paymentMethods,
 							  double pricePerDayWeekday, List<Period> periods) {
+		/**
+		 * crea un booking nuevo y lo agrega a la lista de bookings. Antes de agregarlo verifica que la propiedad del booking
+		 * tenga un tipo de propiedad valido y unos tipos de servicios validos para sitio web, dados por el administrador.
+		 * 
+		 * */
 		
 		Booking newBooking = new Booking(property, checkIn, checkOut, paymentMethods,
 											pricePerDayWeekday, periods);
@@ -79,10 +83,6 @@ public class AccomodationSite {
 		return this.bookings;
 	}
 	
-	public void addBooking(Booking booking) {
-		this.bookings.add(booking);
-	}
-	
 	public List<PropertyType> getAllowedProperties() {
 		return this.allowedProperties;
 	}
@@ -93,12 +93,21 @@ public class AccomodationSite {
 	
 	public void setAllowedProperties(PropertyType allowedProperty) {
 		
+		/**
+		 * Agrega el tipo de propiedad valido para el sitio, dado por el administrador
+		 * */
+		
 		this.getAllowedProperties().add(allowedProperty);
 		
 		
 	}
 	
 	public void setAllowedAmenities(AmenityType allowedAmenity) {
+		
+		/**
+		 * Agrega los tipos de servicios validos para el sitio, dados por el administrador
+		 * 
+		 * */
 		
 		this.getAllowedAmenities().add(allowedAmenity);
 		
@@ -107,11 +116,9 @@ public class AccomodationSite {
 	
 	public void viewProperty(Booking booking) {
 		
-		 
 		 /*
-		  * el sumario es un print screen ln para simular la visualizacion de la propiedad
-		  * */
-		 /*
+		  * llama al metodo sumary de property para printear en pantalla los atributos de la propiedad
+		  * 
 			 * creo un booking mock, el sumario sabe respopnder los atributos de property, 
 			 * y le hago en el stub un when que retorne un property mmock con valores que le agrego 
 			 * que serian los atributos de la property.
@@ -119,6 +126,8 @@ public class AccomodationSite {
 			 * es un void
 			 * 
 			 * testear que booking no sea null y con un verify de times(1)
+			 * 
+			 * el sumario es un print screen ln para simular la visualizacion de la propiedad
 			 * */
 		
 		booking.getProperty().summary();
@@ -127,12 +136,20 @@ public class AccomodationSite {
 	
 	public List<Booking> getVacantProperties() {
 		
+		/**
+		 * filtra la lista de bookings del sitio y se queda con las que tienen el estado disponible.
+		 * */
+		
 		return this.getBookings().stream()
 	               .filter(actualBooking -> actualBooking.getState() instanceof ReserveAvailable)
 	               .toList();
 	}
 	
 	public List<Booking> getApprovedBookings() {
+		/**
+		 * filtra la lista de bookings del sitio y se queda con las que tienen el estado aprovado
+		 * */
+		
 		return this.getBookings().stream()
 								 .filter(actualBooking -> actualBooking.getState() instanceof ReserveApproved)
 								 .toList();
@@ -143,9 +160,7 @@ public class AccomodationSite {
 		
 		
 		/*
-		 * recorrer la lista de bookins del acomodation, es un recorrido de busqueda, retorna los 
-		 * bookings con el inquilino dado por parametro, y si es, los guarda en una lista y los retorna 
-		 * en una lista de bookings.
+		 * Recorre la lista de bookings y la filtra por el tenant dado, y retorna una lista de bookings del tenant dado
 		 * 
 		 * */
 	
@@ -161,10 +176,9 @@ public class AccomodationSite {
 		
 		
 		/**
-		 * futureBookings: bookings que son futuros al dia de hoy, a la fecha actual, siempre el resultado va a cambiar,
-		 * la lista que voy a usar es la del metodo anterior, como lista auxiliar, y a esta lista la voy a 
-		 * filtrar por fecha de chekIn, comparada a la fecha de hoy, diciendo (chekIn > fechaDeHoy)  
-		 * resultado, los bookings futuros.
+		 * primero filtra la lista de bookings y se queda con todos los alquileres del tenant dado, luego, a esa lista 
+		 * resultante, la filtra y se queda con los bookings con un checkIn superior al dia de hoy, es decir, los bookings
+		 * futuros
 		 * 
 		 * */
 		
@@ -177,31 +191,22 @@ public class AccomodationSite {
 	}
 	
 	public Set<String> allBookingCities(Tenant tenant) {
+		/**
+		 * primero filtra la lista de bookings y se queda con todos los alquileres del tenant dado, luego transforma esa
+		 * lista en una lista de ciudades por las que alquiló el tenant dado, y sin elementos repetidos
+		 * */
 		
 		return this.bookingHistory(tenant).stream()
 								 		  .map(actualBooking -> actualBooking.getProperty().getCity())
 								 		  .collect(Collectors.toSet());
 		
-		
-		
-		
-		/**
-		 * agarro la lista dada por bookingHistory, primero creo una lista auxiliar de los bookings ya alquilados historicamente, y le guardo 
-		 * todas las ciudades en donde alquilo el inquilino, de esta lista de bookings 
-		 * saco todas las ciudades, por cada booking le pido la ciudad y la guardo en un set. y retorno ese set. 
-		 * el set buscar como pasarlo a lista y viceversa.
-		 * 
-		 * */
-		
-		
 	}
 	
 	public List<Booking> search(IQuery query) {
 		/**
-		 * voy a tener una lista de bookings, es la del accomodation site, voy a tener que hacer un recorrido sobre 
-		 * la lista de bookings de acomodation site y voy a tener que utilizar el composite query AND
-		 * 
-		 * 
+		 * recibe un iquery como parametro, luego verifica si el searcher esta vacio o es null, entonces retorna 
+		 * todos los bookings del sitio, y sino, almacena el criterio de busqueda dado.
+		 *
 		 * */
 		
 	//	if (this.searcher == null) {

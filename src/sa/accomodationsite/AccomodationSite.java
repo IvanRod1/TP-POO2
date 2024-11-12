@@ -226,7 +226,18 @@ public class AccomodationSite {
 			return this.searcher.search(this.getBookings());
 			
 	*/
+		
 		return null;
+		//IMPORTANTE
+		//Esste metodo deberia retornar :
+		/*
+		 * if(isNull(query)){
+		 * 	return this.bookings
+		 * }else{
+		 * 	return query.search(this.bookings)
+		 * }
+		 * 
+		 * */
 	}
 	
 	
@@ -245,8 +256,5 @@ public class AccomodationSite {
 	
 		
 }
-	
- 	
-	
 	
 

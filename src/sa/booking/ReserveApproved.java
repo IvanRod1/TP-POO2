@@ -4,12 +4,10 @@ import sa.users.Tenant;
 
 public class ReserveApproved implements IReserveState {
 
-	private IReserveState	next = (IReserveState) new ReserveCompleted();
 
 	@Override
-	public IReserveState next() {
-		// TODO Auto-generated method stub
-		return this.next;
+	public void nextState(Booking booking) {
+		booking.setState(new ReserveAvailable());
 	}
 
 	@Override

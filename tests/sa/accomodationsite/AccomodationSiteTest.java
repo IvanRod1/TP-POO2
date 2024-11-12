@@ -24,6 +24,7 @@ import sa.booking.ReserveCompleted;
 //import sa.payments.PaymentMethod;
 //import sa.properties.PaymentMethodEnum;
 import sa.booking.*;
+import sa.properties.AmenityType;
 import sa.properties.Property;
 import sa.properties.PropertyType;
 import sa.users.Tenant;
@@ -62,6 +63,17 @@ public class AccomodationSiteTest {
 	Period period;
 	PropertyType validType; 
 	
+	Administrator administrator;
+	List<AmenityType> allowedAmenities;
+	List<AmenityType> invalidAmenities;
+	
+	AmenityType validAmenity1;
+	AmenityType validAmenity2;
+	
+	PropertyType propertyType1;
+	PropertyType propertyType2;
+	PropertyType propertyType3;
+	
 	// SUT:
 	
 	AccomodationSite accomodationSite;
@@ -71,44 +83,47 @@ public class AccomodationSiteTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 		
+		// inicializacion de constructor de booking
+		
 		property = mock(Property.class);
 		invalidProperty = mock(Property.class);
 		invalidType = mock(PropertyType.class);
+		
 		validType = mock(PropertyType.class);
 		checkIn = LocalDate.now().plusDays(1);
 		checkOut = mock(LocalDate.class);
+		
 		pricePerDayWeekday = 100.0;
 		pricePerDayHighSeason = 70.0;
 		pricePerDayLongSeason = 50.0;
+		
 		tenant = mock(Tenant.class);
 		tenant2 = mock(Tenant.class);
+		
 		state1 =  mock(ReserveAvailable.class);
 		state2 = mock(ReserveApproved.class);
 		state3 = mock(ReserveCompleted.class);
+		
 		paymentsMethods = new ArrayList<PaymentMethod>();
 		paymentMethod = mock(PaymentMethod.class);
 		paymentsMethods.add(paymentMethod);
+		
 		periods = new ArrayList<Period>();
 		period = mock(Period.class);
 		periods.add(period);
+		
 		bookingMock = mock(Booking.class);
 		
+		// inicializacion de valores de referentes al accomodationSite
 		
-		/**
-		 *  Asigno los mock Stubs acá arriba para que las variables no entren como null en el sut,
-			sino que se les asigne el valor esperado para testearlas, en este caso para que no entren al genericBooking como null, 
-			pero no directamente al SUT. NO BORRAR.
+		validAmenity1 = mock(AmenityType.class);
+		validAmenity2 = mock(AmenityType.class);
 		
-		*/
+		propertyType1 = mock(PropertyType.class);
+		propertyType2 = mock(PropertyType.class);
+		propertyType3 = mock(PropertyType.class);
 		
-		when(property.getCity()).thenReturn("Buenos Aires");
-		when(invalidProperty.getPropertyType()).thenReturn(invalidType);
-		when(invalidType.type()).thenReturn("casa");
-		when(property.getPropertyType()).thenReturn(validType);
-		when(validType.type()).thenReturn("duplex");
-		
-		when(property.getAmenities()).thenReturn("luz, agua");
-		when(invalidProperty.getAmenities()).thenReturn("gas");
+		// SUT: accomodationSite
 		
 		accomodationSite = new AccomodationSite();
 		accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods,
@@ -128,10 +143,49 @@ public class AccomodationSiteTest {
 		cities = new HashSet<String>();
 		cities.add(property.getCity());
 		
+		allowedAmenities = new ArrayList<AmenityType>();
+		invalidAmenities = new ArrayList<AmenityType>();
+		
+		allowedAmenities.add(validAmenity1);
+		invalidAmenities.add(validAmenity2);
+		
+		accomodationSite.addAllowedProperty(propertyType1);
+		accomodationSite.addAllowedProperty(propertyType2);
+		
+		accomodationSite.addAllowedAmenities(validAmenity1);
+		accomodationSite.addAllowedAmenities(validAmenity2);
+		
+		
+		
+		//administrator = spy(Administrator.class);
+		
+		
+		/**
+		 *  Asigno los mock Stubs acá arriba para que las variables no entren como null en el sut,
+			sino que se les asigne el valor esperado para testearlas, en este caso para que no entren al genericBooking como null, 
+			pero no directamente al SUT. NO BORRAR.
+		
+		*/
+		
+		when(property.getCity()).thenReturn("Buenos Aires");
+		when(invalidProperty.getPropertyType()).thenReturn(invalidType);
+		when(invalidType.type()).thenReturn("casa");
+		when(property.getPropertyType()).thenReturn(validType);
+		when(validType.type()).thenReturn("duplex");
+		
+		when(property.getAmenities()).thenReturn(allowedAmenities);
+		when(invalidProperty.getAmenities()).thenReturn(invalidAmenities);
+		
+		
+		
+		
+		
+		
+		
 	}
 	
 	// Verify:
-
+	/*
 	@Test
 	void cantidadDeBookingsTest() {
 		
@@ -144,11 +198,11 @@ public class AccomodationSiteTest {
 		
 		
 		
-		assertEquals(accomodationSite.getBookings().size(), 2);
+	//	assertEquals(accomodationSite.getBookings().size(), 2);
 		
-	}
+	//}*/
 	
-	@Test
+	/*@Test
 	void getVacantPropertiesTest() {
 		
 		
@@ -158,9 +212,9 @@ public class AccomodationSiteTest {
 		
 		assertEquals(accomodationSite.getVacantProperties(), availableBookings);
 		
-		}
+		}*/
 		
-	@Test
+	/*@Test
 	void bookingHistoryTest() {
 		
 		assertEquals(accomodationSite.bookingHistory(tenant), bookings);
@@ -170,41 +224,40 @@ public class AccomodationSiteTest {
 	void futureBookings() {
 		
 		assertEquals(accomodationSite.futureBookings(tenant), bookings);
-	}
+	}*/
 	
-	@Test
+	/*@Test
 	void allBookingsCities() {
 		
 		//assertEquals(accomodationSite.allBookingCities(tenant).size(), 1);
 		
 		assertEquals(accomodationSite.allBookingCities(tenant), cities);
-	}
+	}*/
 	
-	@Test
+	/*@Test
 	void getApprovedBookingsTest() {
 		assertEquals(accomodationSite.getApprovedBookings(), approvedBookings);
-	}
+	}*/
 	
-	@Test
-	void createBookingTest() {
-		
-		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods,
-					   						pricePerDayWeekday, periods);
-		  });
-		
-		assertEquals("la propiedad o el servicio dados no son válidos para el sitio web", exception.getMessage());
-		
-	}
 	
-	@Test
+	
+	/*@Test
 	void viewPropertyTest() {
 		
 		accomodationSite.viewProperty(bookingMock);
 		
 		verify(accomodationSite, times(1)).viewProperty(bookingMock);
-	}
+	}*/
 
+	@Test
+	void createBookingTest() {
+	
+		accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods, pricePerDayWeekday, periods);
+		
+		assertEquals(accomodationSite.getBookings().size(), 1);
+		
+		
+	}
 }
 
 

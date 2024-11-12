@@ -76,11 +76,9 @@ public class Property implements Rankeable {
 	
 	@Override
 	public double getRank() {
-		//TODO: sería un recorrido por toda la lista de ranks sumando todos los ranks?
 		/**
-		 * tengo una lista de reviews, a esa lista les pido el rating, y despues sumo todos los ratings de esa lista 
-		 * y los divido por el size de la lista de reviews.
-		 * 
+		 * calcula el promedio del rating de todos los reviews, que son las vistas que tiene una propiedad y el rating con la que 
+		 * la valoró cada usuario en el sitio
 		 * 
 		 * */
 		return this.getReviews().stream()

@@ -87,10 +87,8 @@ public class Administrator extends User {
 	public List<Tenant> bestTenants(List<Tenant> tenants) {
 		
 		/**
-		 * tengo una lista de usuarios, son 2 listas, una de tenant y otra de owner, y tengo que buscar el maximo de inquilinos
-		 * que mas hayan alquilado, usando historyBookings, y busco el maximo inquilino que alquilo mas veces, le voy preguntando 
-		 * a cada inquilino, le pregunto el historial y la cant de bookings de ese historial y comparo esos numeros, y de ahi te tira 
-		 * los maximos 10. 
+		 * recibe una lista de tenants por parametro, y la ordena entre los primeros 10 mejores tenants que 
+		 * alquilaron mas veces en el sitio. 
 		 * 
 		 * 
 		 * */
@@ -109,8 +107,7 @@ public class Administrator extends User {
 	
 	public List<Property> propertiesToBeReserve() {
 		/**
-		 * recorro la lista de bookings le pregunto su estado, si es available lo guardo en una lista, es la lista de bookings, 
-		 * pregunto si el actual esta disponible, le pido el property y guardo a la propery en una lista que es la que voy a devolver
+		 * primero filtra la lista y se queda con los bookings disponibles, y luego la transforma en una lista de propiedades disponibles
 		 * 
 		 * 
 		 * */
@@ -124,10 +121,9 @@ public class Administrator extends User {
 	public double occupancyRate() {
 		
 		/**
-		 * agarro la lista de bookings y le pregunto el estado, si el estado es approve, entonces voy a sumar 1, 
-		 * aca tengo que ver el total de bookings de la pagina, ver la cantidad que estan alquilados, y saco el promedio
-		 * y despues lo paso a porcentaje, y así digo el porcentaje de ocupación, ej, 10 de 100 10% ocupado.
-		 * 
+		 * toma la lista de bookings, primero verifica que no sea cero la cantidad de elementos, porque no se puede 
+		 * dividir por cero, luego toma la cantidad de bookings reservados y los divide por el total de bookings de 
+		 * la pagina
 		 * 
 		 * */
 		

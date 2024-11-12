@@ -51,10 +51,8 @@ public class AccomodationSiteTest {
 	IReserveState state3;
 	List<Booking> bookings;
 	Set<String> cities;
-	Booking genericBooking;
-	Booking anotherBooking;
 	
-	Booking lookedBooking;
+	Booking bookingMock;
 	
 	List<Booking> approvedBookings;
 	List<Booking> availableBookings;
@@ -93,6 +91,7 @@ public class AccomodationSiteTest {
 		periods = new ArrayList<Period>();
 		period = mock(Period.class);
 		periods.add(period);
+		bookingMock = mock(Booking.class);
 		
 		
 		/**
@@ -128,7 +127,6 @@ public class AccomodationSiteTest {
 		
 		cities = new HashSet<String>();
 		cities.add(property.getCity());
-
 		
 	}
 	
@@ -149,35 +147,6 @@ public class AccomodationSiteTest {
 		assertEquals(accomodationSite.getBookings().size(), 2);
 		
 	}
-	
-	
-		/***
-		 *TODO:
-		AccomodationSite = new AccomodationSite()
-		
-		assertTrue(accomodationSite.userOfBookingExists(user)));
-		
-		
-	}*/
-
-		
-
-
-	@Test
-	void viewBookingTest() {
-		
-		/**
-		 * esta linea, la 104, meti al booking de esa manera para poder testear este metodo, porque no encontre una manera 
-		 * de usar el metodo createBooking para buscar ese booking creado en la lista de bookings.
-		 * */
-			//accomodationSite.getBookings().add(lookedBooking);
-				
-			//assertEquals(accomodationSite.viewProperty(lookedBooking), lookedProperty);
-		
-
-		//TODO: no sé como testear este metodo
-		
-		}
 	
 	@Test
 	void getVacantPropertiesTest() {
@@ -216,17 +185,25 @@ public class AccomodationSiteTest {
 		assertEquals(accomodationSite.getApprovedBookings(), approvedBookings);
 	}
 	
-	/*@Test
+	@Test
 	void createBookingTest() {
 		
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            accomodationSite.createBooking(invalidProperty, checkIn, checkOut, pricePerDayWeekday,
-                pricePerDayHighSeason, pricePerDayLongSeason, state3, tenant);
+            accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods,
+					   						pricePerDayWeekday, periods);
 		  });
 		
 		assertEquals("la propiedad o el servicio dados no son válidos para el sitio web", exception.getMessage());
 		
-	}*/
+	}
+	
+	@Test
+	void viewPropertyTest() {
+		
+		accomodationSite.viewProperty(bookingMock);
+		
+		verify(accomodationSite, times(1)).viewProperty(bookingMock);
+	}
 
 }
 

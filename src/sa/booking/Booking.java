@@ -31,7 +31,7 @@ public class Booking implements INotifyConfiguration {
 	public Booking(Property property, LocalDate checkIn, LocalDate checkOut, List<PaymentMethod> paymentMethods,
 			double pricePerDayWeekday, List<Period> periods) {
 		// TODO Auto-generated constructor stub
-		this.state 				= (IReserveState) new ReserveAvailable();
+		this.state 				= state;
 		this.pricer		 		= new Pricer(pricePerDayWeekday, periods);
 		this.policy				= (ICancellationPolicy) new CostFree();
 		this.paymentMethods		= paymentMethods;

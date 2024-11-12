@@ -154,7 +154,7 @@ class AdministratorTest {
 	
 	
 
-	// Excersise:
+	// Excercise:
 	
 	@Test
 	void bestTenantsTest() {

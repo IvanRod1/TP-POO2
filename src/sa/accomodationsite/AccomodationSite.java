@@ -38,6 +38,8 @@ public class AccomodationSite {
 		this.bookings = new ArrayList<Booking>();
 		this.tenants = new ArrayList<Tenant>();
 		this.owners = new ArrayList<Owner>();
+		this.allowedAmenities = new ArrayList<AmenityType>();
+		this.allowedProperties = new ArrayList<PropertyType>();
 	}
 	
 	
@@ -51,7 +53,7 @@ public class AccomodationSite {
 		
 		Booking newBooking = new Booking(property, checkIn, checkOut, paymentMethods,
 											pricePerDayWeekday, periods);
-		
+		//
 		if(this.verifyPropertyType(property) && this.verifyAmenityType(property)) {
 			
 			this.bookings.add(newBooking);
@@ -63,22 +65,21 @@ public class AccomodationSite {
 	}
 	
 	
-	private boolean verifyAmenityType(Property property) {
+	public boolean verifyAmenityType(Property property) {
 		/**
 		 * verifica si el tipo de la propiedad dada pertenece al tipo de propiedad aceptado por el sitio web
-		 * 
+		 * testear a parte
 		 * */
-		return this.getAllowedAmenities().containsAll((Collection<?>) property.getAmenities());
+		return this.getAllowedAmenities().containsAll((Collection<?>) (property.getAmenities()));
 	}
 
-	private boolean verifyPropertyType(Property property) {
+	public boolean verifyPropertyType(Property property) {
 		/**
 		 * verifica si el tipo de los servicios de la propiedad dada pertenecen al tipo de servicios aceptado por el sitio web
 		 * 
 		 * */
 		
-		return this.getAllowedProperties().stream()
-			      						  .anyMatch(propertyType -> propertyType.equals(property.getPropertyType().type()));
+		return this.getAllowedProperties().contains(property.getPropertyType());
 	}
 
 	public List<Booking> getBookings() {
@@ -230,8 +231,14 @@ public class AccomodationSite {
 	
 	
 	
+	public void addAllowedProperty(PropertyType propertyType) {
+		
+		this.allowedProperties.add(propertyType);
+	}
 	
-	
+	public void addAllowedAmenities(AmenityType amenity) {
+		this.allowedAmenities.add(amenity);
+	}
 	
 
 

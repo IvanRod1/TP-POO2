@@ -33,6 +33,10 @@ public class Administrator extends User {
 		return this.accomodationSite;
 	}
 	
+	public void setAccomodationSite(AccomodationSite accomodationSite) {
+		this.accomodationSite = accomodationSite;
+	}
+	
 
 	@Override
 	public void summary() {

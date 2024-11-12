@@ -10,7 +10,7 @@ public class ReserveAvailable implements IReserveState {
 
 	public ReserveAvailable() {
 		// TODO Auto-generated constructor stub
-		this.next = new ReserveApproved(this);
+		this.next = new ReserveBooked(this);
 	}
 	
 	// Para hacer DOC del state available
@@ -26,23 +26,18 @@ public class ReserveAvailable implements IReserveState {
 	}
 	
 	@Override
-	public void requestReserve(Booking b) {
+	public void requestReserve(Booking b, BookedPeriod bp) {
 		// TODO Auto-generated method stub
-		b.getProperty().getOwner().reserveRequestedOn(b);
+		this.next().requestReserve(b, bp);
 	}
 
 	@Override
-	public void approveReserve(Booking b) {
+	public void approveReserve(Booking b, BookedPeriod bp) {}
 		// TODO Auto-generated method stub
-		b.setState(this.next());
-	}
 
 	@Override
-	public void cancelReserve(Booking b) {
-		// TODO Auto-generated method stub
-		b.getTenant().reserveCancelled(b);
-		b.triggerNextRequest();
-	}
+	public void cancelReserve(Booking b, BookedPeriod bp) {}
+	// TODO Auto-generated method stub
 
 }
 

@@ -1,8 +1,10 @@
 package sa.booking;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import sa.payments.PaymentMethod;
 import sa.policies.CostFree;
@@ -23,7 +25,10 @@ public class Booking implements INotifyConfiguration {
 	private List<PaymentMethod>		paymentMethods;
 	private List<INotifyObserver>	subscribers;
 	private Tenant 					tenant;
-	private List<Tenant> 			waitingTenants;
+	
+	// queue1 INV igual en largo que la queue2
+	private List<Tenant> 			waitingTenants; // queue1
+	private List<Period>			bookedPeriods;	// queue2
 
 	public Booking(Property property, LocalDate checkIn, LocalDate checkOut, List<PaymentMethod> paymentMethods,
 			double pricePerDayWeekday, List<SpecialPeriod> periods) {
@@ -76,6 +81,31 @@ public class Booking implements INotifyConfiguration {
 		this.policy.activate();
 	}
 
+	public void setBasePrice(double newPrice) {
+		// TODO Auto-generated method stub
+		this.pricer.setBasePrice(newPrice);
+	}
+
+	public void setBasePrice(double newPrice) {
+		// TODO Auto-generated method stub
+		double currBP = this.pricer.getBasePrice();
+		this.pricer.setBasePrice(newPrice);
+		if (currBP > newPrice) {
+			// notificá
+			this.subscribersBP.values().stream().forEach(o -> o.nofity);
+		} 		
+	}
+
+	public void setSPPrice(double newPrice, SpecialPeriod sp) {
+		// TODO Auto-generated method stub
+		double currSPP = this.pricer.getSPPrice(sp);
+		this.pricer.setSPPrice(newPrice);
+		if (currSPP > newPrice) {
+			// notificá
+			datesSP = this.subscribersSP.stream().filter(p -> p.equals(sp));
+		}
+	}
+	
 	public double price(LocalDate date) {
 		// TODO Auto-generated method stub
 		return this.pricer.price(date);
@@ -86,13 +116,71 @@ public class Booking implements INotifyConfiguration {
 		return this.pricer.priceBetween(startDate, endDate);
 	}
 
-
 	@Override
-	public void registerObserver(INotifyObserver o) {
+	public void registerPriceObserver(INotifyObserver o, LocalDate startDay, LocalDate endDay) {
 		// TODO Auto-generated method stub
-		this.subscribers.add(o);
+		// Modelar como diccioario
+		currDay = startDay;
+		while (currDate != endDay) {
+			// Subtarea
+			registerPriceObserver(o, currDay)
+			currDay.plusDay(1);
+		}
+		// Subtarea por caso borde
+		registerPriceObserver(o, currDay)
 	}
 
+	// SpecialPeriod bajó valor (eran 5 días)
+	// realizar set de observers (sin repetidos) y aviso
+	
+	@Override
+	public void registerPriceObserver(INotifyObserver o, LocalDate date) {
+		// TODO Auto-generated method stub
+		// Modelar como diccioario
+		Optional<SpecialPeriod> sp = this.pricer.periods().stream().findFirst( p -> p.belongs(date));
+		if sp.isPresent() {
+			// Subtarea para agregar a subscribersSP
+			if (this.subscribersSP.exist(date)) {
+				this.subscribersSP.valores().add(o)
+			} else {
+				this.subscribersSP.add(date: o);
+			}
+		} else {
+			// Subtarea para agregar a subscribersBP
+			if (this.subscribersBP.exist(date)) {
+				this.subscribersBP.valores().add(o)
+			} else {
+				this.subscribersBP.add(date: o);
+			}
+		}
+	}
+	
+	@Override
+	public void registerCancelObserver(INotifyObserver o) {
+		// TODO Auto-generated method stub
+		this.subscribersCancel.add(o);
+	}
+
+
+	@Override
+	public void registerReserveObserver(INotifyObserver o) {
+		// TODO Auto-generated method stub
+		this.subscribers3.add(o);
+	}
+
+	@Override
+	public void nofifySubscribersReserve(Booking b, BookedPeriod bp) {
+		// TODO Auto-generated method stub
+		this.subscribersReserve();
+	}
+
+	@Override
+	public void nofifySubscribersCancelled(Booking b, BookedPeriod bp) {
+		// TODO Auto-generated method stub
+		this.subscribersCancel();
+	}
+	
+	
 	@Override
 	public void unregisterObserver(INotifyObserver o) {
 		// TODO Auto-generated method stub
@@ -110,20 +198,42 @@ public class Booking implements INotifyConfiguration {
 		return this.property;
 	}
 
-	public void reserve(Tenant t) {
+	BookedPeriod()
+	LocalDate 		start;
+	LocalDate 		end;
+	Tenant			t;
+	public LocalDate start() {return this.start();}
+	public LocalDate end() {return this.end();}
+	public LocalDate tenant() {return this.tenant();}
+	public boolean belongs(LocalDate d) {return checkea d;}
+	
+	
+	public void reserve(Tenant t, LocalDate start, LocalDate end) {
 		// TODO Auto-generated method stub
-		this.waitingTenants.add(t);
-		this.triggerNextRequest();
+//		Optional<BookedPeriod> p = this.bookedPeriods.stream().findFirst(bp -> bp.belongs(start));
+//		if (!p.isPresent()) {
+			BookedPeriod bp = new BookedPeriod(t, start, end);
+			if (this.bookedPeriods.exist(start)) {
+				this.bookedPeriods.valores().add(bp) // Lista orden de llegada
+			} else {
+				this.bookedPeriods.add(start: [bp]);
+			}
+//			this.waitingTenants.add(t);
+			this.triggerNextRequest();
+		}
+//		} else {
+//			throw new Exception("No te puedo tomar esa reserva porque alguien ya reservó.");
+//		}
 	}
 	
-	public void approveReserve() { // El Owner aprueba al Tenent solicitado.
+	public void approveReserve(BookedPeriod bp) { // El Owner aprueba al Tenant solicitado.
 		// TODO Auto-generated method stub
-		this.state.approveReserve(this);
+		this.state.approveReserve(this, bp);
 	}
 	
-	public void cancelReserve() {
+	public void cancelReserve(BookedPeriod bp) {
 		// TODO Auto-generated method stub
-		this.state.cancelReserve(this);
+		this.state.cancelReserve(this, bp);
 		this.tenant = null; // TODO: Caso borde: había tenant, se cancela y no espera nadie. Qué se hace con esa referencia vieja?
 		this.triggerNextRequest();
 	}
@@ -146,10 +256,15 @@ public class Booking implements INotifyConfiguration {
 
 	void triggerNextRequest() {
 		if (!this.hasAHoldingTenant() && this.someoneIsWaiting()) {
-			this.tenant = this.waitingTenants.removeFirst();
-			this.state.requestReserve(this);
+			if (this.bookedPeriods.has(LocalDate.now())) {
+				BookedPeriod bp = this.bookedPeriods.get(LocalDate.now()).removeFirst();
+//				this.tenant = this.waitingTenants.removeFirst();
+//				Period p	= this.bookedPeriods.removeFirst();
+				this.state.requestReserve(this, bp);
+			}
 		}
 	}
+
 	Tenant getTenant() {
 		// TODO Auto-generated method stub
 		return this.tenant;

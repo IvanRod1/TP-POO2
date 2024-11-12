@@ -21,7 +21,7 @@ import sa.users.Tenant;
 class ReserveAvailableTest {
 
 	private ReserveAvailable	stateAvailable;
-	private ReserveApproved		stateApproved;
+	private ReserveBooked		stateBooked;
 	private Booking				booking;
 	private Property			property;
 	private Tenant				tenant;
@@ -31,7 +31,7 @@ class ReserveAvailableTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		// DOC (Depended-On-Component): nuestros doubles
-		this.stateApproved	= mock(ReserveApproved.class);
+		this.stateBooked	= mock(ReserveBooked.class);
 		this.booking		= mock(Booking.class);
 		this.property		= mock(Property.class);
 		this.tenant			= mock(Tenant.class);
@@ -43,7 +43,7 @@ class ReserveAvailableTest {
 		
 		
 		// SUT (System Under Test): objeto a testear
-		this.stateAvailable = new ReserveAvailable(this.stateApproved);
+		this.stateAvailable = new ReserveAvailable(this.stateBooked);
 	}
 
 	@Test
@@ -53,7 +53,7 @@ class ReserveAvailableTest {
 
 	@Test
 	void testNext() {
-		assertEquals(this.stateApproved, this.stateAvailable.next());
+		assertEquals(this.stateBooked, this.stateAvailable.next());
 	}
 	
 	@Test
@@ -80,7 +80,7 @@ class ReserveAvailableTest {
 	void testApproveReserve() {
 		verifyNoInteractions(this.booking);
 		this.stateAvailable.approveReserve(this.booking);
-		verify(this.booking, times(1)).setState(this.stateApproved);
+		verify(this.booking, times(1)).setState(this.stateBooked);
 	}
 
 	@Test

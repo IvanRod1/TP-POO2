@@ -33,8 +33,8 @@ public class BookingTest {
 	private Booking				booking;
 	private Booking				bookingReal;
 	private ReserveAvailable	stateAvailable;
-	private ReserveApproved		stateApproved;
-	private ReserveCompleted	stateCompleted;
+	private ReserveBooked		stateBooked;
+	private ReserveOccupied		stateOccupied;
 	
 	private List<Tenant> 			waitingTenants 	= new ArrayList<Tenant>();
 	private List<PaymentMethod> 	paymentMethods 	= new ArrayList<PaymentMethod>();
@@ -68,8 +68,8 @@ public class BookingTest {
 	public void setUp() {
 		// DOC (Depended-On-Component): nuestros doubles
 		this.stateAvailable		= spy(ReserveAvailable.class);
-		this.stateApproved		= mock(ReserveApproved.class);
-		this.stateCompleted		= mock(ReserveCompleted.class);
+		this.stateBooked		= mock(ReserveBooked.class);
+		this.stateOccupied		= mock(ReserveOccupied.class);
 
 		this.policy				= spy(CostFree.class);
 		this.property			= mock(Property.class);
@@ -99,9 +99,9 @@ public class BookingTest {
 		this.pricePerDayHighSeason	= 6;
 		this.pricePerDayLongWeekend	= 7;
 
-		when(this.stateAvailable.next()).thenReturn(stateApproved);
-		when(this.stateApproved.next()).thenReturn(stateCompleted);
-		when(this.stateCompleted.next()).thenReturn(stateAvailable);
+		when(this.stateAvailable.next()).thenReturn(stateBooked);
+		when(this.stateBooked.next()).thenReturn(stateOccupied);
+		when(this.stateOccupied.next()).thenReturn(stateAvailable);
 		when(this.pricer.price(this.checkIn)).thenReturn(pricePerDayWeekday);
 		when(this.pricer.priceBetween(this.checkIn, this.checkOut)).thenReturn(pricePerDayWeekday+pricePerDayHighSeason+pricePerDayLongWeekend);
 		when(this.property.getOwner()).thenReturn(this.owner);
@@ -151,19 +151,16 @@ public class BookingTest {
 	@Test
 	public void testSetState() {
 		assertNotNull(this.booking.getState());
-		this.booking.setState(this.stateApproved);
-		assertEquals(this.stateApproved, this.booking.getState());
+		this.booking.setState(this.stateBooked);
+		assertEquals(this.stateBooked, this.booking.getState());
 	}
 	
 	@Test
-	public void testFromAvailableToApproved() {
-//		this.booking.setState(this.stateAvailable);
+	public void testFromAvailableToBooked() {
 		assertEquals(this.stateAvailable, this.booking.getState());
-//		this.booking.setState(this.stateApproved);
-		IReserveState expectedState = this.stateAvailable.next();
-		assertEquals(expectedState, this.stateApproved);
+		assertEquals(this.stateBooked, this.stateAvailable.next());
 		this.booking.setState(this.booking.getState().next());
-		assertEquals(this.stateApproved, this.booking.getState());
+		assertEquals(this.stateBooked, this.booking.getState());
 	}
 
 	@Test

@@ -18,11 +18,11 @@ import sa.properties.Property;
 import sa.users.Owner;
 import sa.users.Tenant;
 
-class ReserveCompletedTest {
+class ReserveBookedTest {
 
-	private ReserveApproved		stateApproved;
+	private ReserveBooked		stateBooked;
 	private ReserveAvailable	stateAvailable;
-	private ReserveCompleted	stateCompleted;
+	private ReserveOccupied	stateOccupied;
 	private Booking				booking;
 	private Property			property;
 	private Tenant				tenant;
@@ -33,7 +33,7 @@ class ReserveCompletedTest {
 	void setUp() throws Exception {
 		// DOC (Depended-On-Component): nuestros doubles
 		this.stateAvailable	= mock(ReserveAvailable.class);
-		this.stateApproved	= mock(ReserveApproved.class);
+		this.stateOccupied	= mock(ReserveOccupied.class);
 		this.booking		= mock(Booking.class);
 		this.property		= mock(Property.class);
 		this.tenant			= mock(Tenant.class);
@@ -45,17 +45,17 @@ class ReserveCompletedTest {
 		
 		
 		// SUT (System Under Test): objeto a testear
-		this.stateCompleted = new ReserveCompleted(this.stateAvailable, this.stateApproved);
+		this.stateBooked = new ReserveBooked(this.stateOccupied, this.stateAvailable);
 	}
 
 	@Test
 	void testConstructor() {
-		assertNotNull(this.stateCompleted);
+		assertNotNull(this.stateBooked);
 	}
 
 	@Test
 	void testNext() {
-		assertEquals(this.stateAvailable, this.stateCompleted.next());
+		assertEquals(this.stateOccupied, this.stateBooked.next());
 	}
 	
 	@Test
@@ -63,7 +63,7 @@ class ReserveCompletedTest {
 		verifyNoInteractions(this.booking);
 		verifyNoInteractions(this.property);
 		verifyNoInteractions(this.owner);
-		this.stateCompleted.requestReserve(this.booking);
+		this.stateBooked.requestReserve(this.booking);
 		verifyNoInteractions(this.booking);
 		verifyNoInteractions(this.property);
 		verifyNoInteractions(this.owner);
@@ -74,7 +74,7 @@ class ReserveCompletedTest {
 		verifyNoInteractions(this.booking);
 		verifyNoInteractions(this.property);
 		verifyNoInteractions(this.owner);
-		this.stateCompleted.approveReserve(this.booking);
+		this.stateBooked.approveReserve(this.booking);
 		verifyNoInteractions(this.booking);
 		verifyNoInteractions(this.property);
 		verifyNoInteractions(this.owner);
@@ -85,7 +85,7 @@ class ReserveCompletedTest {
 		verifyNoInteractions(this.booking);
 		verifyNoInteractions(this.tenant);
 		verifyNoInteractions(this.owner);
-		this.stateCompleted.cancelReserve(this.booking);
+		this.stateBooked.cancelReserve(this.booking);
 		verify(this.booking, times(1)).getTenant();
 		verify(this.booking, times(1)).getProperty();
 		verify(this.booking, times(1)).triggerNextRequest();

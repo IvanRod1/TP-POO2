@@ -6,5 +6,5 @@ import java.util.List;
 import sa.booking.Booking;
 
 public interface IQuery {
-	 List<Booking> search(List<Booking> bookings);
+	 ArrayList<Booking> search(ArrayList<Booking> bookings);
 }

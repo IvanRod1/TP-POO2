@@ -172,7 +172,7 @@ public class AccomodationSiteTest {
 		
         accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods, pricePerDayWeekday, periods);
 		
-		assertEquals(accomodationSite.getBookings().size(), 1);
+		assertEquals(accomodationSite.getBookings().size(), 0);
 		
 		
 	}*/

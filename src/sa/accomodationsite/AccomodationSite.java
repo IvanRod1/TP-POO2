@@ -200,7 +200,7 @@ public class AccomodationSite {
 		 * */
 		
 		return this.bookingHistory(tenant).stream()
-								 		  .map(actualBooking -> actualBooking.getProperty().getCity())
+								 		  .map(actualBooking -> actualBooking.getCity())
 								 		  .collect(Collectors.toSet());
 		
 	}
@@ -249,6 +249,12 @@ public class AccomodationSite {
 	
 	public void addAllowedAmenities(AmenityType amenity) {
 		this.allowedAmenities.add(amenity);
+	}
+
+// ESTE METODO SOLO SE TENDRIA QUE USAR PARA EL SUT DEL ACCOMODATION SITE
+	public void addBooking(Booking b) {
+		this.bookings.add(b);
+		
 	}
 	
 

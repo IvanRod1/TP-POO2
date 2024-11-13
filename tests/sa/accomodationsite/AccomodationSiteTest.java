@@ -35,44 +35,55 @@ public class AccomodationSiteTest {
 	// setUp:
 	
 	Property property;
+	
 	Property invalidProperty;
-	PropertyType invalidType;
+		
 	LocalDate checkIn;
 	LocalDate checkOut;
+	
 	double pricePerDayWeekday;
 	double pricePerDayHighSeason;
 	double pricePerDayLongSeason;
 	
-
-	Tenant tenant;
-	Tenant tenant2;
+	Tenant ivan;
+	Tenant martin;
+	Tenant nacho;
 	
-	IReserveState state1;
-	IReserveState state2;
-	IReserveState state3;
+	IReserveState reserveAvailable;
+	IReserveState reserveBooked;
+	IReserveState reserveOccupied;
+	
 	List<Booking> bookings;
 	Set<String> cities;
 	
-	Booking bookingMock;
+	Booking bookingMock1;
+	Booking bookingMock2;
+	Booking bookingMock3;
 	
 	List<Booking> approvedBookings;
 	List<Booking> availableBookings;
+	
 	List<PaymentMethod> paymentsMethods;
-	PaymentMethod paymentMethod;
-	List<Period> periods;
+	
+	PaymentMethod cash;
+	
 	Period period;
-	PropertyType validType; 
+	List<Period> periods;
+	
+	 
 	
 	Administrator administrator;
+	
 	List<AmenityType> allowedAmenities;
 	List<AmenityType> invalidAmenities;
 	
-	AmenityType validAmenity1;
-	AmenityType validAmenity2;
+	AmenityType electricity;
+	AmenityType internet;
+	AmenityType TV;
 	
-	PropertyType propertyType1;
-	PropertyType propertyType2;
-	PropertyType propertyType3;
+	PropertyType house;
+	PropertyType depto;
+	PropertyType mansion;
 	
 	// SUT:
 	
@@ -84,108 +95,89 @@ public class AccomodationSiteTest {
 	public void setUp() throws Exception {
 		
 		// inicializacion de constructor de booking
+		accomodationSite = new AccomodationSite();
 		
 		property = mock(Property.class);
-		invalidProperty = mock(Property.class);
-		invalidType = mock(PropertyType.class);
-		
-		validType = mock(PropertyType.class);
-		checkIn = LocalDate.now().plusDays(1);
-		checkOut = mock(LocalDate.class);
-		
-		pricePerDayWeekday = 100.0;
-		pricePerDayHighSeason = 70.0;
-		pricePerDayLongSeason = 50.0;
-		
-		tenant = mock(Tenant.class);
-		tenant2 = mock(Tenant.class);
-		
-		state1 =  mock(ReserveAvailable.class);
-		state2 = mock(ReserveApproved.class);
-		state3 = mock(ReserveCompleted.class);
+	
+		checkIn = LocalDate.of(2024, 11, 10);
+		checkOut = LocalDate.of(2024, 11, 20);
 		
 		paymentsMethods = new ArrayList<PaymentMethod>();
-		paymentMethod = mock(PaymentMethod.class);
-		paymentsMethods.add(paymentMethod);
+		paymentsMethods.add(cash);
+		
+		pricePerDayWeekday = 1000.0;
 		
 		periods = new ArrayList<Period>();
 		period = mock(Period.class);
 		periods.add(period);
 		
-		bookingMock = mock(Booking.class);
+		house = mock(PropertyType.class);
+		depto = mock(PropertyType.class);
+		mansion = mock(PropertyType.class);
 		
-		// inicializacion de valores de referentes al accomodationSite
+		accomodationSite.addAllowedProperty(depto);
+		accomodationSite.addAllowedProperty(house);
 		
-		validAmenity1 = mock(AmenityType.class);
-		validAmenity2 = mock(AmenityType.class);
+		internet = mock(AmenityType.class);
+		electricity = mock(AmenityType.class);
+		TV = mock(AmenityType.class);
 		
-		propertyType1 = mock(PropertyType.class);
-		propertyType2 = mock(PropertyType.class);
-		propertyType3 = mock(PropertyType.class);
+		accomodationSite.addAllowedAmenities(internet);
+		accomodationSite.addAllowedAmenities(electricity);
 		
-		// SUT: accomodationSite
+		bookingMock1 = mock(Booking.class);
+		bookingMock2 = mock(Booking.class);
+		bookingMock3 = mock(Booking.class);
 		
-		accomodationSite = new AccomodationSite();
-		accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods,
-									   pricePerDayWeekday, periods); 
-		accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods,
-				   					   pricePerDayWeekday, periods); 
+		//CAMBIAR EL NOMBRE CUANDO MARTIN HAGA MERGE CON SU RAMA A MAIN
+		reserveAvailable = mock(ReserveAvailable.class);
+		reserveOccupied = mock(ReserveCompleted.class);
+		reserveBooked = mock(ReserveApproved.class);
 		
 		availableBookings = new ArrayList<Booking>();
-		availableBookings.add(accomodationSite.getBookings().getFirst());
 		
-		bookings = new ArrayList<Booking>();
-		bookings.add(accomodationSite.bookingHistory(tenant).get(0));
-		
-		approvedBookings = new ArrayList<Booking>();
-		approvedBookings.add(accomodationSite.getBookings().get(1));
-		
-		cities = new HashSet<String>();
-		cities.add(property.getCity());
-		
-		allowedAmenities = new ArrayList<AmenityType>();
-		invalidAmenities = new ArrayList<AmenityType>();
-		
-		allowedAmenities.add(validAmenity1);
-		invalidAmenities.add(validAmenity2);
-		
-		accomodationSite.addAllowedProperty(propertyType1);
-		accomodationSite.addAllowedProperty(propertyType2);
-		
-		accomodationSite.addAllowedAmenities(validAmenity1);
-		accomodationSite.addAllowedAmenities(validAmenity2);
-		
-		
-		
-		//administrator = spy(Administrator.class);
-		
-		
-		/**
-		 *  Asigno los mock Stubs acá arriba para que las variables no entren como null en el sut,
-			sino que se les asigne el valor esperado para testearlas, en este caso para que no entren al genericBooking como null, 
-			pero no directamente al SUT. NO BORRAR.
-		
-		*/
-		
-		when(property.getCity()).thenReturn("Buenos Aires");
-		when(invalidProperty.getPropertyType()).thenReturn(invalidType);
-		when(invalidType.type()).thenReturn("casa");
-		when(property.getPropertyType()).thenReturn(validType);
-		when(validType.type()).thenReturn("duplex");
-		
-		when(property.getAmenities()).thenReturn(allowedAmenities);
-		when(invalidProperty.getAmenities()).thenReturn(invalidAmenities);
-		
-		
-		
-		
-		
-		
+		ivan = mock(Tenant.class);
+		nacho = mock(Tenant.class);
+		martin = mock(Tenant.class);	
 		
 	}
 	
+	@Test
+	void createBookingTest() {
+		List<AmenityType> auxProperty = new ArrayList<AmenityType>();
+		auxProperty.add(electricity);
+		auxProperty.add(internet);
+		
+		when(property.getPropertyType()).thenReturn(house);
+		
+		when(property.getAmenities()).thenReturn(auxProperty);
+		
+		
+		accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods, pricePerDayWeekday, periods);
+		
+		assertEquals(accomodationSite.getBookings().size(), 1);
+		
+		
+	}
+/*	@Test
+	void createNonValidBookingTest() {
+		//ESTE METODO EXPLOTA POR EL HECHO DE LA EXCEPCION, VERIFICAR COMO SE PUEDE SOLUCIONAR
+		List<AmenityType> auxProperty = new ArrayList<AmenityType>();
+		auxProperty.add(electricity);
+		auxProperty.add(internet);
+		
+		when(property.getPropertyType()).thenReturn(mansion);
+		
+		when(property.getAmenities()).thenReturn(auxProperty);
+		
+        accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods, pricePerDayWeekday, periods);
+		
+		assertEquals(accomodationSite.getBookings().size(), 1);
+		
+		
+	}*/
 	// Verify:
-	/*
+	
 	@Test
 	void cantidadDeBookingsTest() {
 		
@@ -198,11 +190,11 @@ public class AccomodationSiteTest {
 		
 		
 		
-	//	assertEquals(accomodationSite.getBookings().size(), 2);
+		assertEquals(accomodationSite.getBookings().size(), 0);
 		
-	//}*/
-	
-	/*@Test
+	}
+
+	@Test
 	void getVacantPropertiesTest() {
 		
 		
@@ -210,56 +202,203 @@ public class AccomodationSiteTest {
 		//assertEquals(accomodationSite.getVacantProperties().size(), 0);
 		//accomodationSite.createBooking(property, checkIn, checkOut, pricePerDayWeekday, pricePerDayHighSeason, pricePerDayLongSeason, state1, tenant); 
 		
+		when(bookingMock1.getState()).thenReturn(reserveAvailable);
+		when(bookingMock2.getState()).thenReturn(reserveAvailable);
+		when(bookingMock3.getState()).thenReturn(reserveBooked);
+		
+		availableBookings.add(bookingMock1);
+		availableBookings.add(bookingMock2);
+		
+		accomodationSite.addBooking(bookingMock1);
+		accomodationSite.addBooking(bookingMock2);
+		accomodationSite.addBooking(bookingMock3);
+		
 		assertEquals(accomodationSite.getVacantProperties(), availableBookings);
 		
-		}*/
+		}
 		
-	/*@Test
+	@Test
 	void bookingHistoryTest() {
 		
-		assertEquals(accomodationSite.bookingHistory(tenant), bookings);
+		when(bookingMock1.getTenant()).thenReturn(ivan);
+		when(bookingMock2.getTenant()).thenReturn(nacho);
+		when(bookingMock3.getTenant()).thenReturn(nacho);
+		
+		accomodationSite.addBooking(bookingMock1);
+		accomodationSite.addBooking(bookingMock2);
+		accomodationSite.addBooking(bookingMock3);
+	
+		assertEquals(accomodationSite.bookingHistory(nacho).size(), 2);
+		assertEquals(accomodationSite.bookingHistory(ivan).size(), 1);
 	}
 	
 	@Test
 	void futureBookings() {
 		
-		assertEquals(accomodationSite.futureBookings(tenant), bookings);
-	}*/
+		accomodationSite.addBooking(bookingMock1);
+		accomodationSite.addBooking(bookingMock2);
+		accomodationSite.addBooking(bookingMock3);
+		
+		when(bookingMock1.getTenant()).thenReturn(ivan);
+		when(bookingMock2.getTenant()).thenReturn(nacho);
+		when(bookingMock3.getTenant()).thenReturn(nacho);
+		
+		when(bookingMock1.getCheckIn()).thenReturn(LocalDate.now().plusDays(15));
+		when(bookingMock2.getCheckIn()).thenReturn(LocalDate.now().minusMonths(2));
+		when(bookingMock3.getCheckIn()).thenReturn(LocalDate.now().plusMonths(4));
+		
+		assertEquals(accomodationSite.futureBookings(ivan).size(), 1);
+		assertEquals(accomodationSite.futureBookings(nacho).size(), 1);
+	}
 	
-	/*@Test
+	@Test
 	void allBookingsCities() {
 		
 		//assertEquals(accomodationSite.allBookingCities(tenant).size(), 1);
 		
-		assertEquals(accomodationSite.allBookingCities(tenant), cities);
-	}*/
-	
-	/*@Test
-	void getApprovedBookingsTest() {
-		assertEquals(accomodationSite.getApprovedBookings(), approvedBookings);
-	}*/
-	
-	
-	
-	/*@Test
-	void viewPropertyTest() {
+		accomodationSite.addBooking(bookingMock1);
+		accomodationSite.addBooking(bookingMock2);
+		accomodationSite.addBooking(bookingMock3);
 		
-		accomodationSite.viewProperty(bookingMock);
+		when(bookingMock1.getTenant()).thenReturn(nacho);
+		when(bookingMock2.getTenant()).thenReturn(nacho);
+		when(bookingMock3.getTenant()).thenReturn(nacho);
 		
-		verify(accomodationSite, times(1)).viewProperty(bookingMock);
-	}*/
-
+		when(bookingMock1.getCity()).thenReturn("Rosario");
+		when(bookingMock2.getCity()).thenReturn("Buenos Aires");
+		when(bookingMock3.getCity()).thenReturn("Cordoba");
+		
+		assertEquals(accomodationSite.allBookingCities(nacho).size(), 3);
+	}
+	
 	@Test
-	void createBookingTest() {
-	
-		accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods, pricePerDayWeekday, periods);
+	void getApprovedBookingsTest() {
 		
-		assertEquals(accomodationSite.getBookings().size(), 1);
+
+		accomodationSite.addBooking(bookingMock1);
+		accomodationSite.addBooking(bookingMock2);
+		accomodationSite.addBooking(bookingMock3);
 		
+		when(bookingMock1.getState()).thenReturn(reserveAvailable);
+		when(bookingMock2.getState()).thenReturn(reserveAvailable);
+		when(bookingMock3.getState()).thenReturn(reserveBooked);
+		
+		assertEquals(accomodationSite.getApprovedBookings().size(),1);
 		
 	}
+	
+	
+	
+	@Test
+	void viewPropertyTest() {
+		
+		accomodationSite.addBooking(bookingMock1);
+		
+		when(bookingMock1.getProperty()).thenReturn(property);
+		
+		accomodationSite.viewProperty(bookingMock1);
+		
+		verify(property).summary();
+		
+		//verify(accomodationSite, times(1)).viewProperty(bookingMock1);
+	}
+
+	
 }
 
+/*
+//CODIGO DE NACHO 
+
+property = mock(Property.class);
+invalidProperty = mock(Property.class);
+invalidType = mock(PropertyType.class);
+
+validType = mock(PropertyType.class);
+checkIn = LocalDate.now().plusDays(1);
+checkOut = mock(LocalDate.class);
+
+pricePerDayWeekday = 100.0;
+pricePerDayHighSeason = 70.0;
+pricePerDayLongSeason = 50.0;
+
+tenant = mock(Tenant.class);
+tenant2 = mock(Tenant.class);
+
+state1 =  mock(ReserveAvailable.class);
+state2 = mock(ReserveApproved.class);
+state3 = mock(ReserveCompleted.class);
+
+paymentsMethods = new ArrayList<PaymentMethod>();
+cash = mock(PaymentMethod.class);
+paymentsMethods.add(cash);
+
+periods = new ArrayList<Period>();
+period = mock(Period.class);
+periods.add(period);
+
+bookingMock = mock(Booking.class);
+
+// inicializacion de valores de referentes al accomodationSite
+
+validAmenity1 = mock(AmenityType.class);
+validAmenity2 = mock(AmenityType.class);
+
+propertyType1 = mock(PropertyType.class);
+propertyType2 = mock(PropertyType.class);
+propertyType3 = mock(PropertyType.class);
+
+// SUT: accomodationSite
+
+accomodationSite = new AccomodationSite();
+/*accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods,
+							   pricePerDayWeekday, periods); 
+accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods,
+		   					   pricePerDayWeekday, periods); */
+/*
+availableBookings = new ArrayList<Booking>();
+availableBookings.add(accomodationSite.getBookings().getFirst());
+
+bookings = new ArrayList<Booking>();
+bookings.add(accomodationSite.bookingHistory(tenant).get(0));
+
+approvedBookings = new ArrayList<Booking>();
+approvedBookings.add(accomodationSite.getBookings().get(1));
+
+cities = new HashSet<String>();
+cities.add(property.getCity());
+
+allowedAmenities = new ArrayList<AmenityType>();
+invalidAmenities = new ArrayList<AmenityType>();
+
+allowedAmenities.add(validAmenity1);
+invalidAmenities.add(validAmenity2);
+
+accomodationSite.addAllowedProperty(propertyType1);
+accomodationSite.addAllowedProperty(propertyType2);
+
+accomodationSite.addAllowedAmenities(validAmenity1);
+accomodationSite.addAllowedAmenities(validAmenity2);
+
+
+
+//administrator = spy(Administrator.class);
+
+
+/**
+ *  Asigno los mock Stubs acá arriba para que las variables no entren como null en el sut,
+	sino que se les asigne el valor esperado para testearlas, en este caso para que no entren al genericBooking como null, 
+	pero no directamente al SUT. NO BORRAR.
+
+*/
+
+/*when(property.getCity()).thenReturn("Buenos Aires");
+when(invalidProperty.getPropertyType()).thenReturn(invalidType);
+when(invalidType.type()).thenReturn("casa");
+when(property.getPropertyType()).thenReturn(validType);
+when(validType.type()).thenReturn("duplex");
+
+when(property.getAmenities()).thenReturn(allowedAmenities);
+when(invalidProperty.getAmenities()).thenReturn(invalidAmenities);*/
 
 
 

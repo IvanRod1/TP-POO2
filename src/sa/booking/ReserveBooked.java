@@ -30,7 +30,7 @@ public class ReserveBooked implements IReserveState {
 	@Override
 	public void requestReserve(Booking b, BookedPeriod bp) {
 		b.setState(this);
-		b.getProperty().getOwner().reserveRequestedOn(b, bp); // Se le avisa al propietario que decida 
+		b.getProperty().getOwner().reserveRequestedOn(b, bp); // Se le avisa al propietario que decida para el bookedperiod actual
 	}
 
 	@Override
@@ -46,11 +46,12 @@ public class ReserveBooked implements IReserveState {
 		// TODO Auto-generated method stub
 		// La cancelación es asentada en el sistema y se envía un mail al dueño del inmueble informándole sobre
 		// el hecho. Debe ser posible enviar por email alguna de las reservas realizadas.
+		b.setState(this.previous);
+		b.setTenant(null);
 		bp.tenant().reserveCancelled(b, bp); // TODO borrar porque lo hace el sistema
 		b.getProperty().getOwner().reserveCancelled(b, bp); // TODO borrar porque lo hace el sistema
-		b.setTenant(null);
 		b.notifySubscribersCancelled(b, bp);  // el sistema (que ES un observer) debe registrar la cancelación y puede avisarle al propietario y al Tenant
-		b.setState(this.previous);
+		b.applyPolicy(bp);
 		b.triggerNextRequest();
 	}
 

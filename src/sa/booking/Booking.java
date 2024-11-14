@@ -97,9 +97,9 @@ public class Booking implements INotifyConfiguration {
 		return this.policy;
 	}
 
-	public void applyPolicy() {
+	public void applyPolicy(BookedPeriod bp) {
 		// TODO Auto-generated method stub
-		this.policy.activate();
+		this.policy.activate(LocalDate.now(), this, bp);
 	}
 
 	public void setBasePrice(double newPrice) {
@@ -242,7 +242,11 @@ public class Booking implements INotifyConfiguration {
 		this.triggerNextRequest();
 	}
 
-	public void cancelConditionalReserve(BookedPeriod bp) {}  // BookedPeriod en agenda
+	public void cancelConditionalReserve(BookedPeriod bp) {
+		this.schedule.remove(bp);
+		this.notifySubscribersCancelled(this, bp);
+		this.applyPolicy(bp);
+	}  // BookedPeriod en agenda
 
 	// Private methods
 	private boolean hasAHoldingTenant() {

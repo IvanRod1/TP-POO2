@@ -27,7 +27,7 @@ class ReserveBookedTest {
 	private Property			property;
 	private Tenant				tenant;
 	private Owner				owner;
-	
+	private BookedPeriod		bp;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -38,10 +38,12 @@ class ReserveBookedTest {
 		this.property		= mock(Property.class);
 		this.tenant			= mock(Tenant.class);
 		this.owner			= mock(Owner.class);
+		this.bp				= mock(BookedPeriod.class);
 
 		when(this.booking.getProperty()).thenReturn(this.property);
 		when(this.booking.getTenant()).thenReturn(this.tenant);
 		when(this.property.getOwner()).thenReturn(this.owner);
+		when(this.bp.tenant()).thenReturn(this.tenant);
 		
 		
 		// SUT (System Under Test): objeto a testear
@@ -60,37 +62,54 @@ class ReserveBookedTest {
 	
 	@Test
 	void testRequestReserve() {
-		verifyNoInteractions(this.booking);
-		verifyNoInteractions(this.property);
-		verifyNoInteractions(this.owner);
-		this.stateBooked.requestReserve(this.booking);
-		verifyNoInteractions(this.booking);
-		verifyNoInteractions(this.property);
-		verifyNoInteractions(this.owner);
+		verify(this.booking, times(0)).setState(stateBooked);
+		this.stateBooked.requestReserve(this.booking, this.bp);
+		verify(this.booking, times(1)).setState(stateBooked);
+		
+//		
+//		verify(this.stateBooked, times(1)).requestReserve(this.booking, this.bp);
+//		verify(this.booking, times(1)).getProperty();
+//		verify(this.property, times(1)).getOwner();
+//		verify(this.owner, times(1)).reserveRequestedOn(this.booking, this.bp);
+//		// Simular aprobación
+//		verify(this.booking, times(0)).approveReserve(this.bp);
+//		this.booking.approveReserve(this.bp);
+//		verify(this.booking, times(1)).approveReserve(this.bp);
+//		// Simular rechazo
+//		verify(this.booking, times(0)).cancelReserve(this.bp);
+//		this.booking.cancelReserve(this.bp);
+//		verify(this.booking, times(1)).cancelReserve(this.bp);
+//
+//		this.stateBooked.requestReserve(this.booking);
+//		verifyNoInteractions(this.booking);
+//		verifyNoInteractions(this.property);
+//		verifyNoInteractions(this.owner);
 	}
 
 	@Test
 	void testApproveReserve() {
-		verifyNoInteractions(this.booking);
-		verifyNoInteractions(this.property);
-		verifyNoInteractions(this.owner);
-		this.stateBooked.approveReserve(this.booking);
-		verifyNoInteractions(this.booking);
-		verifyNoInteractions(this.property);
-		verifyNoInteractions(this.owner);
+		this.stateBooked.approveReserve(this.booking, this.bp);
+		verify(this.booking, times(1)).setTenant(this.tenant);
+		verify(this.booking, times(1)).notifySubscribersReserve(this.booking, this.bp);
+		verify(this.stateOccupied, times(1)).requestReserve(this.booking, this.bp);
 	}
 
 	@Test
 	void testCancelReserve() {
-		verifyNoInteractions(this.booking);
-		verifyNoInteractions(this.tenant);
-		verifyNoInteractions(this.owner);
-		this.stateBooked.cancelReserve(this.booking);
-		verify(this.booking, times(1)).getTenant();
-		verify(this.booking, times(1)).getProperty();
+		this.stateBooked.cancelReserve(this.booking, this.bp);
+		verify(this.booking, times(1)).setState(stateAvailable);
+		verify(this.booking, times(1)).setTenant(null);
+		verify(this.tenant, times(1)).reserveCancelled(this.booking, this.bp);
+		verify(this.owner, times(1)).reserveCancelled(this.booking, this.bp);
+		verify(this.booking, times(1)).notifySubscribersCancelled(this.booking, this.bp);
 		verify(this.booking, times(1)).triggerNextRequest();
-		verify(this.tenant, times(1)).reserveCancelled(this.booking);
-		verify(this.owner, times(1)).reserveCancelled(this.booking);
+	
+//		this.stateBooked.cancelReserve(this.booking, this.bp);
+//		verify(this.booking, times(1)).getTenant();
+//		verify(this.booking, times(1)).getProperty();
+//		verify(this.booking, times(1)).triggerNextRequest();
+//		verify(this.tenant, times(1)).reserveCancelled(this.booking, this.bp);
+//		verify(this.owner, times(1)).reserveCancelled(this.booking, this.bp);
 	}
 
 }

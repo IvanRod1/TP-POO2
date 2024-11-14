@@ -268,8 +268,8 @@ public class BookingTest {
 	public void testApplyPolicy() {
 		assertNotNull(this.booking.getPolicy());
 		verifyNoInteractions(this.policy);
-		this.booking.applyPolicy();
-		verify(this.policy, times(1)).activate();
+		this.booking.applyPolicy(this.bookedperiod1);
+		verify(this.policy).activate(checkIn, booking, bookedperiod1);
 	}
 
 	@Test
@@ -423,4 +423,5 @@ public class BookingTest {
 		this.booking.notifySubscribersReserve(this.booking, this.bookedperiod1);
 		verify(this.subscriber4, times(1)).update(this.booking, this.bookedperiod1);
 	}
+
 }

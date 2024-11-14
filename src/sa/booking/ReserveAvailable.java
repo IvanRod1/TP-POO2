@@ -24,7 +24,7 @@ public class ReserveAvailable implements IReserveState {
 		// TODO Auto-generated method stub
 		return this.next;
 	}
-	
+
 	@Override
 	public void requestReserve(Booking b, BookedPeriod bp) {
 		// TODO Auto-generated method stub

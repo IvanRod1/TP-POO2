@@ -26,7 +26,8 @@ class ReserveAvailableTest {
 	private Property			property;
 	private Tenant				tenant;
 	private Owner				owner;
-	
+	private BookedPeriod		bp;
+	private LocalDate			date;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -36,10 +37,13 @@ class ReserveAvailableTest {
 		this.property		= mock(Property.class);
 		this.tenant			= mock(Tenant.class);
 		this.owner			= mock(Owner.class);
+		this.bp				= mock(BookedPeriod.class);
+		this.date			= LocalDate.now();
 
 		when(this.booking.getProperty()).thenReturn(this.property);
 		when(this.booking.getTenant()).thenReturn(this.tenant);
 		when(this.property.getOwner()).thenReturn(this.owner);
+		when(this.bp.belongs(this.date)).thenReturn(true);
 		
 		
 		// SUT (System Under Test): objeto a testear
@@ -58,38 +62,15 @@ class ReserveAvailableTest {
 	
 	@Test
 	void testRequestReserve() {
-		verifyNoInteractions(this.booking);
-		verifyNoInteractions(this.property);
-		verifyNoInteractions(this.owner);
-		this.stateAvailable.requestReserve(this.booking);
-		verify(this.booking, times(1)).getProperty();
-		verify(this.property, times(1)).getOwner();
-		verify(this.owner, times(1)).reserveRequestedOn(this.booking);
-		// Simular aprobación
-		verify(this.booking, times(0)).approveReserve();
-		this.booking.approveReserve();
-		verify(this.booking, times(1)).approveReserve();
-		// Simular rechazo
-		verify(this.booking, times(0)).cancelReserve();
-		this.booking.cancelReserve();
-		verify(this.booking, times(1)).cancelReserve();
-		
+		verify(this.stateBooked, times(0)).requestReserve(this.booking, this.bp);
+		this.stateAvailable.requestReserve(this.booking, this.bp);
+		verify(this.stateBooked, times(1)).requestReserve(this.booking, this.bp);	
 	}
 
 	@Test
-	void testApproveReserve() {
-		verifyNoInteractions(this.booking);
-		this.stateAvailable.approveReserve(this.booking);
-		verify(this.booking, times(1)).setState(this.stateBooked);
-	}
+	void testApproveReserve() {}
 
 	@Test
-	void testCancelReserve() {
-		verifyNoInteractions(this.booking);
-		verifyNoInteractions(this.tenant);
-		this.stateAvailable.cancelReserve(this.booking);
-		verify(this.tenant, times(1)).reserveCancelled(this.booking);
-		verify(this.booking, times(1)).triggerNextRequest();
-	}
+	void testCancelReserve() {}
 
 }

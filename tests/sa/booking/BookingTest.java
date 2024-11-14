@@ -1,6 +1,7 @@
 package sa.booking;
 
 import static org.junit.Assert.assertFalse;
+
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -25,7 +26,7 @@ import sa.policies.CostFree;
 import sa.policies.ICancellationPolicy;
 import sa.policies.NoCancellation;
 import sa.properties.Property;
-import sa.subscriptions.INotifyObserver;
+import sa.observer.interfaces.INotifyObserver;
 import sa.users.Owner;
 //import sa.users.Owner;
 import sa.users.Tenant;

@@ -1,21 +1,17 @@
 package sa.booking;
-
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
-
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
-import sa.payments.PaymentMethod;
-import sa.policies.CostFree;
-import sa.policies.ICancellationPolicy;
+import sa.booking.PaymentMethod;
+import sa.cancellation.CostFree;
+import sa.cancellation.ICancellationPolicy;
 import sa.properties.Property;
-import sa.subscriptions.INotifyObserver;
+//import sa.subscriptions.INotifyObserver;
+import sa.observer.interfaces.INotifyObserver;
 import sa.users.Tenant;
 
 

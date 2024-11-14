@@ -3,9 +3,38 @@ package sa.users;
 import sa.booking.BookedPeriod;
 import sa.booking.Booking;
 
-public class Owner extends User {
+import java.util.ArrayList;
+import java.util.List;
 
-	private Booking	currentRequest;
+import sa.properties.Property;
+
+public class Owner extends User {
+	
+	private List<Property> properties;
+	private Booking	currentRequest = null;
+	
+	public Owner(String fullName, int telephone, String mail) {
+	
+		super(fullName, telephone, mail);
+		
+		this.properties = new ArrayList<Property>();
+	}
+	
+
+	@Override
+	public void summary() {
+		// TODO Auto-generated method stub
+		/**
+		 * aca tambien queda vacío
+		 */
+		
+	}
+
+	@Override
+	public void reserveCancelled(Booking b, BookedPeriod bp) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	public void reserveRequestedOn(Booking b, BookedPeriod bp) {
 		// TODO Auto-generated method stub
@@ -14,9 +43,4 @@ public class Owner extends User {
 		bp.tenant().summary();
 	}
 
-	@Override
-	public void reserveCancelled(Booking b, BookedPeriod bp) {
-		// TODO Auto-generated method stub
-		
-	}
 }

@@ -36,7 +36,8 @@ public class ReserveBooked implements IReserveState {
 	@Override
 	public void approveReserve(Booking b, BookedPeriod bp) {
 		// Hay que notificar que se acaba de reservar en un periodo cualquiera
-		b.nofifySubscribersReserve(b, bp); // Avisa que se efectivizó la ReserveBooked
+		b.setTenant(bp.tenant());
+		b.notifySubscribersReserve(b, bp); // Avisa que se efectivizó la ReserveBooked
 		this.next.requestReserve(b, bp);
 	}
 
@@ -47,7 +48,8 @@ public class ReserveBooked implements IReserveState {
 		// el hecho. Debe ser posible enviar por email alguna de las reservas realizadas.
 		bp.tenant().reserveCancelled(b, bp); // TODO borrar porque lo hace el sistema
 		b.getProperty().getOwner().reserveCancelled(b, bp); // TODO borrar porque lo hace el sistema
-		b.nofifySubscribersCancelled(b, bp);  // el sistema (que ES un observer) debe registrar la cancelación y puede avisarle al propietario y al Tenant
+		b.setTenant(null);
+		b.notifySubscribersCancelled(b, bp);  // el sistema (que ES un observer) debe registrar la cancelación y puede avisarle al propietario y al Tenant
 		b.setState(this.previous);
 		b.triggerNextRequest();
 	}

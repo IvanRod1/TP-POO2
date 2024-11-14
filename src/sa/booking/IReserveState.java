@@ -4,8 +4,8 @@ package sa.booking;
 public interface IReserveState {
 
 	public IReserveState next();
-	public void approveReserve(Booking b);
-	public void cancelReserve(Booking b);
-	public void requestReserve(Booking b);
+	public void approveReserve(Booking b, BookedPeriod bp);
+	public void cancelReserve(Booking b, BookedPeriod bp);
+	public void requestReserve(Booking b, BookedPeriod bp);
 
 }

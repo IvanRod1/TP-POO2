@@ -37,7 +37,7 @@ public class ReserveOccupied implements IReserveState {
 		// el hecho. Debe ser posible enviar por email alguna de las reservas realizadas.
 		bp.tenant().reserveCancelled(b, bp);// TODO borrar porque lo hace el sistema
 		b.getProperty().getOwner().reserveCancelled(b, bp);// TODO borrar porque lo hace el sistema
-		b.nofifySubscribersCancelled(b, bp);  // el sistema (que ES un observer) debe registrar la cancelación y puede avisarle al propietario y al Tenant
+		b.notifySubscribersCancelled(b, bp);  // el sistema (que ES un observer) debe registrar la cancelación y puede avisarle al propietario y al Tenant
 		b.setState(this.next());
 		b.triggerNextRequest();
 	}

@@ -63,7 +63,7 @@ class ReserveOccupiedTest {
 		verifyNoInteractions(this.booking);
 		verifyNoInteractions(this.property);
 		verifyNoInteractions(this.owner);
-		this.stateOccupied.requestReserve(this.booking);
+		this.stateOccupied.requestReserve(this.booking, bp);
 		verifyNoInteractions(this.booking);
 		verifyNoInteractions(this.property);
 		verifyNoInteractions(this.owner);
@@ -74,7 +74,7 @@ class ReserveOccupiedTest {
 		verifyNoInteractions(this.booking);
 		verifyNoInteractions(this.property);
 		verifyNoInteractions(this.owner);
-		this.stateOccupied.approveReserve(this.booking);
+		this.stateOccupied.approveReserve(this.booking, bp);
 		verifyNoInteractions(this.booking);
 		verifyNoInteractions(this.property);
 		verifyNoInteractions(this.owner);
@@ -85,7 +85,7 @@ class ReserveOccupiedTest {
 		verifyNoInteractions(this.booking);
 		verifyNoInteractions(this.tenant);
 		verifyNoInteractions(this.owner);
-		this.stateOccupied.cancelReserve(this.booking);
+		this.stateOccupied.cancelReserve(this.booking, bp);
 		verify(this.booking, times(1)).getTenant();
 		verify(this.booking, times(1)).getProperty();
 		verify(this.booking, times(1)).triggerNextRequest();

@@ -3,9 +3,12 @@ package sa.booking;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import sa.payments.PaymentMethod;
 
 public class Pricer {
 	
@@ -16,6 +19,11 @@ public class Pricer {
 		// TODO Auto-generated constructor stub
 		this.basePrice = pricePerDayWeekday;
 		this.specialPeriods = periods;
+	}
+
+	public List<SpecialPeriod> getSPeriods() {
+		// TODO Auto-generated method stub
+		return this.specialPeriods;
 	}
 
 	public void addSpecialPeriod(SpecialPeriod p) {
@@ -52,4 +60,8 @@ public class Pricer {
 		this.specialPeriods.remove(p);
 	}
 
+	public double getBasePrice() {
+		// TODO Auto-generated method stub
+		return this.basePrice;
+	}
 }

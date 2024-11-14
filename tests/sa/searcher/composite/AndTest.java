@@ -97,6 +97,7 @@ class AndTest {
 		
 
 		And filter = new And(mock1,mock2);
+		assertNotNull(filter);
 	}
 	
 	@Test

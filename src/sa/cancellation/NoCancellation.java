@@ -12,7 +12,7 @@ public class NoCancellation implements ICancellationPolicy{
 		/*
 		 * El metodo activate indica por pantalla la cantidad de dinero que tiene que pagar el inquilino
 		 * */
-		System.out.println("Se ha procesado la cancelación, tiene que abonar $"+booking.priceBetween(periodCancelled.getCheckIn(),periodCancelled.getCheckOut())+" Pesos");
+		System.out.println("Se ha procesado la cancelación, tiene que abonar $"+booking.priceBetween(periodCancelled.start(),periodCancelled.end())+" Pesos");
 		
 	}
 

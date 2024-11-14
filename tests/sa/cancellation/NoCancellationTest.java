@@ -31,7 +31,7 @@ class NoCancellationTest {
 		bookingTest = mock(Booking.class);
 		bookedPeriodMock = mock(BookedPeriod.class);
 		
-		when(bookedPeriodMock.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 24));
+		when(bookedPeriodMock.start()).thenReturn(LocalDate.of(2024, 11, 24));
 		when(bookingTest.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 24));
 		when(bookingTest.price(bookingTest.getCheckIn())).thenReturn((double) 120000);
 	}

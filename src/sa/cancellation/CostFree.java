@@ -18,10 +18,10 @@ public class CostFree implements ICancellationPolicy{
 		 * 
 		 * 
 		 * */
-		if(cancellationDate.isBefore(periodCancelled.getCheckIn().minusDays(10))) {
+		if(cancellationDate.isBefore(periodCancelled.start().minusDays(10))) {
 			System.out.println("No pagas nada");
 		}else {
-			System.out.println("Solo pagas el equivalente a dos dias de alquiler $:"+ booking.price(periodCancelled.getCheckIn()) * 2 );
+			System.out.println("Solo pagas el equivalente a dos dias de alquiler $:"+ booking.price(periodCancelled.start()) * 2 );
 		}
 		
 		

@@ -14,19 +14,23 @@ import org.mockito.Mockito;
 
 import sa.booking.BookedPeriod;
 import sa.booking.Booking;
+import sa.properties.Property;
 
 class CostFreeTest {
 
 	private CostFree costfree;
 	private Booking bookingTest;
+	private Property property;
 	private BookedPeriod bookedPeriodMock;
 	@BeforeEach
 	void setUp() throws Exception {
 		costfree = new CostFree();
 		bookingTest = mock(Booking.class);
+		property = mock(Property.class);
 		bookedPeriodMock = mock(BookedPeriod.class);
 		
-		when(bookedPeriodMock.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 15));
+		when(this.bookingTest.getProperty()).thenReturn(property);
+		when(bookedPeriodMock.start()).thenReturn(LocalDate.of(2024, 11, 15));
 		//when(bookingTest.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 15));
 		when(bookingTest.price(bookingTest.getCheckIn())).thenReturn((double) 9000);
 		

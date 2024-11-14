@@ -104,4 +104,9 @@ class PricerTest {
 		this.pricer.setBasePrice(this.basePrice+10);
 		assertEquals(this.basePrice+10, this.pricer.price(this.period1.start().minusDays(1)));
 	}
+
+	@Test
+	void testGetBasePrice() {
+		assertEquals(this.basePrice, this.pricer.getBasePrice());
+	}
 }

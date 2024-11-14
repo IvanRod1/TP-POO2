@@ -24,7 +24,7 @@ public class Property implements Rankeable {
 	private List<Review> reviews;
 	
 	
-	public Property(double area, String country, String city, String address, int maxGuests, String description, int maxPicture,
+	public Property(double area, String country, String city, String address, int maxGuests, String description, List<AmenityType> amenities, int maxPicture,
 				   PropertyType type, Owner owner) {
 		this.area = area;
 		this.country = country;
@@ -35,13 +35,32 @@ public class Property implements Rankeable {
 		this.maxPicture = maxPicture;
 		this.type = type;
 		this.owner = owner;
-		this.amenities = new ArrayList<AmenityType>();
+		this.amenities = amenities;
 		this.bookedDays = new ArrayList<LocalDate>();
 		this.pictures = new ArrayList<Picture>();
 		this.reviews = new ArrayList<Review>();
 		
 	}
 
+	// Para hacer DOC
+	public Property(double area, String country, String city, String address, int maxGuests, String description, List<AmenityType> amenities, int maxPicture,
+			   PropertyType type, Owner owner, List<LocalDate> bookedDays, List<Picture> pictures, List<Review> reviews) {
+	this.area = area;
+	this.country = country;
+	this.city = city;
+	this.address = address;
+	this.maxGuests = maxGuests;
+	this.description = description;
+	this.maxPicture = maxPicture;
+	this.type = type;
+	this.owner = owner;
+	this.amenities = amenities;
+	this.bookedDays = bookedDays;
+	this.pictures = pictures;
+	this.reviews = reviews;
+	
+}
+	
 	public void summary() {
 		
 		// TODO Auto-generated method stub
@@ -49,19 +68,19 @@ public class Property implements Rankeable {
 		 * imprimir en pantalla cada atributo de property, con un sout para cada uno o buscar una manera para imprimir todos, en cualquier formato
 		 * */
 		System.out.println("Property Summary:");
-	    System.out.println("Area: " + this.area);
-	    System.out.println("Country: " + this.country);
-	    System.out.println("City: " + this.city);
-	    System.out.println("Address: " + this.address);
-	    System.out.println("Max Guests: " + this.maxGuests);
-	    System.out.println("Description: " + this.description);
-	    System.out.println("Max Pictures: " + this.maxPicture);
-	    System.out.println("Type: " + this.type);
-	    System.out.println("Owner: " + this.owner);
-	    System.out.println("Amenities: " + this.amenities);
-	    System.out.println("Booked Days: " + this.bookedDays);
-	    System.out.println("Pictures: " + this.pictures);
-	    System.out.println("Reviews: " + this.reviews);
+//	    System.out.println("Area: " + this.area);
+//	    System.out.println("Country: " + this.country);
+//	    System.out.println("City: " + this.city);
+//	    System.out.println("Address: " + this.address);
+//	    System.out.println("Max Guests: " + this.maxGuests);
+//	    System.out.println("Description: " + this.description);
+//	    System.out.println("Max Pictures: " + this.maxPicture);
+//	    System.out.println("Type: " + this.type);
+//	    System.out.println("Owner: " + this.owner);
+//	    System.out.println("Amenities: " + this.amenities);
+//	    System.out.println("Booked Days: " + this.bookedDays);
+//	    System.out.println("Pictures: " + this.pictures);
+//	    System.out.println("Reviews: " + this.reviews);
 		
 		
 	}

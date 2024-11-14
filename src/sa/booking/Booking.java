@@ -1,4 +1,5 @@
 package sa.booking;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,13 +7,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import sa.booking.PaymentMethod;
+
 import sa.cancellation.CostFree;
 import sa.cancellation.ICancellationPolicy;
 import sa.properties.Property;
-//import sa.subscriptions.INotifyObserver;
 import sa.observer.interfaces.INotifyObserver;
 import sa.users.Tenant;
+
 
 
 public class Booking implements INotifyConfiguration {
@@ -41,10 +42,10 @@ public class Booking implements INotifyConfiguration {
 		// TODO Auto-generated constructor stub
 		this.state 				= new ReserveAvailable();
 		this.pricer		 		= new Pricer(pricePerDayWeekday, periods);
-		this.policy				= (ICancellationPolicy) new CostFree();
+		this.policy				= new CostFree();
 		this.paymentMethods		= paymentMethods;
-		this.checkIn			= checkIn;
-		this.checkOut			= checkOut;
+		this.setCheckIn(checkIn);
+		this.setCheckOut(checkOut);
 		this.property			= property;
 		this.obsBasePrice		= new ArrayList<INotifyObserver>();
 		this.obsSP 				= new HashMap<LocalDate, Set<INotifyObserver>>();
@@ -67,8 +68,8 @@ public class Booking implements INotifyConfiguration {
 		periods.stream().forEach(p -> this.pricer.addSpecialPeriod(p));
 		this.policy			= policy;
 		this.paymentMethods	= paymentMethods;
-		this.checkIn		= checkIn;
-		this.checkOut		= checkOut;
+		this.setCheckIn(checkIn);
+		this.setCheckOut(checkOut);
 		this.property		= property;
 		this.obsSP 			= obsSP;
 		this.obsBP 			= obsBP;
@@ -301,6 +302,22 @@ public class Booking implements INotifyConfiguration {
 	void setTenant(Tenant t) {
 		// TODO Auto-generated method stub
 		this.tenant = t;
+	}
+
+	public LocalDate getCheckOut() {
+		return checkOut;
+	}
+
+	public void setCheckOut(LocalDate checkOut) {
+		this.checkOut = checkOut;
+	}
+
+	public LocalDate getCheckIn() {
+		return checkIn;
+	}
+
+	public void setCheckIn(LocalDate checkIn) {
+		this.checkIn = checkIn;
 	}
 
 }

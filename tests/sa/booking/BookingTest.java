@@ -21,14 +21,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import sa.payments.PaymentMethod;
-import sa.policies.CostFree;
-import sa.policies.ICancellationPolicy;
-import sa.policies.NoCancellation;
+import sa.booking.PaymentMethod;
+import sa.cancellation.CostFree;
+import sa.cancellation.ICancellationPolicy;
+import sa.cancellation.NoCancellation;
 import sa.properties.Property;
 import sa.observer.interfaces.INotifyObserver;
 import sa.users.Owner;
-//import sa.users.Owner;
 import sa.users.Tenant;
 
 

@@ -27,7 +27,7 @@ public class City extends SimpleQuery {
 		
 		ArrayList<Booking> aux = new ArrayList<Booking>();
 		for(int i=0;i < bookings.size();i++) {
-			if(bookings.get(i).getCity() == this.getCity()) {
+			if(bookings.get(i).getProperty().getCity() == this.getCity()) {
 	
 				aux.add(bookings.get(i));
 			}

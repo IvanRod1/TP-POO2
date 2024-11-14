@@ -12,23 +12,26 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import sa.booking.Booking;
+import sa.properties.Property;
 import sa.searcher.simpleQuery.City;
 
 class CityTest {
 	
 	private City filterCity;
 	private Booking bookingTest;
-	
+	private Property property;
 	private ArrayList<Booking> aux;
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		filterCity = new City("Ciudad");
 		bookingTest = mock(Booking.class);
+		property = mock(Property.class);
 		
 		aux = new ArrayList<Booking>();
 		
-		when(bookingTest.getCity()).thenReturn("Varela");
+		when(this.bookingTest.getProperty()).thenReturn(property);
+		when(property.getCity()).thenReturn("Varela");
 		aux.add(bookingTest);
 		
 	}

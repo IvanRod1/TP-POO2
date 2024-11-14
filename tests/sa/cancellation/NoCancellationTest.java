@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import sa.booking.BookedPeriod;
 import sa.booking.Booking;
 
 class NoCancellationTest {
@@ -19,6 +20,8 @@ class NoCancellationTest {
 	private NoCancellation noCancellation;
 	
 	private Booking bookingTest;
+	private BookedPeriod bookedPeriodMock;
+	
 	@BeforeEach
 	void setUp() throws Exception {
 		//SUT
@@ -26,6 +29,9 @@ class NoCancellationTest {
 		
 		//DOC
 		bookingTest = mock(Booking.class);
+		bookedPeriodMock = mock(BookedPeriod.class);
+		
+		when(bookedPeriodMock.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 24));
 		when(bookingTest.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 24));
 		when(bookingTest.price(bookingTest.getCheckIn())).thenReturn((double) 120000);
 	}
@@ -38,8 +44,8 @@ class NoCancellationTest {
 	@Test
 	void activateNoCancellation() {
 		NoCancellation spy = Mockito.spy(noCancellation);
-		spy.activate(LocalDate.now(),bookingTest);
-		verify(spy, atLeastOnce()).activate(LocalDate.now(), bookingTest);
+		spy.activate(LocalDate.now(),bookingTest,bookedPeriodMock);
+		verify(spy, atLeastOnce()).activate(LocalDate.now(), bookingTest,bookedPeriodMock);
 
 	}
 

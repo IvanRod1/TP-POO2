@@ -18,12 +18,12 @@ public class IntermediateCancellation implements ICancellationPolicy{
 		 * Y si no es ninguna de las 2, se paga todo 
 		 * */
 		
-		if(cancellationDate.plusDays(20).isBefore(periodCancelled.getCheckIn())) {
+		if(cancellationDate.plusDays(20).isBefore(periodCancelled.start())) {
 			System.out.println("No pagas nada");
-		}else if (cancellationDate.plusDays(10).isBefore(periodCancelled.getCheckIn())) {
-			System.out.println("Se paga la mitad "+booking.priceBetween(periodCancelled.getCheckIn(),periodCancelled.getCheckOut())/2);
+		}else if (cancellationDate.plusDays(10).isBefore(periodCancelled.start())) {
+			System.out.println("Se paga la mitad "+booking.priceBetween(periodCancelled.start(),periodCancelled.end())/2);
 		}else {
-			System.out.println("Se paga todo "+booking.priceBetween(periodCancelled.getCheckIn(),periodCancelled.getCheckOut()));
+			System.out.println("Se paga todo "+booking.priceBetween(periodCancelled.start(),periodCancelled.end()));
 
 		}
 		

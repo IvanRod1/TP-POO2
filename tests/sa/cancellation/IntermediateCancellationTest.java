@@ -29,7 +29,7 @@ class IntermediateCancellationTest {
 		checkInDate = LocalDate.of(2024, 11, 24);
 		bookedPeriodMock = mock(BookedPeriod.class);
 		
-		when(bookedPeriodMock.getCheckIn()).thenReturn(checkInDate);
+		when(bookedPeriodMock.start()).thenReturn(checkInDate);
 		when(bookingTest.getCheckIn()).thenReturn(checkInDate);
 		when(bookingTest.price(bookingTest.getCheckIn())).thenReturn((double) 123000);
 		

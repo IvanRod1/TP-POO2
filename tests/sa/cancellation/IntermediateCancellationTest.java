@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import sa.booking.BookedPeriod;
 import sa.booking.Booking;
 
 class IntermediateCancellationTest {
@@ -19,12 +20,16 @@ class IntermediateCancellationTest {
 	private IntermediateCancellation intermediateCancellation;
 	private Booking bookingTest;
 	private LocalDate checkInDate;
+	private BookedPeriod bookedPeriodMock;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		//DOCS
 		bookingTest = mock(Booking.class);
 		checkInDate = LocalDate.of(2024, 11, 24);
+		bookedPeriodMock = mock(BookedPeriod.class);
+		
+		when(bookedPeriodMock.getCheckIn()).thenReturn(checkInDate);
 		when(bookingTest.getCheckIn()).thenReturn(checkInDate);
 		when(bookingTest.price(bookingTest.getCheckIn())).thenReturn((double) 123000);
 		
@@ -41,8 +46,8 @@ class IntermediateCancellationTest {
 	void activateIntermediateCancellation22DaysBeforeTest() {
 		
 		IntermediateCancellation spy = Mockito.spy(intermediateCancellation);
-		spy.activate(checkInDate.minusDays(22),bookingTest);
-		verify(spy, atLeastOnce()).activate(checkInDate.minusDays(22), bookingTest);
+		spy.activate(checkInDate.minusDays(22),bookingTest,bookedPeriodMock);
+		verify(spy, atLeastOnce()).activate(checkInDate.minusDays(22), bookingTest,bookedPeriodMock);
 
 	}
 	
@@ -50,14 +55,14 @@ class IntermediateCancellationTest {
 	void activateIntermediateCancellation15DaysBeforeTest() {
 		
 		IntermediateCancellation spy = Mockito.spy(intermediateCancellation);
-		spy.activate(checkInDate.minusDays(15),bookingTest);
-		verify(spy, atLeastOnce()).activate(checkInDate.minusDays(15), bookingTest);
+		spy.activate(checkInDate.minusDays(15),bookingTest,bookedPeriodMock);
+		verify(spy, atLeastOnce()).activate(checkInDate.minusDays(15), bookingTest,bookedPeriodMock);
 	}
 	@Test
 	void activateIntermediateCancellation5DaysBeforeTest() {
 		IntermediateCancellation spy = Mockito.spy(intermediateCancellation);
-		spy.activate(checkInDate.minusDays(5),bookingTest);
-		verify(spy, atLeastOnce()).activate(checkInDate.minusDays(5), bookingTest);
+		spy.activate(checkInDate.minusDays(5),bookingTest,bookedPeriodMock);
+		verify(spy, atLeastOnce()).activate(checkInDate.minusDays(5), bookingTest,bookedPeriodMock);
 	}
 	
 

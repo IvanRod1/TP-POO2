@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
+import sa.properties.Property;
 import sa.searcher.composite.Or;
 import sa.searcher.simpleQuery.City;
 import sa.searcher.simpleQuery.IQuery;
@@ -31,6 +32,10 @@ class OrTest {
 	private Booking bookingTarget2;
 	private Booking bookingTarget3;
 	
+	private Property property1;
+	private Property property2;
+	private Property property3;
+
 	private ArrayList<Booking> aux;
 	
 	private City cityFilter;
@@ -47,9 +52,13 @@ class OrTest {
 		bookingTarget2 = mock(Booking.class);
 		bookingTarget3 = mock(Booking.class);
 		
-		when(bookingTarget1.getCity()).thenReturn("Cordoba");
-		when(bookingTarget2.getCity()).thenReturn("Santa Fe");
-		when(bookingTarget3.getCity()).thenReturn("Corrientes");
+		property1	= mock(Property.class);
+		property2	= mock(Property.class);
+		property3	= mock(Property.class);
+
+		when(property1.getCity()).thenReturn("Cordoba");
+		when(property2.getCity()).thenReturn("Santa Fe");
+		when(property3.getCity()).thenReturn("Corrientes");
 		
 		LocalDate fechaAux1 = LocalDate.of(2024, 10, 10);
 		LocalDate fechaAux2 = LocalDate.of(2024, 9, 12);
@@ -63,9 +72,9 @@ class OrTest {
 		when(bookingTarget2.price(bookingTarget2.getCheckIn())).thenReturn((double) 17000);
 		when(bookingTarget3.price(bookingTarget3.getCheckIn())).thenReturn((double) 20000);
 		
-		when(bookingTarget1.getMaxGuest()).thenReturn(5);
-		when(bookingTarget2.getMaxGuest()).thenReturn(4);
-		when(bookingTarget3.getMaxGuest()).thenReturn(10);
+		when(property1.getMaxGuests()).thenReturn(5);
+		when(property2.getMaxGuests()).thenReturn(4);
+		when(property3.getMaxGuests()).thenReturn(10);
 		
 		ArrayList<Booking> aux = new ArrayList<Booking>();
 		

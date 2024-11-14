@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
+import sa.properties.Property;
 import sa.searcher.simpleQuery.MaxGuest;
 
 class MaxGuestTest {
@@ -17,6 +18,8 @@ class MaxGuestTest {
 	private MaxGuest maxGuestFilter;
 	
 	private Booking bookingMock;
+	private Property property;
+	
 	private ArrayList<Booking> aux;
 	
 	
@@ -27,9 +30,11 @@ class MaxGuestTest {
 		
 		//DOC
 		bookingMock = mock(Booking.class);
+		property = mock(Property.class);
 		aux = new ArrayList<Booking>();
 		
-		when(bookingMock.getMaxGuest()).thenReturn(15);
+		when(this.bookingMock.getProperty()).thenReturn(property);
+		when(property.getMaxGuests()).thenReturn(15);
 		aux.add(bookingMock);
 	}
 

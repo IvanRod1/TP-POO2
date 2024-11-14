@@ -24,13 +24,13 @@ public class Property implements Rankeable {
 	private List<Review> reviews;
 	
 	
-	public Property(double area, String country, String city, String address, int maxGuess, String description, int maxPicture,
+	public Property(double area, String country, String city, String address, int maxGuests, String description, int maxPicture,
 				   PropertyType type, Owner owner) {
 		this.area = area;
 		this.country = country;
 		this.city = city;
 		this.address = address;
-		this.maxGuests = maxGuess;
+		this.maxGuests = maxGuests;
 		this.description = description;
 		this.maxPicture = maxPicture;
 		this.type = type;
@@ -99,6 +99,11 @@ public class Property implements Rankeable {
 
 	public PropertyType getPropertyType() {
 		return this.type;
+	}
+	
+
+	public Owner getOwner() {
+		return this.owner;
 	}
 	
  

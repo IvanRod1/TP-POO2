@@ -36,13 +36,18 @@ class PropertyTest {
 	}
 
 	@Test
+	void testConstructor() {
+		assertNotNull(property);
+	}
+
+	@Test
 	void testSummary() {
 		fail("Not yet implemented");
 	}
 
 	@Test
 	void testGetCity() {
-		fail("Not yet implemented");
+		assertEquals(city, property.getCity());
 	}
 	
 	@Test
@@ -52,22 +57,22 @@ class PropertyTest {
 	
 	@Test
 	void testGetMaxGuests() {
-		fail("Not yet implemented");
+		assertEquals(maxGuests, property.getMaxGuests());
 	}
 	
 	@Test
 	void testGetAmenities() {
-		fail("Not yet implemented");
+		assertEquals(amenities, property.getAmenities());
 	}
 	
 	@Test
 	void testGetPropertyType() {
-		fail("Not yet implemented");
+		assertEquals(type, property.getPropertyType());
 	}
 	
 	@Test
 	void testGetOwner() {
-		fail("Not yet implemented");
+		assertEquals(owner, property.getOwner());
 	}
 	
 }

@@ -2,6 +2,7 @@ package sa.observer;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -34,13 +35,14 @@ class applicationMobileTest {
 	@Test
 	void newAppMobileObservertest() {
 		appMobileObserver = new ApplicationMobile();
+		assertNotNull(appMobileObserver);
 	}
 	@Test
 	void updateObserverAppMobileTest() {
 		appMobileObserver.setScreen(screenTest);
 		appMobileObserver.update(bookingTest); 
+		verify(screenTest);
 	}
 	
-	
-
+	 
 }

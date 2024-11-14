@@ -24,12 +24,18 @@ import sa.accomodationsite.AccomodationSite;
 //import sa.booking.ReserveOccupied;
 //import sa.payments.PaymentMethod;
 //import sa.properties.PaymentMethodEnum;
-import sa.booking.*;
+import sa.booking.Booking;
+import sa.booking.IReserveState;
+import sa.booking.PaymentMethod;
+import sa.booking.ReserveAvailable;
+import sa.booking.ReserveBooked;
+import sa.booking.ReserveOccupied;
+import sa.booking.SpecialPeriod;
+import sa.booking.BookedPeriod;
 import sa.properties.AmenityType;
 import sa.properties.Property;
 import sa.properties.PropertyType;
 import sa.users.Tenant;
-import sa.booking.Booking;
 
 public class AccomodationSiteTest {
 	
@@ -272,7 +278,7 @@ public class AccomodationSiteTest {
 		when(bookingMock1.getTenant()).thenReturn(nacho);
 		when(bookingMock2.getTenant()).thenReturn(nacho);
 		when(bookingMock3.getTenant()).thenReturn(nacho);
-		
+	
 		when(propertyMock1.getCity()).thenReturn("Rosario");
 		when(propertyMock2.getCity()).thenReturn("Buenos Aires");
 		when(propertyMock3.getCity()).thenReturn("Cordoba");

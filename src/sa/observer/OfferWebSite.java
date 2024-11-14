@@ -23,7 +23,7 @@ public class OfferWebSite implements INotifyObserver{
 	@Override
 	public void update(Booking b, LocalDate date) {
 		// TODO Auto-generated method stub
-		System.out.println("Le paso el booking al objeto colaborativo y el bookedperiod en cuestion");
+		System.out.println("Le paso el booking al objeto colaborativo y la fecha en cuestion");
 	}
 
 }

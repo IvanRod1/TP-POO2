@@ -270,7 +270,7 @@ public class Booking implements INotifyConfiguration {
 		}
 	}
 
-	Tenant getTenant() {
+	public Tenant getTenant() {
 		// TODO Auto-generated method stub
 		return this.tenant;
 	}

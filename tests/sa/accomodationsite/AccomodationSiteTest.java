@@ -4,6 +4,7 @@ import static org.junit.Assert.assertThrows;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+//import static org.mockito.Mockito.mock;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,11 +17,11 @@ import org.junit.jupiter.api.Test;
 
 import sa.accomodationsite.AccomodationSite;
 
-import sa.booking.ReserveAvailable;
-import sa.booking.ReserveApproved;
-import sa.booking.IReserveState;
-import sa.booking.Period;
-import sa.booking.ReserveCompleted;
+//import sa.booking.ReserveAvailable;
+//import sa.booking.ReserveBooked;
+//import sa.booking.IReserveState;
+//import sa.booking.SpecialPeriod;
+//import sa.booking.ReserveOccupied;
 //import sa.payments.PaymentMethod;
 //import sa.properties.PaymentMethodEnum;
 import sa.booking.*;
@@ -67,9 +68,10 @@ public class AccomodationSiteTest {
 	
 	PaymentMethod cash;
 	
-	Period period;
-	List<Period> periods;
-	
+	//------------------
+	SpecialPeriod period;
+	List<SpecialPeriod> periods;
+	//------------------
 	 
 	
 	Administrator administrator;
@@ -97,18 +99,21 @@ public class AccomodationSiteTest {
 		// inicializacion de constructor de booking
 		accomodationSite = new AccomodationSite();
 		
-		property = mock(Property.class);
-	
+		
 		checkIn = LocalDate.of(2024, 11, 10);
 		checkOut = LocalDate.of(2024, 11, 20);
+		
+		property = mock(Property.class);
+	
+		
 		
 		paymentsMethods = new ArrayList<PaymentMethod>();
 		paymentsMethods.add(cash);
 		
 		pricePerDayWeekday = 1000.0;
 		
-		periods = new ArrayList<Period>();
-		period = mock(Period.class);
+		periods = new ArrayList<SpecialPeriod>();
+		period = mock(SpecialPeriod.class);
 		periods.add(period);
 		
 		house = mock(PropertyType.class);
@@ -131,8 +136,8 @@ public class AccomodationSiteTest {
 		
 		//CAMBIAR EL NOMBRE CUANDO MARTIN HAGA MERGE CON SU RAMA A MAIN
 		reserveAvailable = mock(ReserveAvailable.class);
-		reserveOccupied = mock(ReserveCompleted.class);
-		reserveBooked = mock(ReserveApproved.class);
+		reserveOccupied = mock(ReserveOccupied.class);
+		reserveBooked = mock(ReserveBooked.class);
 		
 		availableBookings = new ArrayList<Booking>();
 		
@@ -260,13 +265,21 @@ public class AccomodationSiteTest {
 		accomodationSite.addBooking(bookingMock2);
 		accomodationSite.addBooking(bookingMock3);
 		
+		Property propertyMock1 = mock(Property.class);
+		Property propertyMock2 = mock(Property.class);
+		Property propertyMock3 = mock(Property.class);
+		
 		when(bookingMock1.getTenant()).thenReturn(nacho);
 		when(bookingMock2.getTenant()).thenReturn(nacho);
 		when(bookingMock3.getTenant()).thenReturn(nacho);
 		
-		when(bookingMock1.getCity()).thenReturn("Rosario");
-		when(bookingMock2.getCity()).thenReturn("Buenos Aires");
-		when(bookingMock3.getCity()).thenReturn("Cordoba");
+		when(propertyMock1.getCity()).thenReturn("Rosario");
+		when(propertyMock2.getCity()).thenReturn("Buenos Aires");
+		when(propertyMock3.getCity()).thenReturn("Cordoba");
+		
+		when(bookingMock1.getProperty()).thenReturn(propertyMock1);
+		when(bookingMock2.getProperty()).thenReturn(propertyMock2);
+		when(bookingMock3.getProperty()).thenReturn(propertyMock3);
 		
 		assertEquals(accomodationSite.allBookingCities(nacho).size(), 3);
 	}

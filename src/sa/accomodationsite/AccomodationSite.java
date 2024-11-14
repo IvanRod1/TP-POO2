@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 
 import sa.searcher.simpleQuery.IQuery;
 import sa.booking.Booking;
-import sa.booking.Period;
+import sa.booking.BookedPeriod;
 import sa.booking.ReserveAvailable;
-import sa.booking.ReserveApproved;
+import sa.booking.ReserveBooked;
 import sa.properties.AmenityType;
 //import sa.payments.PaymentMethod;
 import sa.booking.*;
@@ -44,7 +44,7 @@ public class AccomodationSite {
 	
 	
 	public void createBooking(Property property, LocalDate checkIn, LocalDate checkOut, List<PaymentMethod> paymentMethods,
-							  double pricePerDayWeekday, List<Period> periods) {
+							  double pricePerDayWeekday, List<SpecialPeriod> periods) {
 		/**
 		 * crea un booking nuevo y lo agrega a la lista de bookings. Antes de agregarlo verifica que la propiedad del booking
 		 * tenga un tipo de propiedad valido y unos tipos de servicios validos para sitio web, dados por el administrador.
@@ -154,7 +154,7 @@ public class AccomodationSite {
 		 * */
 		
 		return this.getBookings().stream()
-								 .filter(actualBooking -> actualBooking.getState() instanceof ReserveApproved)
+								 .filter(actualBooking -> actualBooking.getState() instanceof ReserveBooked)
 								 .toList();
 	}
 	
@@ -200,7 +200,7 @@ public class AccomodationSite {
 		 * */
 		
 		return this.bookingHistory(tenant).stream()
-								 		  .map(actualBooking -> actualBooking.getCity())
+								 		  .map(actualBooking -> actualBooking.getProperty().getCity())
 								 		  .collect(Collectors.toSet());
 		
 	}

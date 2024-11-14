@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.DynamicTest;
 
+import sa.booking.BookedPeriod;
+import sa.booking.Booking;
 //import sa.properties.AmenityType;
 import sa.properties.AmenityType;
 import sa.properties.Property;
@@ -47,22 +49,22 @@ public class Administrator extends User {
 		
 	}
 	
-	public void create(Rankeable rankeable) {
-		
-		/**
-		 * crea un user o una property new Tenant o new Property 
-		 * consultar como usar el parametro rankeable
-		 * 
-		 * */
-		Owner newOwner = new Owner("Nacho", 123, "foo@gmail.com");
-		PropertyType propertyType = new PropertyType("casa", "con pileta");
-		
-		Property newProperty = new Property(500.0, "Argentina", "Córdoba", "Carlos Paz 123", 12, 
-											"Casa frente al dique", 20, propertyType, newOwner);
-		
-		Tenant newTenant = new Tenant("Nacho", 456, "bar@gmail.com");
-		
-	}
+//	public void create(Rankeable rankeable) {
+//		
+//		/**
+//		 * crea un user o una property new Tenant o new Property 
+//		 * consultar como usar el parametro rankeable
+//		 * 
+//		 * */
+//		Owner newOwner = new Owner("Nacho", 123, "foo@gmail.com");
+//		PropertyType propertyType = new PropertyType("casa", "con pileta");
+//		
+//		Property newProperty = new Property(500.0, "Argentina", "Córdoba", "Carlos Paz 123", 12, 
+//											"Casa frente al dique", 20, propertyType, newOwner);
+//		
+//		Tenant newTenant = new Tenant("Nacho", 456, "bar@gmail.com");
+//		
+//	}
 	
 	public void addAllowedPropertyTypes(PropertyType allowedProperty) {
 		
@@ -137,6 +139,12 @@ public class Administrator extends User {
 		
 		return ((double) this.getAccomodationSite().getApprovedBookings().size() /
 				 this.getAccomodationSite().getBookings().size()) * 100;
+		
+	}
+
+	@Override
+	public void reserveCancelled(Booking b, BookedPeriod bp) {
+		// TODO Auto-generated method stub
 		
 	}
 	

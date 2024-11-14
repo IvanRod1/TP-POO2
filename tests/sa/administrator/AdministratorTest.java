@@ -3,6 +3,7 @@ package sa.administrator;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import sa.accomodationsite.AccomodationSite;
 import sa.accomodationsite.Administrator;
 import sa.booking.Booking;
-import sa.booking.ReserveApproved;
+import sa.booking.ReserveBooked;
 import sa.booking.ReserveAvailable;
 import sa.booking.IReserveState;
 import sa.properties.Property;
@@ -91,8 +92,8 @@ class AdministratorTest {
 		reserveAvailable2 = mock(ReserveAvailable.class);
 		reserveAvailable3 = mock(ReserveAvailable.class);
 		
-		reserveApproved1 = mock(ReserveApproved.class);
-		reserveApproved2 = mock(ReserveApproved.class);
+		reserveApproved1 = mock(ReserveBooked.class);
+		reserveApproved2 = mock(ReserveBooked.class);
 		
 		approvedBookings = new ArrayList<Booking>();
 		approvedBookings.add(booking4);

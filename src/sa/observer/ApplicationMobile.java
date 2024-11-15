@@ -9,6 +9,7 @@ import sa.observer.interfaces.INotifyObserver;
 public class ApplicationMobile implements INotifyObserver{
 
 	private ObjectScreen screen;
+
 	@Override
 	public void update(Booking booking) {
 		// TODO Auto-generated method stub
@@ -38,7 +39,7 @@ public class ApplicationMobile implements INotifyObserver{
 	@Override
 	public void update(Booking b, LocalDate date) {
 		// TODO Auto-generated method stub
-		System.out.println("Le paso el booking al objeto colaborativo y el bookedperiod en cuestion");
+		System.out.println("Le paso el booking al objeto colaborativo y el date en cuestion");
 	}
 
 }

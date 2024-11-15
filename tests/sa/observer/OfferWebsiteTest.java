@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
 
-class offerWebsiteTest {
+class OfferWebsiteTest {
 
 	private OfferWebSite website;
 	private Booking bookingTest;

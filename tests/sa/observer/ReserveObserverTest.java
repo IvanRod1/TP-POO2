@@ -5,9 +5,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import sa.booking.BookedPeriod;
 import sa.booking.Booking;
 import sa.properties.Property;
 
@@ -24,7 +29,7 @@ class ReserveObserverTest {
 
 	@Test
 	void newReserveObserverTest() {
-		observer = new ReserveObserver();
+		ReserveObserver observer = new ReserveObserver();
 		assertNotNull(observer);
 	}
 	
@@ -40,4 +45,21 @@ class ReserveObserverTest {
 		verify(auxProperty).summary();
 	}
 
+	@Test
+	void updaterWithBookedPeriodTest() {
+		final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(outContent));
+		BookedPeriod bp = mock(BookedPeriod.class);
+		observer.update(bookingMock, bp);
+		assertEquals("Le paso el booking al objeto colaborativo y el bookedperiod en cuestion" + System.lineSeparator(), outContent.toString());
+	}
+	
+	@Test
+	void updateWithDateTest() {
+		final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(outContent));
+		LocalDate date = LocalDate.now();
+		observer.update(bookingMock, date);
+		assertEquals("Le paso el booking al objeto colaborativo y el date en cuestion" + System.lineSeparator(), outContent.toString());
+	}
 }

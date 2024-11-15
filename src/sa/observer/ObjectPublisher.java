@@ -5,9 +5,5 @@ import sa.observer.interfaces.HomePagePublisher;
 public class ObjectPublisher implements HomePagePublisher{
 
 	@Override
-	public void publish(String message) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	public void publish(String message) {}
 }

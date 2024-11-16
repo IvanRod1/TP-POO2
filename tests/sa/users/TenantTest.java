@@ -61,7 +61,7 @@ class TenantTest {
 	void cancelReserveTest() {
 		PropertyRent rentMock = mock(PropertyRent.class);
 		when(userTenant.registeredSite.getPropertyRent(rent)).thenReturn(rent);
-		userTenant.cancelReserve(rentMock);
+		userTenant.cancelReserve(rentMock); //Este metodo necesita un metodo del propertyRent que todavia no desarrolle
 	}
 	@Test
 	void allBookingsTest() {

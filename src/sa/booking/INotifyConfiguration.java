@@ -1,6 +1,6 @@
 package sa.booking;
 
-import sa.subscriptions.INotifyObserver;
+import sa.observer.interfaces.*;
 
 public interface INotifyConfiguration {
 	

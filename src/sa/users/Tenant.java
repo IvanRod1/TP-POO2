@@ -17,10 +17,10 @@ public class Tenant extends User {
 		 * 
 		 * * hacer lo mismo que en property 
 		 */
-		System.out.println("Property Summary:");
-	    System.out.println("Area: " + this.fullName);
-	    System.out.println("Area: " + this.telephone);
-	    System.out.println("Area: " + this.mail);
+		System.out.println("Tenant Summary:");
+	    System.out.println("name: " + this.fullName);
+	    System.out.println("telephone: " + this.telephone);
+	    System.out.println("mail: " + this.mail);
 		
 	}
 

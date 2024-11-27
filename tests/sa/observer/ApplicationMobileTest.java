@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import sa.booking.BookedPeriod;
 import sa.booking.Booking;
-import sa.booking.IReserveState;
+import sa.booking.reserveStates.IReserveState;
 
 class ApplicationMobileTest {
 

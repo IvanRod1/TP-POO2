@@ -239,7 +239,6 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 								.filter(w -> date.equals(w.getCheckIn()))
 								.findFirst();
 		// Si está en waiting pasa a ser una reserva formal
-		System.out.print(wr);
 		if (wr.isPresent()) {
 			Reserve next_r = wr.get();
 			this.getConditionalReserves().remove(next_r);

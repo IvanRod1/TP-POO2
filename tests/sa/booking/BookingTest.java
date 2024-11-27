@@ -1,12 +1,7 @@
 package sa.booking;
 
-import static org.junit.Assert.assertFalse;
-
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import static org.mockito.Mockito.*;
 
@@ -15,17 +10,11 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import sa.booking.PaymentMethod;
 import sa.booking.reserveStates.ReserveBooked;
 import sa.booking.reserveStates.ReserveOccupied;
 import sa.cancellation.CostFree;
-import sa.cancellation.ICancellationPolicy;
 import sa.cancellation.NoCancellation;
 import sa.properties.Property;
 import sa.observer.interfaces.INotifyObserver;
@@ -245,7 +234,7 @@ public class BookingTest {
 	public void testSetCancellationPolicy() {
 		assertNotNull(this.booking.getPolicy());
 		verifyNoInteractions(this.policy);
-		NoCancellation noCPolicy = spy(NoCancellation.class);
+		NoCancellation noCPolicy = mock(NoCancellation.class);
 		this.booking.setCancellationPolicy(noCPolicy);
 		assertEquals(noCPolicy, this.booking.getPolicy());
 		verifyNoInteractions(noCPolicy);
@@ -310,103 +299,76 @@ public class BookingTest {
 	}
 
 	// Subscribers
-//	@Test
-//	public void testNotifySubscribersLowerPrice() {
-//		verify(this.subscriber5, times(0)).update(this.booking);
-//		when(this.pricer.getBasePrice()).thenReturn(pricePerDayWeekday);
-//		this.booking.setBasePrice(pricePerDayWeekday*0.5);
-//		verify(this.subscriber5, times(1)).update(this.booking);
-//	}
-//	
-//	@Test
-//	public void testRegisterPriceObserver() {
-//		assertEquals(1, this.obsBP.size());
-//		assertEquals(1, this.obsSP.size());
-//		assertEquals(1, this.setObsBP.size());
-//		assertEquals(1, this.setObsSP.size());
-//		INotifyObserver expectedObs = mock(INotifyObserver.class);
-//		this.booking.registerPriceObserver(expectedObs, this.checkIn);
-//		this.booking.registerPriceObserver(expectedObs, this.checkIn.plusDays(1), this.checkIn.plusDays(3));
-//		assertEquals(2, this.obsBP.size());
-//		assertEquals(2, this.setObsBP.size());
-//		assertEquals(2, this.obsSP.size());
-//		assertEquals(2, this.setObsSP.size());
-//	}
-//
-//	@Test
-//	public void testUnregisterPriceObserver() {
-//		assertEquals(1, this.setObsBP.size());
-//		this.booking.unRegisterPriceObserver(this.subscriber1, this.checkIn);
-//		assertEquals(1, this.obsBP.size());
-//		assertEquals(0, this.setObsBP.size());
-//		assertEquals(1, this.setObsSP.size());
-//		this.booking.unRegisterPriceObserver(this.subscriber2, this.checkIn.plusDays(2));
-//		assertEquals(1, this.obsSP.size());
-//		assertEquals(0, this.setObsSP.size());
-//	}
-//
-//	@Test
-//	public void testNotifySubscribersPrice() {
-//		verify(this.subscriber1, times(0)).update(this.booking, this.checkIn);
-//		verify(this.subscriber2, times(0)).update(this.booking, this.checkIn);
-//		this.booking.notifySubscribersPrice(this.booking, this.checkIn);
-//		this.booking.notifySubscribersPrice(this.booking, this.checkIn.plusDays(2));
-//		verify(this.subscriber1, times(1)).update(this.booking, this.checkIn);
-//		verify(this.subscriber2, times(1)).update(this.booking, this.checkIn.plusDays(2));
-//	}
-//
-//	@Test
-//	public void testRegisterCancelObserver() {
-//		assertEquals(1, this.obsCancel.size());
-//		assertEquals(1, this.setObsCancel.size());
-//		INotifyObserver expectedObs = mock(INotifyObserver.class);
-//		this.booking.registerCancelObserver(expectedObs, this.bookedperiod1);
-//		this.booking.registerCancelObserver(expectedObs, this.bookedperiod2);
-//		assertEquals(2, this.obsCancel.size());
-//		assertEquals(2, this.setObsCancel.size());
-//	}
-//
-//	@Test
-//	public void testUnregisterCancelObserver() {
-//		assertEquals(1, this.obsCancel.size());
-//		assertEquals(1, this.setObsCancel.size());
-//		this.booking.unRegisterCancelObserver(this.subscriber3, this.bookedperiod1);
-//		assertEquals(1, this.obsCancel.size());
-//		assertEquals(0, this.setObsCancel.size());
-//	}
-//
-//	@Test
-//	public void testNotifySubscribersCancelled() {
-//		verify(this.subscriber3, times(0)).update(this.booking, this.bookedperiod1);
-//		this.booking.notifySubscribersCancelled(this.booking, this.bookedperiod1);
-//		verify(this.subscriber3, times(1)).update(this.booking, this.bookedperiod1);
-//	}
-//
-//	@Test
-//	public void testRegisterReserveObserver() {
-//		assertEquals(1, this.obsReserve.size());
-//		assertEquals(1, this.setObsReserve.size());
-//		INotifyObserver expectedObs = mock(INotifyObserver.class);
-//		this.booking.registerReserveObserver(expectedObs, this.bookedperiod1);
-//		this.booking.registerReserveObserver(expectedObs, this.bookedperiod2);
-//		assertEquals(2, this.obsReserve.size());
-//		assertEquals(2, this.setObsReserve.size());
-//	}
-//
-//	@Test
-//	public void testUnregisterReserveObserver() {
-//		assertEquals(1, this.obsReserve.size());
-//		assertEquals(1, this.setObsReserve.size());
-//		this.booking.unRegisterReserveObserver(this.subscriber4, this.bookedperiod1);
-//		assertEquals(1, this.obsReserve.size());
-//		assertEquals(0, this.setObsReserve.size());
-//	}
-//
-//	@Test
-//	public void testNotifySubscribersReserve() {
-//		verify(this.subscriber4, times(0)).update(this.booking, this.bookedperiod1);
-//		this.booking.notifySubscribersReserve(this.booking, this.bookedperiod1);
-//		verify(this.subscriber4, times(1)).update(this.booking, this.bookedperiod1);
-//	}
+	@Test
+	public void testNotifySubscribersLowerPrice() {
+		verify(this.subscriber5, times(0)).updateLowerPrice(this.booking);
+		when(this.pricer.getBasePrice()).thenReturn(pricePerDayWeekday);
+		this.obsPrice.add(this.subscriber5);
+		this.booking.setBasePrice(pricePerDayWeekday*0.5);
+		verify(this.subscriber5, times(1)).updateLowerPrice(this.booking);
+	}
+
+	@Test
+	public void testRegisterPriceObserver() {
+		assertEquals(1, this.obsPrice.size());
+		this.booking.registerPriceObserver(this.subscriber4);
+		assertEquals(2, this.obsPrice.size());
+	}
+
+	@Test
+	public void testUnregisterPriceObserver() {
+		assertEquals(1, this.obsPrice.size());
+		this.booking.unRegisterPriceObserver(subscriber1);
+		assertEquals(0, this.obsPrice.size());
+	}
+
+	@Test
+	public void testNotifySubscribersPrice() {
+		verify(this.subscriber1, times(0)).updateLowerPrice(booking);
+		this.booking.notifySubscribersPrice();
+		verify(this.subscriber1, times(1)).updateLowerPrice(booking);
+	}
+
+	@Test
+	public void testRegisterCancelObserver() {
+		assertEquals(1, this.obsCancel.size());
+		this.booking.registerCancelObserver(subscriber4);
+		assertEquals(2, this.obsCancel.size());
+	}
+
+	@Test
+	public void testUnregisterCancelObserver() {
+		assertEquals(1, this.obsCancel.size());
+		this.booking.unRegisterCancelObserver(subscriber2);
+		assertEquals(0, this.obsCancel.size());
+	}
+
+	@Test
+	public void testNotifySubscribersCancelled() {
+		verify(this.subscriber2, times(0)).updateCancellation(reserve1);
+		this.booking.notifySubscribersCancelled(reserve1);
+		verify(this.subscriber2, times(1)).updateCancellation(reserve1);
+	}
+
+	@Test
+	public void testRegisterReserveObserver() {
+		assertEquals(1, this.obsReserve.size());
+		this.booking.registerReserveObserver(subscriber4);
+		assertEquals(2, this.obsReserve.size());
+	}
+
+	@Test
+	public void testUnregisterReserveObserver() {
+		assertEquals(1, this.obsReserve.size());
+		this.booking.unRegisterReserveObserver(subscriber3);
+		assertEquals(0, this.obsReserve.size());
+	}
+
+	@Test
+	public void testNotifySubscribersReserve() {
+		verify(this.subscriber3, times(0)).updateNewReserve(reserve1);
+		this.booking.notifySubscribersReserve(reserve1);
+		verify(this.subscriber3, times(1)).updateNewReserve(reserve1);
+	}
 
 }

@@ -4,7 +4,7 @@ import sa.booking.Reserve;
 
 public interface IReserveState {
 
-	public IReserveState next();
+	public void next();
 	public void approve(Reserve r);
 	public void cancel();
 	public void request(Reserve r);

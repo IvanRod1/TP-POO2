@@ -1,5 +1,6 @@
 package sa.booking;
 
+
 import java.time.LocalDate;
 
 public class SpecialPeriod extends Period {
@@ -20,5 +21,10 @@ public class SpecialPeriod extends Period {
 	public void setPrice(double newPrice) {
 		// TODO Auto-generated method stub
 		this.price = newPrice;
+	}
+
+	@Override
+	public LocalDate start() {
+		return super.start();
 	}
 }

@@ -39,31 +39,18 @@ public class BookingTest {
 	private Booking				bookingReal;
 	private ReserveBooked		stateBooked;
 	private ReserveOccupied		stateOccupied;
+	private Timer				timer;
 
-//	private ReserveAvailable	stateAvailable;
-	
 	private List<PaymentMethod> 		paymentMethods 	= new ArrayList<PaymentMethod>();
 	private Period	    				period;
 	private List<Reserve> 				reserves = new ArrayList<Reserve>();
 	private List<Reserve>				waitings = new ArrayList<Reserve>();
+	private List<INotifyObserver> 		obsPrice = new ArrayList<INotifyObserver>();
+	private List<INotifyObserver> 		obsCancel = new ArrayList<INotifyObserver>();
+	private List<INotifyObserver> 		obsReserve = new ArrayList<INotifyObserver>();
 
-	//	private List<INotifyObserver>	obsBasePrice 	= new ArrayList<INotifyObserver>();
-//	private List<BookedPeriod>	    bps;
-
-	
-//	private HashMap<LocalDate, List<BookedPeriod>>		bookedPeriods = new HashMap<LocalDate, List<BookedPeriod>>();
-//	private HashMap<LocalDate, Set<INotifyObserver>>    obsBP = new HashMap<LocalDate, Set<INotifyObserver>>();
-//	private HashMap<LocalDate, Set<INotifyObserver>>	obsSP = new HashMap<LocalDate, Set<INotifyObserver>>();
-//	private HashMap<BookedPeriod, Set<INotifyObserver>> obsCancel = new HashMap<BookedPeriod, Set<INotifyObserver>>();
-//	private HashMap<BookedPeriod, Set<INotifyObserver>> obsReserve = new HashMap<BookedPeriod, Set<INotifyObserver>>();
-	
-//	private Set<INotifyObserver> setObsBP = new HashSet<INotifyObserver>();
-//	private Set<INotifyObserver> setObsSP = new HashSet<INotifyObserver>();
-//	private Set<INotifyObserver> setObsCancel = new HashSet<INotifyObserver>();
-//	private Set<INotifyObserver> setObsReserve = new HashSet<INotifyObserver>();
 	
 	// Para DOC Pricer
-//	private BookingSchedule		schedule;
 	private Pricer				pricer;
 	private List<SpecialPeriod> specialPeriods	= new ArrayList<SpecialPeriod>();
 	private SpecialPeriod		specialPeriod1;
@@ -104,11 +91,9 @@ public class BookingTest {
 	@BeforeEach
 	public void setUp() {
 		// DOC (Depended-On-Component): nuestros doubles
-//		this.stateAvailable		= spy(ReserveAvailable.class);
 		this.stateBooked		= mock(ReserveBooked.class);
 		this.stateOccupied		= mock(ReserveOccupied.class);
 
-//		this.schedule			= mock(BookingSchedule.class);
 		this.policy				= spy(CostFree.class);
 		this.property			= mock(Property.class);
 		this.pricer				= mock(Pricer.class);
@@ -132,6 +117,7 @@ public class BookingTest {
 		this.bookedperiod1		= mock(Period.class);
 		this.bookedperiod2		= mock(Period.class);
 		this.bookedperiod3		= mock(Period.class);
+		this.timer				= mock(Timer.class);
 		
 		this.specialPeriods.add(specialPeriod1);
 		this.specialPeriods.add(specialPeriod2);
@@ -139,11 +125,9 @@ public class BookingTest {
 		this.paymentMethods.add(paymentMethod1);
 		this.paymentMethods.add(paymentMethod2);
 
-//		this.setObsBP.add(subscriber1);
-//		this.setObsSP.add(subscriber2);
-//		this.setObsCancel.add(subscriber3);
-//		this.setObsReserve.add(subscriber4);
-//		this.obsBasePrice.add(subscriber5);
+		this.obsPrice.add(subscriber1);
+		this.obsCancel.add(subscriber2);
+		this.obsReserve.add(subscriber3);
 		
 		this.today 				= LocalDate.now();
 		this.begin				= this.today;
@@ -151,19 +135,10 @@ public class BookingTest {
 		this.pricePerDayWeekday		= 5;
 		this.pricePerDayHighSeason	= 6;
 		this.pricePerDayLongWeekend	= 7;
-//		this.bps					= new ArrayList<BookedPeriod>();
-//		this.bookedPeriods.put(today, bps);
 
-//		this.obsSP.put(this.checkIn.plusDays(2), this.setObsSP);
-//		this.obsBP.put(this.checkIn, this.setObsBP);
-//		this.obsCancel.put(this.bookedperiod1, this.setObsCancel);
-//		this.obsReserve.put(this.bookedperiod1, this.setObsReserve);
-
+		when(this.reserve1.getCheckIn()).thenReturn(this.today);
+		when(this.reserve1.getTenant()).thenReturn(this.tenant1);
 		
-//		when(this.stateAvailable.next()).thenReturn(stateBooked);
-		when(this.stateBooked.next()).thenReturn(stateOccupied);
-//		when(this.stateOccupied.next()).thenReturn(stateAvailable);
-
 		when(this.specialPeriod1.price()).thenReturn(pricePerDayHighSeason);
 		when(this.specialPeriod1.start()).thenReturn(this.begin.plusDays(2));
 		when(this.specialPeriod1.end()).thenReturn(this.begin.plusDays(3));
@@ -179,9 +154,6 @@ public class BookingTest {
 
 		when(this.property.getOwner()).thenReturn(this.owner);
 		
-//		when(this.schedule.getBPs()).thenReturn(bookedPeriods);
-//		when(this.schedule.isEmpty()).thenReturn(bookedPeriods.isEmpty());
-//		when(this.schedule.reserves(this.today)).thenReturn(bookedPeriods.get(this.today));
 
 		// Alquila 1 día
 		when(this.bookedperiod1.start()).thenReturn(this.today);
@@ -215,8 +187,7 @@ public class BookingTest {
 //		when(this.reserve3.getCheckOut()).thenReturn(this.bookedperiod3.end());
 
 		// SUT (System Under Test): objeto a testear
-		this.booking = new Booking(   stateBooked
-									, policy
+		this.booking = new Booking(   policy
 									, pricer
 									, property
 									, paymentMethods
@@ -224,13 +195,11 @@ public class BookingTest {
 									, specialPeriods
 									, period
 									, reserves
-									, waitings );
-//									, obsSP
-//									, obsBP
-//									, obsCancel
-//									, obsReserve
-//									, schedule
-//									, obsBasePrice );
+									, waitings
+									, timer
+									, obsCancel
+									, obsReserve
+									, obsPrice );
 
 		this.bookingReal = new Booking(   property
 										, begin
@@ -332,14 +301,12 @@ public class BookingTest {
 
 	@Test
 	public void testTriggerNextRequest() {
-		when(this.schedule.hasReserves(this.today)).thenReturn(true);
-		when(this.schedule.getNext(this.today)).thenReturn(this.bookedperiod1);
-		this.booking.triggerNextRequest();
-		verify(this.stateAvailable, times(1)).requestReserve(this.booking, this.bookedperiod1);
-		
-		when(this.schedule.isEmpty()).thenReturn(true);
-		this.booking.triggerNextRequest();
-		verify(this.stateAvailable, times(1)).requestReserve(this.booking, this.bookedperiod1);
+		assertEquals(0, this.booking.getConditionalReserves().size());
+		this.waitings.add(this.reserve1);
+		assertEquals(1, this.booking.getConditionalReserves().size());
+		this.booking.triggerNextRequest(this.reserve1.getCheckIn());
+		verify(this.owner, times(1)).reserveRequestedOn(this.reserve1);
+		assertEquals(0, this.booking.getConditionalReserves().size());
 	}
 
 	// Subscribers

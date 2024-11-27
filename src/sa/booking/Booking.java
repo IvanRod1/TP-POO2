@@ -51,7 +51,8 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 	// Para hacer DOC de sus atributos.
 	public Booking(CostFree policy, Pricer pricer, Property property,
 			List<PaymentMethod> paymentMethods, double pricePerDayWeekday, List<SpecialPeriod> specialPeriods,
-			Period period, List<Reserve> reserves, List<Reserve> waitings, Timer timer) {
+			Period period, List<Reserve> reserves, List<Reserve> waitings, Timer timer, List<INotifyObserver> obsCancel
+			, List<INotifyObserver> obsReserve, List<INotifyObserver> obsPrice) {
 		// TODO Auto-generated constructor stub
 		this.pricer 		= pricer;
 		this.pricer.setBasePrice(pricePerDayWeekday);
@@ -238,6 +239,7 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 								.filter(w -> date.equals(w.getCheckIn()))
 								.findFirst();
 		// Si está en waiting pasa a ser una reserva formal
+		System.out.print(wr);
 		if (wr.isPresent()) {
 			Reserve next_r = wr.get();
 			this.getConditionalReserves().remove(next_r);

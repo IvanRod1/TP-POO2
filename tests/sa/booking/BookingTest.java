@@ -106,7 +106,7 @@ public class BookingTest {
 		this.bookedperiod1		= mock(Period.class);
 		this.bookedperiod2		= mock(Period.class);
 		this.bookedperiod3		= mock(Period.class);
-		this.timer				= mock(Timer.class);
+		this.timer				= spy(Timer.class);
 		
 		this.specialPeriods.add(specialPeriod1);
 		this.specialPeriods.add(specialPeriod2);
@@ -126,6 +126,7 @@ public class BookingTest {
 		this.pricePerDayLongWeekend	= 7;
 
 		when(this.reserve1.getCheckIn()).thenReturn(this.today);
+		when(this.reserve1.getCheckOut()).thenReturn(this.today);
 		when(this.reserve1.getTenant()).thenReturn(this.tenant1);
 		
 		when(this.specialPeriod1.price()).thenReturn(pricePerDayHighSeason);
@@ -370,5 +371,36 @@ public class BookingTest {
 		this.booking.notifySubscribersReserve(reserve1);
 		verify(this.subscriber3, times(1)).updateNewReserve(reserve1);
 	}
+	
+	@Test
+	public void testUpdate() {
+		assertEquals(0, this.reserves.size());
+		this.reserves.add(this.reserve1);
+		assertEquals(1, this.reserves.size());
+		verify(this.reserve1, times(0)).getCheckOut();
+		this.booking.update(this.reserve1, this.today);
+		verify(this.reserve1, times(1)).getCheckOut();
 
+		assertEquals(0, this.reserves.size());
+		this.reserves.add(this.reserve1);
+		assertEquals(1, this.reserves.size());
+		verify(this.reserve1, times(1)).getCheckOut();
+		verify(this.reserve1, times(0)).next();
+		this.booking.update(this.reserve1, this.today.minusDays(1));
+		verify(this.reserve1, times(3)).getCheckOut();
+		verify(this.reserve1, times(1)).next();
+	}
+
+	@Test
+	public void testSetSPPrice() {
+		verify(this.subscriber1, times(0)).updateLowerPrice(this.booking);
+		double newPrice = pricePerDayHighSeason*0.5;
+		verify(this.specialPeriod1, times(0)).price();
+		verify(this.specialPeriod1, times(0)).setPrice(newPrice);
+		this.booking.setSPPrice(newPrice, this.specialPeriod1);
+		verify(this.specialPeriod1, times(1)).price();
+		verify(this.specialPeriod1, times(1)).setPrice(newPrice);
+		verify(this.subscriber1, times(1)).updateLowerPrice(this.booking);
+	}
+	
 }

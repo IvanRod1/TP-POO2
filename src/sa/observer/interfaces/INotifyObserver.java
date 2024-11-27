@@ -1,8 +1,6 @@
 package sa.observer.interfaces;
 
-import java.time.LocalDate;
 
-import sa.booking.BookedPeriod;
 import sa.booking.Booking;
 import sa.booking.Reserve;
 

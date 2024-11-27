@@ -2,7 +2,6 @@ package sa.booking.reserveStates;
 
 import java.time.LocalDate;
 
-import sa.booking.BookedPeriod;
 import sa.booking.Booking;
 import sa.booking.Reserve;
 import sa.users.Owner;
@@ -58,6 +57,12 @@ public class ReserveOccupied implements IReserveState {
 	public Reserve getReserve() {
 		// TODO Auto-generated method stub
 		return this.reserve;
+	}
+
+	@Override
+	public void cancel() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

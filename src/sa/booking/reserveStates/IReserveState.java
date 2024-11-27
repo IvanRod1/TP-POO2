@@ -1,7 +1,6 @@
 package sa.booking.reserveStates;
 
 import sa.booking.Reserve;
-import sa.subscriptions.INotifyTimerSubscriber;
 
 public interface IReserveState {
 

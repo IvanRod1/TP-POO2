@@ -1,8 +1,5 @@
 package sa.users;
 
-import sa.booking.BookedPeriod;
-import sa.booking.Booking;
-import sa.booking.Period;
 import sa.booking.Reserve;
 
 import java.util.ArrayList;
@@ -36,11 +33,6 @@ public class Owner extends User {
 		
 	}
 
-	@Override
-	public void reserveCancelled(Booking b, BookedPeriod bp) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	public void reserveRequestedOn(Reserve r) {
 		// TODO Auto-generated method stub

@@ -32,7 +32,6 @@ class ReserveBookedTest {
 	private Property			property;
 	private Tenant				tenant;
 	private Owner				owner;
-	private BookedPeriod		bp;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -43,12 +42,10 @@ class ReserveBookedTest {
 		this.property		= mock(Property.class);
 		this.tenant			= mock(Tenant.class);
 		this.owner			= mock(Owner.class);
-		this.bp				= mock(BookedPeriod.class);
 
 		when(this.booking.getProperty()).thenReturn(this.property);
 		when(this.booking.getTenant()).thenReturn(this.tenant);
 		when(this.property.getOwner()).thenReturn(this.owner);
-		when(this.bp.tenant()).thenReturn(this.tenant);
 		
 		
 		// SUT (System Under Test): objeto a testear

@@ -59,8 +59,8 @@ class CheckInTest {
 	
 	@Test
 	void successfulQuerySearchTest() {
-		when(bookingMock.isAvaiableDate(LocalDate.of(2024, 8, 17))).thenReturn(true);
-		when(bookingMock.getPeriod().belongs(LocalDate.of(2024, 8, 17))).thenReturn(true);
+		when(bookingMock.isAvaiableDate(LocalDate.of(2024, 11, 20))).thenReturn(true);
+		when(bookingMock.getPeriod().belongs(LocalDate.of(2024, 11, 20))).thenReturn(true);
 		verify(bookingMock).getPeriod();
 		
 		assertEquals(this.querytest1.search(bookings).size(),1);

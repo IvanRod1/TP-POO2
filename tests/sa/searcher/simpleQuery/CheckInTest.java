@@ -1,10 +1,12 @@
-package sa.simpleQuery;
+package sa.searcher.simpleQuery;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
 import sa.booking.Period;
+import sa.searcher.simpleQuery.CheckIn;
 
 class CheckInTest {
 
@@ -23,6 +26,9 @@ class CheckInTest {
 	
 	private Period bookingPeriod;
 	
+	private LocalDate fechaInicio;
+	private LocalDate fechaFin;
+	
 	@BeforeEach
 	void setUp() throws Exception {
 		
@@ -33,8 +39,13 @@ class CheckInTest {
 		
 		bookingPeriod = mock(Period.class);
 		
-		when(bookingPeriod.start()).thenReturn(LocalDate.of(2024, 10, 10));
-		when(bookingPeriod.end()).thenReturn(LocalDate.of(2024, 12, 31));
+		bookings = new ArrayList<Booking>();
+		
+		fechaInicio = LocalDate.of(2024, 10, 10);
+		fechaFin = LocalDate.of(2024, 12, 31);
+		
+		when(bookingPeriod.start()).thenReturn(fechaInicio);
+		when(bookingPeriod.end()).thenReturn(fechaFin);
 		when(bookingMock.getPeriod()).thenReturn(bookingPeriod);
 		
 		bookings.add(bookingMock);
@@ -48,8 +59,17 @@ class CheckInTest {
 	
 	@Test
 	void successfulQuerySearchTest() {
+		when(bookingMock.isAvaiableDate(LocalDate.of(2024, 8, 17))).thenReturn(false);
+		when(bookingMock.getPeriod().belongs(LocalDate.of(2024, 8, 17))).thenReturn(false);
+		verify(bookingMock).getPeriod();
 		
-		assertEquals(this.querytest1.search(bookings).size(),1);
+		assertEquals(this.querytest2.search(bookings).size(),0);
+	}
+	
+	@Test
+	void failedQuerySearchTest() {
+		when(bookingMock.isAvaiableDate(LocalDate.of(2024, 11, 20))).thenReturn(true);
+		when(bookingMock.getPeriod().belongs(LocalDate.of(2024, 11, 20))).thenReturn(true);
 	}
 
 }

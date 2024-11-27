@@ -1,4 +1,4 @@
-package sa.simpleQuery;
+package sa.searcher.simpleQuery;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

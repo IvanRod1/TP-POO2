@@ -1,4 +1,4 @@
-package sa.simpleQuery;
+package sa.searcher.simpleQuery;
 
 import java.util.List;
 

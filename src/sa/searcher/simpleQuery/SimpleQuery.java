@@ -1,4 +1,4 @@
-package sa.simpleQuery;
+package sa.searcher.simpleQuery;
 
 public abstract class SimpleQuery implements IQuery{
 

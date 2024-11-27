@@ -10,28 +10,28 @@ import sa.users.Tenant;
 
 public class ReserveBooked implements IReserveState {
 
-	private IReserveState	next;
+	private IReserveState	nextState;
 	private Reserve			reserve;
 	
 
 	public ReserveBooked(Reserve reserve) {
 		// TODO Auto-generated constructor stub
-		this.next 	  = new ReserveOccupied(reserve);
+		this.nextState 	  = new ReserveOccupied(reserve);
 		this.reserve  = reserve;
 	}
 
 	// Para hacer DOC del state approved
-	public ReserveBooked(ReserveOccupied stateNext, ReserveAvailable statePrevious) {
+	public ReserveBooked(ReserveOccupied stateNext, Reserve reserve) {
 		// TODO Auto-generated constructor stub
-		this.next 	  = stateNext;
-		this.previous = statePrevious;
+		this.nextState 	  = stateNext;
+		this.reserve = reserve;
 	}
 
 
 	@Override
 	public void next() {
 		// TODO Auto-generated method stub
-		this.getReserve().setState(this.next());
+		this.getReserve().setState(this.nextState);
 	}
 
 	@Override

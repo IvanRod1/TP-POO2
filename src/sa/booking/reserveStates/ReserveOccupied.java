@@ -1,17 +1,21 @@
-package sa.booking;
+package sa.booking.reserveStates;
 
+import java.time.LocalDate;
+
+import sa.booking.BookedPeriod;
+import sa.booking.Booking;
+import sa.booking.Reserve;
 import sa.users.Owner;
 import sa.users.Tenant;
 
 public class ReserveOccupied implements IReserveState {
 
 	private IReserveState	next;
-	private IReserveState	previous;
+	private Reserve			reserve;
 
-	public ReserveOccupied(ReserveAvailable stateNext, ReserveBooked statePrevious) {
+	public ReserveOccupied(Reserve reserve) {
 		// TODO Auto-generated constructor stub
-		this.next = stateNext;
-		this.previous = statePrevious;
+		this.reserve  = reserve;
 	}
 
 	@Override
@@ -22,16 +26,16 @@ public class ReserveOccupied implements IReserveState {
 	}
 
 	@Override
-	public void requestReserve(Booking b, BookedPeriod bp) {
+	public void request(Reserve r) {
 		b.setState(this);
 		// Timer con checkOut (bp.end()) para pasar al próximo estado de forma limpia
 	}
 
 	@Override
-	public void approveReserve(Booking b, BookedPeriod bp) {}
+	public void approve(Reserve r) {}
 
 	@Override
-	public void cancelReserve(Booking b, BookedPeriod bp) {
+	public void cancel(Reserve r) {
 		// TODO Auto-generated method stub
 		// La cancelación es asentada en el sistema y se envía un mail al dueño del inmueble informándole sobre
 		// el hecho. Debe ser posible enviar por email alguna de las reservas realizadas.
@@ -42,6 +46,18 @@ public class ReserveOccupied implements IReserveState {
 		b.notifySubscribersCancelled(b, bp);  // el sistema (que ES un observer) debe registrar la cancelación y puede avisarle al propietario y al Tenant
 		b.applyPolicy(bp);
 		b.triggerNextRequest();
+	}
+
+	@Override
+	public boolean isCancelled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Reserve getReserve() {
+		// TODO Auto-generated method stub
+		return this.reserve;
 	}
 
 

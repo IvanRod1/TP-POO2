@@ -1,4 +1,4 @@
-package sa.booking;
+package sa.booking.reserveStates;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,6 +14,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import sa.booking.BookedPeriod;
+import sa.booking.Booking;
+import sa.booking.reserveStates.ReserveAvailable;
+import sa.booking.reserveStates.ReserveBooked;
+import sa.booking.reserveStates.ReserveOccupied;
 import sa.properties.Property;
 import sa.users.Owner;
 import sa.users.Tenant;
@@ -22,7 +27,7 @@ class ReserveBookedTest {
 
 	private ReserveBooked		stateBooked;
 	private ReserveAvailable	stateAvailable;
-	private ReserveOccupied	stateOccupied;
+	private ReserveOccupied		stateOccupied;
 	private Booking				booking;
 	private Property			property;
 	private Tenant				tenant;

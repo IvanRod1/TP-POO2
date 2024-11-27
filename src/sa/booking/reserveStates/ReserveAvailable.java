@@ -1,5 +1,7 @@
-package sa.booking;
+package sa.booking.reserveStates;
 
+import sa.booking.BookedPeriod;
+import sa.booking.Booking;
 import sa.users.Owner;
 import sa.users.Tenant;
 import sa.users.User;

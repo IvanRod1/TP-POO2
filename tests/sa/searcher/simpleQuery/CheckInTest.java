@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
 import sa.booking.Period;
-import sa.searcher.simpleQuery.CheckIn;
+
 
 class CheckInTest {
 

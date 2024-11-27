@@ -9,6 +9,8 @@ public class Period {
 
 	public Period(LocalDate start, LocalDate end) {
 		// TODO Auto-generated constructor stub
+		this.start = start;
+		this.end   = end;
 	}
 
 	public LocalDate start() {

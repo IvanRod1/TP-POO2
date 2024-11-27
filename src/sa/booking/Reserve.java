@@ -11,6 +11,7 @@ public class Reserve {
 	private Booking booking;
 	private Period period;
 	private Tenant tenant;
+	private double price;
 	private IReserveState state;
 
 	public Reserve(Booking b, Tenant t, Period p) {
@@ -18,6 +19,7 @@ public class Reserve {
 		this.booking = b;
 		this.period	 = p;
 		this.tenant	 = t;
+		this.price	 = this.booking.priceBetween(this.getCheckIn(), this.getCheckOut());
 	}
 
 	public void setState(IReserveState state) {
@@ -35,11 +37,6 @@ public class Reserve {
 		return this.tenant;
 	}
 
-	void setTenant(Tenant t) {
-		// TODO Auto-generated method stub
-		this.tenant = t;
-	}
-
 	public void approve() { // El Owner aprueba al Tenant solicitado.
 		// TODO Auto-generated method stub
 		this.setState(new ReserveBooked(this));
@@ -49,10 +46,6 @@ public class Reserve {
 	public void cancel() {
 		// TODO Auto-generated method stub
 		this.state.cancel();
-	}
-
-	public void cancelConditionalReserve() {
-		// NO SE CANCELAN LAS RESERVAS CONDICIONALES
 	}
 
 	public Period getPeriod() {
@@ -75,6 +68,11 @@ public class Reserve {
 		return this.booking;
 	}
 
+	public double getPrice() {
+		// TODO Auto-generated method stub
+		return this.price;
+	}
+	
 	void next() {
 		// TODO Auto-generated method stub
 		this.state.next();

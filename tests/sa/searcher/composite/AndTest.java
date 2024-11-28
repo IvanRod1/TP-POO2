@@ -2,6 +2,7 @@ package sa.searcher.composite;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -38,16 +39,31 @@ class AndTest {
 	private Period bookingPeriod;
 	private LocalDate checkInDate;
 	
+	private City spyCityQuery;
+	private MaxGuest spyMaxGuestQuery;
+	private MinPrice spyMinPriceQuery;
+	private CheckIn spyCheckInQuery;
+	
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		cityQuery = mock(City.class);
-		maxGuestQuery = mock(MaxGuest.class);
-		minPriceQuery = mock(MinPrice.class);
-		checkInQuery = mock(CheckIn.class);
 		
-		querytest1 = new And(cityQuery,maxGuestQuery);
-		querytest2 = new And(minPriceQuery,checkInQuery);
+		cityQuery = new City("Buenos Aires");
+		spyCityQuery = spy(cityQuery);
+		
+		maxGuestQuery = new MaxGuest(5);
+		spyMaxGuestQuery = spy(maxGuestQuery);
+		
+		minPriceQuery = new MinPrice(1238.0,checkInDate);
+		spyMinPriceQuery =spy(minPriceQuery);
+		
+		checkInQuery = new CheckIn(checkInDate);
+		spyCheckInQuery = spy(checkInQuery);
+		
+		
+		querytest1 = new And(spyCityQuery,spyMaxGuestQuery);
+		querytest2 = new And(spyMinPriceQuery,spyCheckInQuery);
+		
 		
 		bookingMock = mock(Booking.class);
 		bookings = new ArrayList<Booking>();
@@ -68,22 +84,9 @@ class AndTest {
 		when(bookingMock.price(checkInDate)).thenReturn(1239.0);
 		
 		
-		when(cityQuery.getNameCity()).thenReturn("Buenos Aires");
-		when(maxGuestQuery.getMaxGuests()).thenReturn(5); 
-		
-		when(minPriceQuery.getMinPrice()).thenReturn(1238.0); 
-		when(checkInQuery.getCheckInDate()).thenReturn(checkInDate);
-		
-		when(cityQuery.search(bookings)).thenReturn(bookings);
-		when(maxGuestQuery.search(bookings)).thenReturn(bookings);
-		when(minPriceQuery.search(bookings)).thenReturn(bookings);
-		when(checkInQuery.search(bookings)).thenReturn(new ArrayList<Booking>());
-		
-		
-		
+
 		
 		bookings.add(bookingMock);
-		
 		
 		
 	}

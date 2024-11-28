@@ -40,7 +40,7 @@ class CheckInTest {
 		bookingPeriod = mock(Period.class);
 		
 		bookings = new ArrayList<Booking>();
-		
+		 
 		fechaInicio = LocalDate.of(2024, 10, 10);
 		fechaFin = LocalDate.of(2024, 12, 31);
 		
@@ -56,7 +56,12 @@ class CheckInTest {
 		assertNotNull(querytest1);
 		assertNotNull(querytest2);
 	}
-	
+	@Test
+	void getCheckInDateTest() {
+		assertEquals(querytest1.getCheckInDate(),LocalDate.of(2024, 11, 20));
+		assertEquals(querytest2.getCheckInDate(),LocalDate.of(2024, 8, 17));
+		
+	}
 	@Test
 	void successfulQuerySearchTest() {
 		when(bookingMock.isAvaiableDate(LocalDate.of(2024, 11, 20))).thenReturn(true);

@@ -20,11 +20,15 @@ public class CheckIn extends SimpleQuery{
 		List<Booking> aux = new ArrayList<Booking>();
 		
 		for(int i=0;i<bookings.size();i++) {
-			if(bookings.get(i).getPeriod().belongs(this.date) && bookings.get(i).isAvaiableDate(this.date)) {
+			if(bookings.get(i).getPeriod().belongs(getCheckInDate()) && bookings.get(i).isAvaiableDate(getCheckInDate())) {
 				aux.add(bookings.get(i));
 			}
 		}
 		return aux;
+	}
+
+	public LocalDate getCheckInDate() {
+		return this.date;
 	}
 	
 	

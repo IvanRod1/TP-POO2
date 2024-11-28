@@ -45,6 +45,11 @@ class MaxGuestTest {
 		assertNotNull(querytest2);
 	}
 	@Test
+	void getMaxGuestsTest() {
+		assertEquals(querytest1.getMaxGuests(),3);
+		assertEquals(querytest2.getMaxGuests(),5);
+	}
+	@Test
 	void successfullQuerySearchTest() {
 		assertEquals(querytest1.search(bookings).size(),1);
 	}

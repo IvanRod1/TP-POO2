@@ -26,4 +26,8 @@ public class MaxGuest extends SimpleQuery {
 		return aux;
 	}
 
+	public int getMaxGuests() {
+		return this.value;
+	}
+
 }

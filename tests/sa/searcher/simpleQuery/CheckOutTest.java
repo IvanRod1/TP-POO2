@@ -26,7 +26,7 @@ class CheckOutTest {
 	
 	private Period bookingPeriod;
 	
-	private LocalDate fechaInicio;
+	private LocalDate fechaInicio; 
 	private LocalDate fechaFin;
 	
 	@BeforeEach
@@ -55,6 +55,11 @@ class CheckOutTest {
 	void newCheckOutTest() {
 		assertNotNull(querytest1);
 		assertNotNull(querytest2);
+	}
+	@Test
+	void getCheckOutDateTest() {
+		assertEquals(querytest1.getCheckOutDate(), LocalDate.of(2024, 11, 20));
+		assertEquals(querytest2.getCheckOutDate(), LocalDate.of(2024, 8, 17));
 	}
 	@Test
 	void succesfulQuerySearchTest() {

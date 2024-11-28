@@ -18,10 +18,15 @@ public class CheckOut extends SimpleQuery {
 	public List<Booking> search(List<Booking> bookings) {
 		List<Booking> aux = new ArrayList<Booking>();
 		for(int i=0;i<bookings.size();i++) {
-			if(bookings.get(i).getPeriod().belongs(this.date)) {
+			if(bookings.get(i).getPeriod().belongs(getCheckOutDate())) {
 				aux.add(bookings.get(i));
 			}
 		}
 		return aux;
+	}
+
+	public LocalDate getCheckOutDate() {
+		// TODO Auto-generated method stub
+		return this.date;
 	}
 }

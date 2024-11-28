@@ -52,6 +52,11 @@ class CityTest {
 		assertNotNull(querytest1);
 		assertNotNull(querytest2);
 	}
+	@Test
+	void getNameCityTest() {
+		assertEquals(querytest1.getNameCity(), "Buenos Aires");
+		assertEquals(querytest2.getNameCity(), "Cordoba");
+	}
 	
 	@Test
 	void successfullQuerySearchTest() {

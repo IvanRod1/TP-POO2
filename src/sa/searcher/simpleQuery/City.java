@@ -13,12 +13,16 @@ public class City extends SimpleQuery {
 		this.name = cityName;
 	}
 	
+	public String getNameCity() {
+		return this.name;
+	}
+	
 	@Override
 	public List<Booking> search(List<Booking> bookings) {
 		List<Booking> aux = new ArrayList<Booking>();
 		
 		for(int i=0;i<bookings.size();i++) {
-			if(bookings.get(i).getProperty().getCity().equals(name)) {
+			if(bookings.get(i).getProperty().getCity().equals(this.getNameCity())) {
 				aux.add(bookings.get(i));
 			}
 		}

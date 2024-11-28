@@ -29,4 +29,9 @@ public class MaxPrice extends SimpleQuery {
 		return aux;
 	}
 
+	public double getMaxPrice() {
+		// TODO Auto-generated method stub
+		return this.value;
+	}
+
 }

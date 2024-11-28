@@ -27,7 +27,7 @@ class MaxPriceTest {
 		dateReserve = LocalDate.of(2024, 11, 25);
 		
 		querytest1 = new MaxPrice(1234,dateReserve);
-		querytest2 = new MaxPrice(1200,dateReserve);
+		querytest2 = new MaxPrice(1200,dateReserve); 
 		
 		bookingMock = mock(Booking.class);
 		bookings = new ArrayList<Booking>();
@@ -41,8 +41,12 @@ class MaxPriceTest {
 	void newMaxPriceQueryTest() {
 		querytest1 = new MaxPrice(1234,dateReserve);
 	}
-	
 	@Test
+	void getMaxPriceTest() {
+		 assertEquals(querytest1.getMaxPrice(),1234);
+		 assertEquals(querytest2.getMaxPrice(),1200);
+	}
+	@Test 
 	void successfullQuerySearchTest() {
 		assertEquals(querytest1.search(bookings).size(),1);
 	}

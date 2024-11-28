@@ -27,7 +27,7 @@ class MinPriceTest {
 		dateReserve = LocalDate.of(2024, 11, 20);
 		
 		querytest1 = new MinPrice(1234,dateReserve);
-		querytest2 = new MinPrice(1240,dateReserve);
+		querytest2 = new MinPrice(1240,dateReserve); 
 		
 		
 		bookingMock = mock(Booking.class);
@@ -42,7 +42,11 @@ class MinPriceTest {
 	void newMinPriceQueryTest() {
 		querytest1 = new MinPrice(4321,dateReserve);
 	}
-	
+	@Test
+	void getMinPriceTest() {
+		assertEquals(querytest1.getMinPrice(),1234);
+		assertEquals(querytest2.getMinPrice(),1240);
+	}
 	@Test
 	void successfullQuerySearchTest() {
 		assertEquals(querytest1.search(bookings).size(),1);

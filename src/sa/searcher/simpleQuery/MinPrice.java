@@ -21,12 +21,16 @@ public class MinPrice extends SimpleQuery {
 		List<Booking> aux = new ArrayList<Booking>();
 		
 		for(int i=0;i<bookings.size();i++) {
-			if(bookings.get(i).price(date) >= this.value ) {
+			if(bookings.get(i).price(date) >= getMinPrice()) {
 				aux.add(bookings.get(i));
 			}
 		}
 		
 		return aux;
+	}
+
+	public double getMinPrice() {
+		return this.value;
 	}
 
 }

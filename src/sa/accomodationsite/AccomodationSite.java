@@ -80,8 +80,8 @@ public class AccomodationSite {
 		return this.getAllowedProperties().contains(property.getPropertyType());
 	}
 
-	public List<Booking> getBookings() {
-		return this.bookings;
+	public ArrayList<Booking> getBookings() {
+		return (ArrayList<Booking>) this.bookings;
 	}
 	
 	public List<PropertyType> getAllowedProperties() {
@@ -120,43 +120,28 @@ public class AccomodationSite {
 		 /*
 		  * llama al metodo sumary de property para printear en pantalla los atributos de la propiedad
 		  * 
-			 * creo un booking mock, el sumario sabe respopnder los atributos de property, 
-			 * y le hago en el stub un when que retorne un property mmock con valores que le agrego 
-			 * que serian los atributos de la property.
-			 * mock de propiedad stub y mock de booking, hago set property y le paso el property mock 
-			 * es un void
-			 * 
-			 * testear que booking no sea null y con un verify de times(1)
-			 * 
-			 * el sumario es un print screen ln para simular la visualizacion de la propiedad
 			 * */
 		
 		booking.getProperty().summary();
 		 
 	}
 	
-	public List<Booking> getVacantProperties() {
-		
-		/**
-		 * filtra la lista de bookings del sitio y se queda con las que tienen el estado disponible.
-		 * */
+	public List<Reserve> getOccupiedReserves() {
 		
 		return this.getBookings().stream()
-	               .filter(actualBooking -> actualBooking.getState() instanceof ReserveAvailable)
-	               .toList();
+			    				 .flatMap(booking -> booking.getReserves().stream())
+			    				 .filter(reserve -> reserve.getCheckIn().isBefore(LocalDate.now())
+			    						 			&& reserve.getCheckOut().isAfter(LocalDate.now()))
+			    				 .toList();
 	}
 	
-	public List<Booking> getApprovedBookings() {
-		/**
-		 * filtra la lista de bookings del sitio y se queda con las que tienen el estado aprovado
-		 * */
-		
-		return this.getBookings().stream()
-								 .filter(actualBooking -> actualBooking.getState() instanceof ReserveBooked)
-								 .toList();
-	}
 	
-	public List<Booking> bookingHistory(Tenant tenant) {
+	
+	
+	
+	
+	
+	public List<Reserve> allReservesOfTheTenant(Tenant tenant) {
 		
 		
 		
@@ -166,14 +151,15 @@ public class AccomodationSite {
 		 * */
 	
 		return this.getBookings().stream()
-								 .filter(actualBooking -> actualBooking.getTenant().equals(tenant))
-								 .toList();
+		         				 .flatMap(booking -> booking.getReserves().stream())
+		         				 .filter(actualReserve -> actualReserve.getTenant().equals(tenant))
+		         				 .toList();
 		
 		
 	}
 	
 		
-	public List<Booking> futureBookings(Tenant tenant) {
+	public List<Reserve> futureReservesOfTheTenant(Tenant tenant) {
 		
 		
 		/**
@@ -185,21 +171,23 @@ public class AccomodationSite {
 		
 		LocalDate today = LocalDate.now();
 		
-		return this.bookingHistory(tenant).stream()
-						  	  		      .filter(actualBooking -> actualBooking.getCheckIn().isAfter(today))
+		return this.allReservesOfTheTenant(tenant).stream()
+						  	  		      .filter(actualReserve -> actualReserve.getCheckIn().isAfter(today))
 						  	  		      .toList();
 		
 	}
 	
-	public Set<String> allBookingCities(Tenant tenant) {
+	public Set<String> allReservesCities(Tenant tenant) {
 		/**
 		 * primero filtra la lista de bookings y se queda con todos los alquileres del tenant dado, luego transforma esa
 		 * lista en una lista de ciudades por las que alquiló el tenant dado, y sin elementos repetidos
 		 * */
-		
-		return this.bookingHistory(tenant).stream()
-								 		  .map(actualBooking -> actualBooking.getProperty().getCity())
-								 		  .collect(Collectors.toSet());
+		  
+		return this.allReservesOfTheTenant(tenant).stream()
+		        								  .map(reserve -> reserve.getBooking())
+		        								  .map(booking -> booking.getProperty())
+		        								  .map(property -> property.getCity())
+		        								  .collect(Collectors.toSet());
 		
 	}
 	
@@ -209,55 +197,20 @@ public class AccomodationSite {
 		 * todos los bookings del sitio, y sino, almacena el criterio de busqueda dado.
 		 *
 		 * */
-		
-	//	if (this.searcher == null) {
-			/**
-			 * si el usuario no establece un criterio de busqueda, se retornan todos los bookings de la pagina.
-			 * */
-			
-		/*	return this.getBookings();
-			
+
+		if(query == null){
+			return this.getBookings();} else {
+			return query.search(this.getBookings());}
 		}
-			
-			this.searcher = query;
-			
-			return this.searcher.search(this.getBookings());
-			
-	*/
-		
-		return null;
-		//IMPORTANTE
-		//Esste metodo deberia retornar :
-		/*
-		 * if(isNull(query)){
-		 * 	return this.bookings
-		 * }else{
-		 * 	return query.search(this.bookings)
-		 * }
-		 * 
-		 * */
-	}
 	
 	
-	
-	public void addAllowedProperty(PropertyType propertyType) {
-		
-		this.allowedProperties.add(propertyType);
-	}
-	
-	public void addAllowedAmenities(AmenityType amenity) {
-		this.allowedAmenities.add(amenity);
-	}
 
 // ESTE METODO SOLO SE TENDRIA QUE USAR PARA EL SUT DEL ACCOMODATION SITE
+	
 	public void addBooking(Booking b) {
 		this.bookings.add(b);
 		
 	}
-	
-
-
-	
 		
 }
 	

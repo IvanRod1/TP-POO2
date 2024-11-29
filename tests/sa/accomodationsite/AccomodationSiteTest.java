@@ -4,7 +4,7 @@ import static org.junit.Assert.assertThrows;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-//import static org.mockito.Mockito.mock;
+
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -15,29 +15,21 @@ import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import sa.accomodationsite.AccomodationSite;
-
-//import sa.booking.ReserveAvailable;
-//import sa.booking.ReserveBooked;
-//import sa.booking.IReserveState;
-//import sa.booking.SpecialPeriod;
-//import sa.booking.ReserveOccupied;
-//import sa.payments.PaymentMethod;
-//import sa.properties.PaymentMethodEnum;
 import sa.booking.Booking;
 import sa.booking.PaymentMethod;
 import sa.booking.SpecialPeriod;
 import sa.booking.reserveStates.IReserveState;
-import sa.booking.reserveStates.ReserveAvailable;
 import sa.booking.reserveStates.ReserveBooked;
 import sa.booking.reserveStates.ReserveOccupied;
-import sa.booking.BookedPeriod;
 import sa.properties.AmenityType;
 import sa.properties.Property;
 import sa.properties.PropertyType;
-import sa.users.Reserve;
 import sa.users.Tenant;
+import sa.booking.Reserve;
+
 
 public class AccomodationSiteTest {
 	
@@ -50,6 +42,7 @@ public class AccomodationSiteTest {
 	Booking booking2;
 	Reserve reserve1;
 	Reserve reserve2;
+	Reserve reserve3;
 	List<Reserve> expectedReserves;
 	
 	// variables para el metodo allReservesOfTheTenant:
@@ -70,29 +63,54 @@ public class AccomodationSiteTest {
 	
 	// excercise:
 	
+	@BeforeEach
 	public void setUp() throws Exception {
 		
 		// SUT:
 		accomodationSite = new AccomodationSite();
 		
+		booking1 = mock(Booking.class);
+		booking2 = mock(Booking.class);
+		booking3 = mock(Booking.class);
+		
+		reserve1 = mock(Reserve.class);
+		reserve2 = mock(Reserve.class);
+		reserve3 = mock(Reserve.class);
+		tenant = mock(Tenant.class);
+		
+		reservesOfTheTenant = new ArrayList<Reserve>();
+		expectedReserves = new ArrayList<Reserve>();
+		futureReserves = new ArrayList<Reserve>();
+		bookings = new ArrayList<Booking>();
+		
 		// para getOccupiedReservesTest
 		accomodationSite.addBooking(booking1);
 		accomodationSite.addBooking(booking2);
 		
-		booking1.getReserves().add(reserve1); //ver que metodo usa martin paara agregar o crear una reserva y meterla en la lista
-		booking2.add(reserve2);
+		when(booking1.getReserves()).thenReturn(expectedReserves);
 		
 		expectedReserves.add(reserve1);
 		expectedReserves.add(reserve2);
 		
+		reservesOfTheTenant.add(reserve1);
+		reservesOfTheTenant.add(reserve2);
+		
+		bookings.add(booking1);
+		bookings.add(booking2);
+		
+		
 		when(reserve1.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 25));
-		when(reserve1.getChechOut()).thenReturn(LocalDate.of(2024, 12, 15));
+		when(reserve1.getCheckOut()).thenReturn(LocalDate.of(2024, 12, 15));
 		
 		when(reserve2.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 27));
-		when(reserve2.getChechOut()).thenReturn(LocalDate.of(2024, 12, 17));
+		when(reserve2.getCheckOut()).thenReturn(LocalDate.of(2024, 12, 17));
+		
+		when(reserve3.getCheckIn()).thenReturn(LocalDate.of(2024, 12, 24));
+		when(reserve3.getCheckOut()).thenReturn(LocalDate.of(2025, 1, 1));
 		
 		when(reserve1.getTenant()).thenReturn(tenant);
 		when(reserve2.getTenant()).thenReturn(tenant);
+		when(reserve3.getTenant()).thenReturn(tenant);
 		// para getOccupiedReservesTest
 		
 		
@@ -130,11 +148,11 @@ public class AccomodationSiteTest {
 		// TODO: solo testea el lado positivo, preguntarle a ivan como testear la rama del else, probar pasarle una lista vacia para la rama if positiva
 		// para el else puede ser un spy que se verifique si le llego la llamada a la query del  metodo search
 		
-		assertEquals(null, accomodationSite.search(null));
+		assertEquals(bookings, accomodationSite.search(null));
 	}
 	
 	@Test
-	void agregarBookingTest() {
+	void addBookingTest() {
 		
 		accomodationSite.addBooking(booking3);
 		

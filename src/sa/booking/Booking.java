@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import sa.booking.reserveStates.IReserveState;
+import sa.booking.reserveStates.ReserveBooked;
 import sa.cancellation.CostFree;
 import sa.cancellation.ICancellationPolicy;
 import sa.properties.Property;
@@ -21,7 +22,6 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 	private Property				property;
 	private Pricer					pricer;
 
-	private IReserveState			state;
 	private ICancellationPolicy		policy;
 
 	private List<PaymentMethod>			paymentMethods;
@@ -169,7 +169,13 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 	@Override
 	public void notifySubscribersCancelled(Reserve r) {
 		// TODO Auto-generated method stub
+		// Tanto el AccomodationSite como User pueden implementar la interfaz de observador y por lo tanto
+		// AccomodationSite, Tenant y Owner pueden registrarse a las cancelaciones con facilidad.
 		this.obsCancel.stream().forEach(o -> o.updateCancellation(r));
+		// TODO: qué se hace con la reserva cancelada 'r' ?
+		this.reserves.remove(r);
+		this.applyPolicy(r);
+		this.triggerNextRequest(LocalDate.now());
 	}
 
 	public void unRegisterPriceObserver(INotifyObserver o) {
@@ -244,4 +250,5 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 			this.getProperty().getOwner().reserveRequestedOn(next_r);
 		}
 	}
+
 }

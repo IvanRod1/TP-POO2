@@ -4,7 +4,7 @@ import static org.junit.Assert.assertThrows;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-//import static org.mockito.Mockito.mock;
+
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -17,27 +17,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import sa.accomodationsite.AccomodationSite;
-
-//import sa.booking.ReserveAvailable;
-//import sa.booking.ReserveBooked;
-//import sa.booking.IReserveState;
-//import sa.booking.SpecialPeriod;
-//import sa.booking.ReserveOccupied;
-//import sa.payments.PaymentMethod;
-//import sa.properties.PaymentMethodEnum;
 import sa.booking.Booking;
 import sa.booking.PaymentMethod;
 import sa.booking.SpecialPeriod;
 import sa.booking.reserveStates.IReserveState;
-import sa.booking.reserveStates.ReserveAvailable;
 import sa.booking.reserveStates.ReserveBooked;
 import sa.booking.reserveStates.ReserveOccupied;
-import sa.booking.BookedPeriod;
 import sa.properties.AmenityType;
 import sa.properties.Property;
 import sa.properties.PropertyType;
-import sa.users.Reserve;
 import sa.users.Tenant;
+import sa.booking.Reserve;
 
 public class AccomodationSiteTest {
 	
@@ -80,16 +70,16 @@ public class AccomodationSiteTest {
 		accomodationSite.addBooking(booking2);
 		
 		booking1.getReserves().add(reserve1); //ver que metodo usa martin paara agregar o crear una reserva y meterla en la lista
-		booking2.add(reserve2);
+		booking2.getReserves().add(reserve2);
 		
 		expectedReserves.add(reserve1);
 		expectedReserves.add(reserve2);
 		
 		when(reserve1.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 25));
-		when(reserve1.getChechOut()).thenReturn(LocalDate.of(2024, 12, 15));
+		when(reserve1.getCheckOut()).thenReturn(LocalDate.of(2024, 12, 15));
 		
 		when(reserve2.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 27));
-		when(reserve2.getChechOut()).thenReturn(LocalDate.of(2024, 12, 17));
+		when(reserve2.getCheckOut()).thenReturn(LocalDate.of(2024, 12, 17));
 		
 		when(reserve1.getTenant()).thenReturn(tenant);
 		when(reserve2.getTenant()).thenReturn(tenant);
@@ -134,7 +124,7 @@ public class AccomodationSiteTest {
 	}
 	
 	@Test
-	void agregarBookingTest() {
+	void addBookingTest() {
 		
 		accomodationSite.addBooking(booking3);
 		

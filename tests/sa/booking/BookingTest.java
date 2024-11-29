@@ -12,8 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import sa.booking.reserveStates.ReserveBooked;
-import sa.booking.reserveStates.ReserveOccupied;
+import sa.booking.reserveStates.Timer;
 import sa.cancellation.CostFree;
 import sa.cancellation.NoCancellation;
 import sa.properties.Property;
@@ -26,8 +25,6 @@ public class BookingTest {
 
 	private Booking				booking;
 	private Booking				bookingReal;
-	private ReserveBooked		stateBooked;
-	private ReserveOccupied		stateOccupied;
 	private Timer				timer;
 
 	private List<PaymentMethod> 		paymentMethods 	= new ArrayList<PaymentMethod>();
@@ -80,9 +77,6 @@ public class BookingTest {
 	@BeforeEach
 	public void setUp() {
 		// DOC (Depended-On-Component): nuestros doubles
-		this.stateBooked		= mock(ReserveBooked.class);
-		this.stateOccupied		= mock(ReserveOccupied.class);
-
 		this.policy				= spy(CostFree.class);
 		this.property			= mock(Property.class);
 		this.pricer				= mock(Pricer.class);

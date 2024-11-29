@@ -12,15 +12,15 @@ import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
 import sa.booking.Reserve;
-import sa.observer.BookingSubcriber;
+import sa.observer.BookingSubscriber;
 
 class TimerTest {
 
 	private Timer timer;
 	
-	private List<BookingSubcriber> bsubscribers;
-	private BookingSubcriber suscriber1;
-	private BookingSubcriber suscriber2;
+	private List<BookingSubscriber> bsubscribers;
+	private BookingSubscriber suscriber1;
+	private BookingSubscriber suscriber2;
 	
 	private Booking	booking1;
 	private Booking	booking2;
@@ -34,8 +34,8 @@ class TimerTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		// DOC
-		this.suscriber1	= mock(BookingSubcriber.class);
-		this.suscriber2	= mock(BookingSubcriber.class);
+		this.suscriber1	= mock(BookingSubscriber.class);
+		this.suscriber2	= mock(BookingSubscriber.class);
 		this.booking1 	= mock(Booking.class);
 		this.booking2 	= mock(Booking.class);
 		this.reserve1 	= mock(Reserve.class);

@@ -6,20 +6,20 @@ import java.util.List;
 
 import sa.booking.Booking;
 import sa.booking.Reserve;
-import sa.observer.BookingSubcriber;
+import sa.observer.BookingSubscriber;
 
 public class Timer implements INotifyTimer {
 
-	private List<BookingSubcriber> bsubscribers;
+	private List<BookingSubscriber> bsubscribers;
 	
 	public Timer() {
-		this.bsubscribers = new ArrayList<BookingSubcriber>();
+		this.bsubscribers = new ArrayList<BookingSubscriber>();
 	}
 
 	@Override
 	public void register(Booking booking, Reserve reserve, LocalDate date) {
 		// TODO Auto-generated method stub
-		this.bsubscribers.add(new BookingSubcriber(booking, reserve, date));
+		this.bsubscribers.add(new BookingSubscriber(booking, reserve, date));
 		
 	}
 
@@ -38,7 +38,7 @@ public class Timer implements INotifyTimer {
 								  .forEach(bs -> bs.getBooking().update(bs.getReserve(), date));
 	}
 
-	public List<BookingSubcriber> getSubscribers() {
+	public List<BookingSubscriber> getSubscribers() {
 		// TODO Auto-generated method stub
 		return this.bsubscribers;
 	}

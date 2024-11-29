@@ -13,9 +13,9 @@ import org.junit.jupiter.api.Test;
 import sa.accomodationsite.AccomodationSite;
 import sa.accomodationsite.Administrator;
 import sa.booking.Booking;
-import sa.booking.ReserveBooked;
-import sa.booking.ReserveAvailable;
-import sa.booking.IReserveState;
+import sa.booking.reserveStates.IReserveState;
+import sa.booking.reserveStates.ReserveAvailable;
+import sa.booking.reserveStates.ReserveBooked;
 import sa.properties.Property;
 import sa.users.Tenant;
 

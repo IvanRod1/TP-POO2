@@ -10,13 +10,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import sa.searcher.simpleQuery.IQuery;
-import sa.booking.Booking;
-import sa.booking.BookedPeriod;
-import sa.booking.ReserveAvailable;
-import sa.booking.ReserveBooked;
 import sa.properties.AmenityType;
 //import sa.payments.PaymentMethod;
 import sa.booking.*;
+import sa.booking.reserveStates.ReserveAvailable;
+import sa.booking.reserveStates.ReserveBooked;
 import sa.properties.Property;
 import sa.properties.PropertyType;
 import sa.users.Owner;

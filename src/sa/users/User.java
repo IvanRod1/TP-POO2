@@ -3,8 +3,6 @@ package sa.users;
 import java.util.ArrayList;
 import java.util.List;
 
-import sa.booking.BookedPeriod;
-import sa.booking.Booking;
 import sa.properties.Rankeable;
 import sa.properties.Review;
 
@@ -45,6 +43,4 @@ public abstract class User implements Rankeable {
 		
 	}
 
-	public abstract void reserveCancelled(Booking b, BookedPeriod bp);
-		// TODO Auto-generated method stub
 }

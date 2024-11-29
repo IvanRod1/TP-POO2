@@ -109,4 +109,9 @@ class PricerTest {
 	void testGetBasePrice() {
 		assertEquals(this.basePrice, this.pricer.getBasePrice());
 	}
+
+	@Test
+	void testGetSPeriods() {
+		assertEquals(this.periods, this.pricer.getSPeriods());
+	}
 }

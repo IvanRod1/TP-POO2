@@ -5,76 +5,60 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-import sa.booking.BookedPeriod;
-import sa.booking.Booking;
-import sa.booking.reserveStates.ReserveAvailable;
-import sa.booking.reserveStates.ReserveBooked;
-import sa.properties.Property;
-import sa.users.Owner;
-import sa.users.Tenant;
+import sa.booking.Reserve;
 
-class ReserveAvailableTest {
+class ReserveCancelledTest {
 
-	private ReserveAvailable	stateAvailable;
-	private ReserveBooked		stateBooked;
-	private Booking				booking;
-	private Property			property;
-	private Tenant				tenant;
-	private Owner				owner;
-	private BookedPeriod		bp;
-	private LocalDate			date;
+	private ReserveCancelled	stateCancelled;
+
+	private Reserve				reserve;
+	private LocalDate			cancelDate;
 	
 	@BeforeEach
 	void setUp() throws Exception {
 		// DOC (Depended-On-Component): nuestros doubles
-		this.stateBooked	= mock(ReserveBooked.class);
-		this.booking		= mock(Booking.class);
-		this.property		= mock(Property.class);
-		this.tenant			= mock(Tenant.class);
-		this.owner			= mock(Owner.class);
-		this.bp				= mock(BookedPeriod.class);
-		this.date			= LocalDate.now();
-
-		when(this.booking.getProperty()).thenReturn(this.property);
-		when(this.booking.getTenant()).thenReturn(this.tenant);
-		when(this.property.getOwner()).thenReturn(this.owner);
-		when(this.bp.belongs(this.date)).thenReturn(true);
+		this.reserve		= mock(Reserve.class);
+		this.cancelDate		= LocalDate.now();
 		
 		
 		// SUT (System Under Test): objeto a testear
-		this.stateAvailable = new ReserveAvailable(this.stateBooked);
+		this.stateCancelled = new ReserveCancelled(this.reserve, this.cancelDate);
 	}
 
 	@Test
 	void testConstructor() {
-		assertNotNull(this.stateAvailable);
+		assertNotNull(this.stateCancelled);
 	}
 
 	@Test
 	void testNext() {
-		assertEquals(this.stateBooked, this.stateAvailable.next());
+		this.stateCancelled.next();
 	}
+
+	@Test
+	void testApprove() {
+		this.stateCancelled.approve(this.reserve);
+	}
+
+	@Test
+	void testCancel() {this.stateCancelled.cancel();}
 	
 	@Test
-	void testRequestReserve() {
-		verify(this.stateBooked, times(0)).requestReserve(this.booking, this.bp);
-		this.stateAvailable.requestReserve(this.booking, this.bp);
-		verify(this.stateBooked, times(1)).requestReserve(this.booking, this.bp);	
+	void testGetReserve() {
+		assertEquals(this.reserve, this.stateCancelled.getReserve());
 	}
 
 	@Test
-	void testApproveReserve() {}
+	void testIsCancelled() {
+		assertEquals(true, this.stateCancelled.isCancelled());
+	}
 
 	@Test
-	void testCancelReserve() {}
-
+	void testCancellationDate() {
+		assertEquals(this.cancelDate, this.stateCancelled.cancellationDate());
+	}
 }

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
+import sa.booking.Reserve;
 import sa.properties.Property;
 import sa.properties.PropertyType;
 
@@ -18,6 +19,7 @@ class ApplicationMobileTest {
 
 	private ApplicationMobile observertest;
 	
+	private Reserve reserveMock;
 	private Booking bookingMock;
 	private Property propertyMock;
 	private PropertyType type;
@@ -27,6 +29,8 @@ class ApplicationMobileTest {
 	void setUp() throws Exception {
 		observertest = new ApplicationMobile();
 		
+		reserveMock = mock(Reserve.class);
+		
 		bookingMock = mock(Booking.class);
 		
 		propertyMock = mock(Property.class);
@@ -35,6 +39,7 @@ class ApplicationMobileTest {
 		
 		observertest.setScreen(screenMock);
 		
+		when(reserveMock.getBooking()).thenReturn(bookingMock);
 		when(bookingMock.getProperty()).thenReturn(propertyMock);
 		when(propertyMock.getPropertyType()).thenReturn(type);
 		when(type.type()).thenReturn("Casa Quinta");

@@ -2,6 +2,7 @@ package sa.observers;
 
 import sa.booking.Booking;
 
+
 public class ApplicationMobile implements INotifyObserver{
 
 	private ObjectScreen screen;

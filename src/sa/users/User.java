@@ -11,10 +11,7 @@ public abstract class User implements Rankeable {
 	protected int telephone;
 	protected String mail;
 	private List<Review> reviews;
-
-	protected User() {
-		
-	}
+	private List<Reserve> reserves;
 	
 	public User(String fullName, int telephone, String mail) {
 		this.fullName = fullName;

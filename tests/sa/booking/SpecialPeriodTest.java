@@ -7,13 +7,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertTrue;
 
-
 import java.time.LocalDate;
 
 
 class SpecialPeriodTest {
 
-	private SpecialPeriod	period;
+	private SpecialPeriod	specialPeriod;
 	
 	private double		price;
 	private LocalDate	begin;
@@ -27,35 +26,42 @@ class SpecialPeriodTest {
 		this.end	= this.begin.plusDays(2);
 		
 		// SUT
-		this.period	= new SpecialPeriod(this.price, this.begin, this.end);
+		this.specialPeriod	= new SpecialPeriod(this.price, begin, end);
 	}
 
 	@Test
 	void testConstructor() {
-		assertNotNull(this.period);
+		assertNotNull(this.specialPeriod);
 	}
 	
 	@Test
 	void testStart() {
-		assertEquals(this.begin, this.period.start());
+		assertEquals(this.begin, this.specialPeriod.start());
 	}
 
 	@Test
 	void testEnd() {
-		assertEquals(this.end, this.period.end());
+		assertEquals(this.end, this.specialPeriod.end());
 	}
 	
 	@Test
 	void testBelongs() {
-		assertFalse(this.period.belongs(this.begin.minusDays(1)));
-		assertTrue(this.period.belongs(this.begin));
-		assertTrue(this.period.belongs(this.begin.plusDays(1)));
-		assertTrue(this.period.belongs(this.end));
-		assertFalse(this.period.belongs(this.end.plusDays(1)));
+		assertFalse(this.specialPeriod.belongs(this.begin.minusDays(1)));
+		assertTrue(this.specialPeriod.belongs(this.begin));
+		assertTrue(this.specialPeriod.belongs(this.begin.plusDays(1)));
+		assertTrue(this.specialPeriod.belongs(this.end));
+		assertFalse(this.specialPeriod.belongs(this.end.plusDays(1)));
 	}
 
 	@Test
 	void testPrice() {
-		assertEquals(this.price, this.period.price());
+		assertEquals(this.price, this.specialPeriod.price());
+	}
+	
+	@Test
+	void testSetPrice() {
+		assertEquals(this.price, this.specialPeriod.price());
+		this.specialPeriod.setPrice(this.price*2);
+		assertEquals(this.price*2, this.specialPeriod.price());
 	}
 }

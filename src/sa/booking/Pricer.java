@@ -1,14 +1,9 @@
 package sa.booking;
 
 import java.time.LocalDate;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import sa.payments.PaymentMethod;
 
 public class Pricer {
 	

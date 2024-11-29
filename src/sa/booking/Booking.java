@@ -2,86 +2,93 @@ package sa.booking;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
+import sa.booking.reserveStates.IReserveState;
+import sa.booking.reserveStates.ReserveBooked;
 import sa.cancellation.CostFree;
 import sa.cancellation.ICancellationPolicy;
 import sa.properties.Property;
-import sa.observer.interfaces.INotifyObserver;
+import sa.subscriptions.INotifyTimerSubscriber;
 import sa.users.Tenant;
+import sa.observer.interfaces.INotifyObserver;
 
 
 
-public class Booking implements INotifyConfiguration {
+public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 
-	private LocalDate				checkIn;
-	private LocalDate				checkOut;
+	private Period					period;
 	private Property				property;
 	private Pricer					pricer;
-	private Tenant 					tenant;
-	private BookingSchedule			schedule;
 
-	private IReserveState			state;
 	private ICancellationPolicy		policy;
 
-	private List<PaymentMethod>		paymentMethods;
-	private List<INotifyObserver>	obsBasePrice;
-	
-	private HashMap<LocalDate, Set<INotifyObserver>>    obsBP;
-	private HashMap<LocalDate, Set<INotifyObserver>>	obsSP;
-	private HashMap<BookedPeriod, Set<INotifyObserver>> obsCancel;
-	private HashMap<BookedPeriod, Set<INotifyObserver>> obsReserve;
+	private List<PaymentMethod>			paymentMethods;
+	private List<Reserve>				reserves;
+	private List<Reserve>				waitings;
+	private Timer						timer;
+
+	private List<INotifyObserver> 	obsCancel;
+	private List<INotifyObserver> 	obsReserve;
+	private List<INotifyObserver> 	obsPrice;
 
 
-	public Booking(Property property, LocalDate checkIn, LocalDate checkOut, List<PaymentMethod> paymentMethods,
+	public Booking(Property property, LocalDate begin, LocalDate end, List<PaymentMethod> paymentMethods,
 			double pricePerDayWeekday, List<SpecialPeriod> periods) {
 		// TODO Auto-generated constructor stub
-		this.state 				= new ReserveAvailable();
 		this.pricer		 		= new Pricer(pricePerDayWeekday, periods);
 		this.policy				= new CostFree();
 		this.paymentMethods		= paymentMethods;
-		this.setCheckIn(checkIn);
-		this.setCheckOut(checkOut);
+		this.setPeriod(new Period(begin, end));
 		this.property			= property;
-		this.obsBasePrice		= new ArrayList<INotifyObserver>();
-		this.obsSP 				= new HashMap<LocalDate, Set<INotifyObserver>>();
-		this.obsBP 				= new HashMap<LocalDate, Set<INotifyObserver>>();
-		this.obsCancel  		= new HashMap<BookedPeriod, Set<INotifyObserver>>();
-		this.obsReserve  		= new HashMap<BookedPeriod, Set<INotifyObserver>>();
-		this.schedule  			= new BookingSchedule();
+		this.obsPrice			= new ArrayList<INotifyObserver>();
+		this.obsCancel  		= new ArrayList<INotifyObserver>();
+		this.obsReserve  		= new ArrayList<INotifyObserver>();
 	}
 
-	// Para hacer DOC del state available
-	public Booking(ReserveAvailable stateAvailable, CostFree policy, Pricer pricer, Property property, LocalDate checkIn,
-			LocalDate checkOut,	List<PaymentMethod> paymentMethods, double pricePerDayWeekday, List<SpecialPeriod> periods,
-			HashMap<LocalDate, Set<INotifyObserver>> obsSP, HashMap<LocalDate, Set<INotifyObserver>> obsBP,
-			HashMap<BookedPeriod, Set<INotifyObserver>> obsCancel, HashMap<BookedPeriod, Set<INotifyObserver>> obsReserve,
-			BookingSchedule schedule, List<INotifyObserver> obsBasePrice) {
+	// Para hacer DOC de sus atributos.
+	public Booking(CostFree policy, Pricer pricer, Property property,
+			List<PaymentMethod> paymentMethods, double pricePerDayWeekday, List<SpecialPeriod> specialPeriods,
+			Period period, List<Reserve> reserves, List<Reserve> waitings, Timer timer, List<INotifyObserver> obsCancel
+			, List<INotifyObserver> obsReserve, List<INotifyObserver> obsPrice) {
 		// TODO Auto-generated constructor stub
-		this.state 			= stateAvailable;
 		this.pricer 		= pricer;
 		this.pricer.setBasePrice(pricePerDayWeekday);
-		periods.stream().forEach(p -> this.pricer.addSpecialPeriod(p));
+		specialPeriods.stream().forEach(p -> this.pricer.addSpecialPeriod(p));
 		this.policy			= policy;
 		this.paymentMethods	= paymentMethods;
-		this.setCheckIn(checkIn);
-		this.setCheckOut(checkOut);
 		this.property		= property;
-		this.obsSP 			= obsSP;
-		this.obsBP 			= obsBP;
+		this.period			= period;
+		this.reserves		= reserves;
+		this.waitings		= waitings;
+		this.timer			= timer;
 		this.obsCancel		= obsCancel;
 		this.obsReserve		= obsReserve;
-		this.schedule  		= schedule;
-		this.obsBasePrice	= obsBasePrice;
+		this.obsPrice		= obsPrice;
 	}
 
-	public IReserveState getState() {
+	public void newReserve(Tenant t, LocalDate start, LocalDate end) {
 		// TODO Auto-generated method stub
-		return this.state;
+//		this.schedule.reserve(t, start, end);
+		this.getProperty().getOwner().reserveRequestedOn(new Reserve(this, t, new Period(start, end)));
+//		this.triggerNextRequest();
+	}
+
+	public void newConditionalReserve(Tenant t, LocalDate start, LocalDate end) {
+		// TODO Auto-generated method stub
+		this.waitings.add(new Reserve(this, t, new Period(start, end)));
+		
+	}
+
+	public Property getProperty() {
+		// TODO Auto-generated method stub
+		return this.property;
+	}
+
+	public List<PaymentMethod> getPaymentMethods() {
+		// TODO Auto-generated method stub
+		return this.paymentMethods;
 	}
 
 	public void setCancellationPolicy(ICancellationPolicy policy) {
@@ -94,9 +101,9 @@ public class Booking implements INotifyConfiguration {
 		return this.policy;
 	}
 
-	public void applyPolicy(BookedPeriod bp) {
+	public void applyPolicy(Reserve r) {
 		// TODO Auto-generated method stub
-		this.policy.activate(LocalDate.now(), this, bp);
+		this.policy.activate(r);
 	}
 
 	public void setBasePrice(double newPrice) {
@@ -104,21 +111,21 @@ public class Booking implements INotifyConfiguration {
 		double currBP = this.pricer.getBasePrice();
 		this.pricer.setBasePrice(newPrice);
 		if (currBP > newPrice) {
-			// notificá
-			this.obsBasePrice.stream().forEach(o -> o.update(this));
+			// notificá que el booking bajó de precio base
+			this.notifySubscribersPrice();
 		} 		
 	}
 
-//	public void setSPPrice(double newPrice, SpecialPeriod sp) {
-//		// TODO Auto-generated method stub
-//		double currSPP = sp.price();
-//		sp.setPrice(newPrice);
-//		if (currSPP > newPrice) {
-//			// notificá
-//			datesSP = this.obsSP.stream().filter(p -> p.equals(sp));
-//		}
-//	}
-//	
+	public void setSPPrice(double newPrice, SpecialPeriod sp) {
+		// TODO Auto-generated method stub
+		double currSPP = sp.price();
+		sp.setPrice(newPrice);
+		if (currSPP > newPrice) {
+			// notificá que el booking bajó de precio
+			this.notifySubscribersPrice();
+		}
+	}
+	
 	public double price(LocalDate date) {
 		// TODO Auto-generated method stub
 		return this.pricer.price(date);
@@ -130,194 +137,118 @@ public class Booking implements INotifyConfiguration {
 	}
 
 	@Override
-	public void registerPriceObserver(INotifyObserver o, LocalDate startDay, LocalDate endDay) {
+	public void registerPriceObserver(INotifyObserver o) {
 		// TODO Auto-generated method stub
-//		LocalDate currDay = startDay;
-		while (!startDay.isEqual(endDay)) {
-			this.registerPriceObserver(o, startDay);
-			startDay = startDay.plusDays(1);
-		}
-		// Caso borde
-		this.registerPriceObserver(o, startDay);
+		this.obsPrice.add(o);
 	}
 
 	@Override
-	public void registerPriceObserver(INotifyObserver o, LocalDate date) {
+	public void registerCancelObserver(INotifyObserver o) {
 		// TODO Auto-generated method stub
-		Optional<SpecialPeriod> sp = this.pricer.getSPeriods().stream().filter(p -> p.belongs(date)).findFirst();
-		if (sp.isPresent()) {
-			// Subtarea para agregar a subscribers de Special Periods
-			if (this.obsSP.containsKey(date)) {
-				this.obsSP.get(date).add(o);
-			} else {
-				Set<INotifyObserver> os = new HashSet<INotifyObserver>();
-				os.add(o);
-				this.obsSP.put(date, os);
-			}
-		} else {
-			// Subtarea para agregar a subscribers de Base Price
-			if (this.obsBP.containsKey(date)) {
-				this.obsBP.get(date).add(o);
-			} else {
-				Set<INotifyObserver> os = new HashSet<INotifyObserver>();
-				os.add(o);
-				this.obsBP.put(date, os);
-			}
-		}
-	}
-	
-	@Override
-	public void registerCancelObserver(INotifyObserver o, BookedPeriod bp) {
-		// TODO Auto-generated method stub
-		// Subtarea para agregar a subscribersCancel
-		if (this.obsCancel.containsKey(bp)) {
-			this.obsCancel.get(bp).add(o);
-		} else {
-			Set<INotifyObserver> os = new HashSet<INotifyObserver>();
-			os.add(o);
-			this.obsCancel.put(bp, os);
-		}
+		this.obsCancel.add(o);
 	}
 
 	@Override
-	public void registerReserveObserver(INotifyObserver o, BookedPeriod bp) {
+	public void registerReserveObserver(INotifyObserver o) {
 		// TODO Auto-generated method stub
-		if (this.obsReserve.containsKey(bp)) {
-			this.obsReserve.get(bp).add(o);
-		} else {
-			Set<INotifyObserver> os = new HashSet<INotifyObserver>();
-			os.add(o);
-			this.obsReserve.put(bp, os);
-		}
+		this.obsReserve.add(o);
 	}
 
 	@Override
-	public void notifySubscribersPrice(Booking b, LocalDate date) {
-		if (this.obsBP.containsKey(date)) {
-			this.obsBP.get(date).stream().forEach(o -> o.update(b, date));
-		} else {
-			this.obsSP.get(date).stream().forEach(o -> o.update(b, date));
-		}
-	}
-	
-	@Override
-	public void notifySubscribersReserve(Booking b, BookedPeriod bp) {
+	public void notifySubscribersReserve(Reserve r) {
 		// TODO Auto-generated method stub
-		if (this.obsReserve.containsKey(bp)) {
-			this.obsReserve.get(bp).stream().forEach(o -> o.update(b, bp));
-		}
+		this.obsReserve.stream().forEach(o -> o.updateNewReserve(r));
 	}
 
 	@Override
-	public void notifySubscribersCancelled(Booking b, BookedPeriod bp) {
+	public void notifySubscribersPrice() {
 		// TODO Auto-generated method stub
-		if (this.obsCancel.containsKey(bp)) {
-			this.obsCancel.get(bp).stream().forEach(o -> o.update(b, bp));
+		this.obsPrice.stream().forEach(o -> o.updateLowerPrice(this));
+	}
+
+	@Override
+	public void notifySubscribersCancelled(Reserve r) {
+		// TODO Auto-generated method stub
+		// Tanto el AccomodationSite como User pueden implementar la interfaz de observador y por lo tanto
+		// AccomodationSite, Tenant y Owner pueden registrarse a las cancelaciones con facilidad.
+		this.obsCancel.stream().forEach(o -> o.updateCancellation(r));
+		// TODO: qué se hace con la reserva cancelada 'r' ?
+		this.reserves.remove(r);
+		this.applyPolicy(r);
+		this.triggerNextRequest(LocalDate.now());
+	}
+
+	public void unRegisterPriceObserver(INotifyObserver o) {
+		// TODO Auto-generated method stub
+		this.obsPrice.remove(o);
+	}
+
+	public void unRegisterCancelObserver(INotifyObserver o) {
+		// TODO Auto-generated method stub
+		this.obsCancel.remove(o);
+	}
+
+	public void unRegisterReserveObserver(INotifyObserver o) {
+		// TODO Auto-generated method stub
+		this.obsReserve.remove(o);
+	}
+
+	public Period getPeriod() {
+		return this.period;
+	}
+
+	private void setPeriod(Period p) {
+		this.period = p;
+	}
+
+	public List<Reserve> getReserves() {
+		// TODO Auto-generated method stub
+		return this.reserves;
+	}
+
+	public List<Reserve> getConditionalReserves() {
+		// TODO Auto-generated method stub
+		return this.waitings;
+	}
+
+	void addReserve(Reserve reserve) {
+		// TODO Auto-generated method stub
+		// TODO: debería cobrarle al Tenant porque ya fue aceptada
+		this.getReserves().add(reserve);
+//		reserve.registerToTimer(timer, reserve.getCheckIn());
+		this.getTimer().register(this, reserve, reserve.getCheckIn());
+	}
+
+	private Timer getTimer() {
+		// TODO Auto-generated method stub
+		return this.timer;
+	}
+
+	@Override
+	public void update(Reserve r, LocalDate date) {
+		// TODO Auto-generated method stub
+		this.getTimer().unregister(this, r, date);
+		if (date.equals(r.getCheckOut())) {
+			// Se terminó la ocupación
+			// Hay que remover esta reserve de la lista 'reserves' pero antes preguntar si no hay nadie esperando
+			this.getReserves().remove(r);
+			this.triggerNextRequest(date);
+		} else { // Comienza su tiempo de ocupación
+			r.next();
+			this.getTimer().register(this, r, r.getCheckOut());
 		}
 	}
 
-	public Property getProperty() {
-		// TODO Auto-generated method stub
-		return this.property;
-	}
-	
-	public void reserve(Tenant t, LocalDate start, LocalDate end) {
-		// TODO Auto-generated method stub
-		this.schedule.reserve(t, start, end);
-		this.triggerNextRequest();
-	}
-
-	public void approveReserve(BookedPeriod bp) { // El Owner aprueba al Tenant solicitado.
-		// TODO Auto-generated method stub
-		this.state.approveReserve(this, bp);
-	}
-	
-	public void cancelReserve(BookedPeriod bp) {  // BookedPeriod actual
-		// TODO Auto-generated method stub
-		this.state.cancelReserve(this, bp);
-		this.tenant = null; // TODO: Caso borde: había tenant, se cancela y no espera nadie. Qué se hace con esa referencia vieja?
-		this.triggerNextRequest();
-	}
-
-	public void cancelConditionalReserve(BookedPeriod bp) {
-		this.schedule.remove(bp);
-		this.notifySubscribersCancelled(this, bp);
-		this.applyPolicy(bp);
-	}  // BookedPeriod en agenda
-
-	// Private methods
-	private boolean hasAHoldingTenant() {
-		// TODO Auto-generated method stub
-		return this.tenant != null;
-	}
-	
-	private boolean someoneIsWaiting() {
-		return !this.schedule.isEmpty();
-	}
-
-	// Package methods - (no-modifier) only package path visibility
-	void setState(IReserveState state) {
-		// TODO Auto-generated method stub
-		this.state = state;
-	}
-
-	void triggerNextRequest() {
-		if (!this.hasAHoldingTenant() && this.someoneIsWaiting()) {
-			if (this.schedule.hasReserves(LocalDate.now())) {
-				BookedPeriod bp = this.schedule.getNext(LocalDate.now());
-				this.state.requestReserve(this, bp);
-			}
+	void triggerNextRequest(LocalDate date) {
+		Optional<Reserve> wr = this.getConditionalReserves().stream()
+								.filter(w -> date.equals(w.getCheckIn()))
+								.findFirst();
+		// Si está en waiting pasa a ser una reserva formal
+		if (wr.isPresent()) {
+			Reserve next_r = wr.get();
+			this.getConditionalReserves().remove(next_r);
+			this.getProperty().getOwner().reserveRequestedOn(next_r);
 		}
-	}
-
-	public Tenant getTenant() {
-		// TODO Auto-generated method stub
-		return this.tenant;
-	}
-
-	List<PaymentMethod> getPaymentMethods() {
-		// TODO Auto-generated method stub
-		return this.paymentMethods;
-	}
-
-	public void unRegisterPriceObserver(INotifyObserver o, LocalDate date) {
-		// TODO Auto-generated method stub
-		if (this.obsBP.containsKey(date)) {
-			this.obsBP.get(date).remove(o);
-		} else {
-			this.obsSP.get(date).remove(o);
-		}
-	}
-
-	public void unRegisterCancelObserver(INotifyObserver o, BookedPeriod bp) {
-		// TODO Auto-generated method stub
-		this.obsCancel.get(bp).remove(o);
-	}
-
-	public void unRegisterReserveObserver(INotifyObserver o, BookedPeriod bp) {
-		// TODO Auto-generated method stub
-		this.obsReserve.get(bp).remove(o);
-	}
-
-	void setTenant(Tenant t) {
-		// TODO Auto-generated method stub
-		this.tenant = t;
-	}
-
-	public LocalDate getCheckOut() {
-		return checkOut;
-	}
-
-	public void setCheckOut(LocalDate checkOut) {
-		this.checkOut = checkOut;
-	}
-
-	public LocalDate getCheckIn() {
-		return checkIn;
-	}
-
-	public void setCheckIn(LocalDate checkIn) {
-		this.checkIn = checkIn;
 	}
 
 }

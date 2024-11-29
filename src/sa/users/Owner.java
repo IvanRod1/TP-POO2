@@ -1,7 +1,6 @@
 package sa.users;
 
-import sa.booking.BookedPeriod;
-import sa.booking.Booking;
+import sa.booking.Reserve;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +9,13 @@ import sa.properties.Property;
 
 public class Owner extends User {
 	
-	private List<Property> properties;
-	private Booking	currentRequest = null;
-	
+	private List<Property> 	properties;
+	private Reserve  		requestedReserve = null;
+
+	public Owner() {
+		
+	}
+
 	public Owner(String fullName, int telephone, String mail) {
 	
 		super(fullName, telephone, mail);
@@ -30,17 +33,15 @@ public class Owner extends User {
 		
 	}
 
-	@Override
-	public void reserveCancelled(Booking b, BookedPeriod bp) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	public void reserveRequestedOn(Booking b, BookedPeriod bp) {
+	public void reserveRequestedOn(Reserve r) {
 		// TODO Auto-generated method stub
-		this.currentRequest = b;
+		this.requestedReserve  = r;
 		// Acá el owner puede visualizar datos del tenant
-		bp.tenant().summary();
+		r.getTenant().summary();
 	}
-
+	
+	public Reserve getRequestedReserve() {
+		return this.requestedReserve;
+	}
 }

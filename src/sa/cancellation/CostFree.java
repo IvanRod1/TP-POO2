@@ -16,6 +16,7 @@ public class CostFree implements ICancellationPolicy{
 			int i = 0;
 			double total = 0;
 			
+			//FALLA SI SE ALQUILA SOLO UN DIA
 			while(!aux.isEqual(reserve.getCheckOut()) && i !=2) { //Comparo que checkIn no sea el mismo date que checkOut y que i no sea igual a 2 (Quiero sumar el precio de DOS dias)
 				total += reserve.getBooking().price(aux);
 				aux = aux.plusDays(1);

@@ -3,6 +3,7 @@ package sa.users;
 import java.util.ArrayList;
 import java.util.List;
 
+import sa.booking.Reserve;
 import sa.properties.Rankeable;
 import sa.properties.Review;
 
@@ -18,6 +19,7 @@ public abstract class User implements Rankeable {
 		this.telephone = telephone;
 		this.mail = mail;
 		this.reviews = new ArrayList<Review>();
+		this.reserves = new ArrayList<Reserve>();
 	}
 	
 	public List<Review> getReviews() {

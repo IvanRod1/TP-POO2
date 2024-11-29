@@ -49,22 +49,6 @@ public class Administrator extends User {
 		
 	}
 	
-//	public void create(Rankeable rankeable) {
-//		
-//		/**
-//		 * crea un user o una property new Tenant o new Property 
-//		 * consultar como usar el parametro rankeable
-//		 * 
-//		 * */
-//		Owner newOwner = new Owner("Nacho", 123, "foo@gmail.com");
-//		PropertyType propertyType = new PropertyType("casa", "con pileta");
-//		
-//		Property newProperty = new Property(500.0, "Argentina", "Córdoba", "Carlos Paz 123", 12, 
-//											"Casa frente al dique", 20, propertyType, newOwner);
-//		
-//		Tenant newTenant = new Tenant("Nacho", 456, "bar@gmail.com");
-//		
-//	}
 	
 	public void addAllowedPropertyTypes(PropertyType allowedProperty) {
 		
@@ -101,8 +85,8 @@ public class Administrator extends User {
 		
 		return 	tenants.stream()
 			    	   .sorted((tenant1, tenant2) -> Integer.compare(
-			    				this.getAccomodationSite().bookingHistory(tenant2).size(),
-			    				this.getAccomodationSite().bookingHistory(tenant1).size()
+			    				this.getAccomodationSite().allReservesOfTheTenant(tenant2).size(),
+			    				this.getAccomodationSite().allReservesOfTheTenant(tenant1).size()
 			    			)) 
 			    	   .limit(10) 
 			    	   .toList(); 
@@ -111,18 +95,22 @@ public class Administrator extends User {
 		
 	}
 	
-	public List<Property> propertiesToBeReserve() {
-		/**
-		 * primero filtra la lista y se queda con los bookings disponibles, y luego la transforma en una lista de propiedades disponibles
-		 * 
-		 * 
-		 * */
-		
-		return this.getAccomodationSite().getVacantProperties().stream()
-															   .map(actualBooking -> actualBooking.getProperty())
-															   .toList();
-										
-	}
+//	public List<Property> propertiesToBeReserve() {
+//		/**
+//		 * primero filtra la lista y se queda con los bookings disponibles, y luego la transforma en una lista de propiedades disponibles
+//		 * 
+//		 * 
+//		 * */
+//		// TODO: como no existe el estado disponible ahora, tampoco se guarda una reserva antes de que pase a estado reservada, o 
+//		// a este metodo lo borro, o cambio y digo el porcentaje de reservas en estado reservadas, no las disponibles, seria algo asi 
+//		// como, la lista de reservas reservadas dividido el total de la lista de reservas formales, en realidad tampoco porque todas las 
+//		// reservas de la lista de reservas formales son reservas que estan en alguno de los 3 estados, y no entran a esa lista sino pasan por ser reservas reservadas
+//		// si no sale borrarlo, tampoco veo que lo pida el enunciado 
+//		return this.getAccomodationSite().getVacantProperties().stream()
+//															   .map(actualBooking -> actualBooking.getProperty())
+//															   .toList();
+//										
+//	}
 	
 	public double occupancyRate() {
 		
@@ -133,20 +121,22 @@ public class Administrator extends User {
 		 * 
 		 * */
 		
+		// TODO: HAY que adaptarlo a lo nuevo, el approved bookings ya no existe, seria un getOccupiedBookings()
+		
 		if (this.getAccomodationSite().getBookings().size() == 0) {
 	        return 0.0; 
 	    }
 		
-		return ((double) this.getAccomodationSite().getApprovedBookings().size() /
+		return ((double) this.getAccomodationSite().getOccupiedReserves().size() /
 				 this.getAccomodationSite().getBookings().size()) * 100;
 		
 	}
 
-	@Override
-	public void reserveCancelled(Booking b, BookedPeriod bp) {
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public void reserveCancelled(Booking b, BookedPeriod bp) { PREGUNTARLE A MARTIN sobre si este va o no va
+//		// TODO Auto-generated method stub
+//		
+//	}
 	
 }
 

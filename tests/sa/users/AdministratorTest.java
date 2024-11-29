@@ -1,4 +1,4 @@
-package sa.administrator;
+package sa.users;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import sa.accomodationsite.AccomodationSite;
-import sa.accomodationsite.Administrator;
 import sa.booking.Booking;
 import sa.booking.reserveStates.IReserveState;
 import sa.booking.reserveStates.ReserveAvailable;

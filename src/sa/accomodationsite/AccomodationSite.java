@@ -17,6 +17,7 @@ import sa.booking.reserveStates.ReserveAvailable;
 import sa.booking.reserveStates.ReserveBooked;
 import sa.properties.Property;
 import sa.properties.PropertyType;
+import sa.users.Administrator;
 import sa.users.Owner;
 import sa.users.Tenant;
 

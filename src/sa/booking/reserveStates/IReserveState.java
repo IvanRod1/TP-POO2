@@ -7,7 +7,6 @@ public interface IReserveState {
 	public void next();
 	public void approve(Reserve r);
 	public void cancel();
-	public void request(Reserve r);
 	public boolean isCancelled();
 	public Reserve getReserve();
 }

@@ -102,9 +102,9 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 		return this.policy;
 	}
 
-	public void applyPolicy(Reserve r) {
+	public void applyPolicy(Reserve r, LocalDate cancellationDate) {
 		// TODO Auto-generated method stub
-		this.policy.activate(r);
+		this.policy.activate(r,cancellationDate);
 	}
 
 	public void setBasePrice(double newPrice) {
@@ -175,7 +175,7 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 		this.obsCancel.stream().forEach(o -> o.updateCancellation(r));
 		// TODO: qué se hace con la reserva cancelada 'r' ?
 		this.reserves.remove(r);
-		this.applyPolicy(r);
+		this.applyPolicy(r, LocalDate.now());
 		this.triggerNextRequest(LocalDate.now());
 	}
 
@@ -250,6 +250,16 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 			this.getConditionalReserves().remove(next_r);
 			this.getProperty().getOwner().reserveRequestedOn(next_r);
 		}
+	}
+
+	public boolean isAvaiableDate(LocalDate checkInDate) {
+		// FALTA HACER AVAIABLE PERIODS
+		return false;
+	}
+
+	public Pricer getPricer() {
+		// TODO Auto-generated method stub
+		return this.pricer;
 	}
 
 }

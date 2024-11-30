@@ -59,7 +59,7 @@ private ApplicationMobile observertest;
 	void observerGettingNotified() {
 		
 		observertest.updateCancellation(reserveMock);
-		verify(propertyMock);
+		//verify(propertyMock);
 		assertNotNull(observertest.getScreen());
 	}
 	

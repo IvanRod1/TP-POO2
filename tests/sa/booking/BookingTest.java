@@ -213,8 +213,7 @@ public class BookingTest {
 	public void testGetPricer() {
 		assertEquals(this.pricer, this.booking.getPricer());
 	}
-	
-	
+
 	@Test
 	public void testGetPaymentMethods() {
 		assertEquals(this.paymentMethods, this.booking.getPaymentMethods());

@@ -83,7 +83,7 @@ public class BookingTest {
 		this.specialPeriod1		= mock(SpecialPeriod.class);
 		this.specialPeriod2		= mock(SpecialPeriod.class);
 		this.specialPeriod3		= mock(SpecialPeriod.class);
-		this.owner				= spy(Owner.class);
+		this.owner				= mock(Owner.class);
 		this.tenant1 	  		= mock(Tenant.class);
 //		this.tenant2 	  		= mock(Tenant.class);
 //		this.tenant3 	  		= mock(Tenant.class);
@@ -119,6 +119,7 @@ public class BookingTest {
 		this.pricePerDayHighSeason	= 6;
 		this.pricePerDayLongWeekend	= 7;
 
+		
 		when(this.reserve1.getCheckIn()).thenReturn(this.today);
 		when(this.reserve1.getCheckOut()).thenReturn(this.today);
 		when(this.reserve1.getTenant()).thenReturn(this.tenant1);

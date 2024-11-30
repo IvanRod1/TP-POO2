@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import sa.booking.reserveStates.IReserveState;
-import sa.booking.reserveStates.ReserveBooked;
 import sa.booking.reserveStates.Timer;
 import sa.cancellation.CostFree;
 import sa.cancellation.ICancellationPolicy;

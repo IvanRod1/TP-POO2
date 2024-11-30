@@ -78,4 +78,9 @@ public class Reserve {
 		this.state.next();
 	}
 
+	public void setPrice(double d) {
+		this.price = d; 
+		
+	}
+
 }

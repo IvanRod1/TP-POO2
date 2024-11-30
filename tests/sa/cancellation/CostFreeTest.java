@@ -22,7 +22,6 @@ class CostFreeTest {
 	
 	private Reserve reserveMock;
 	private LocalDate dateTest;
-	
 	private Booking bookingMock;
 	
 	@BeforeEach
@@ -44,6 +43,7 @@ class CostFreeTest {
 	@Test
 	void cancellation10DaysBeforeCheckIn() {
 		when(reserveMock.getCheckIn()).thenReturn(LocalDate.of(2024, 10, 21));
+		assertTrue(dateTest.isBefore(reserveMock.getCheckIn()));
 		cancellationtest.activate(reserveMock, dateTest);
 		verify(reserveMock).setPrice(0.0);
 	}

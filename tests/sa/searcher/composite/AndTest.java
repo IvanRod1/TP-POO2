@@ -2,134 +2,113 @@ package sa.searcher.composite;
 
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doReturn;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
+import sa.booking.Period;
 import sa.properties.Property;
-import sa.searcher.composite.And;
+
+import sa.searcher.simpleQuery.CheckIn;
 import sa.searcher.simpleQuery.City;
-import sa.searcher.simpleQuery.IQuery;
+
 import sa.searcher.simpleQuery.MaxGuest;
-import sa.searcher.simpleQuery.MaxPrice;
+
+import sa.searcher.simpleQuery.MinPrice;
 
 class AndTest {
 
-	private And andFilter;
-	private And andFilter2;
+	private And querytest1;
+	private And querytest2;
 	
-	private IQuery mock1;
-	private IQuery mock2;
+	private Booking bookingMock;
+	private List<Booking> bookings;
 	
-	private Booking bookingTarget1;
-	private Booking bookingTarget2;
-	private Booking bookingNoTarget;
 	
-	private Property property1;
-	private Property property2;
-	private Property property3;
+	private City cityQuery;
+	private MaxGuest maxGuestQuery;
+	private MinPrice minPriceQuery;
+	private CheckIn checkInQuery;
+	private Property house;
 	
-	private City filtroCity;
-	private MaxGuest filtroGuest;
-	private MaxPrice filtroPrice;
+	private LocalDate startDate;
+	private Period bookingPeriod;
+	private LocalDate checkInDate;
 	
-	private ArrayList<Booking> aux;
-	
+	private City spyCityQuery;
+	private MaxGuest spyMaxGuestQuery;
+	private MinPrice spyMinPriceQuery;
+	private CheckIn spyCheckInQuery;
 	
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		//DOC'S
-		mock1 = mock(IQuery.class);
-		mock2 = mock(IQuery.class);
-		 
-		bookingTarget1 = mock(Booking.class);
-		bookingTarget2 = mock(Booking.class);
-		bookingNoTarget = mock(Booking.class);
 		
-		property1	= mock(Property.class);
-		property2	= mock(Property.class);
-		property3	= mock(Property.class);
+		cityQuery = new City("Buenos Aires");
+		spyCityQuery = spy(cityQuery);
 		
-		when(bookingTarget1.getProperty()).thenReturn(property1);
-		when(bookingTarget2.getProperty()).thenReturn(property2);
+		maxGuestQuery = new MaxGuest(5);
+		spyMaxGuestQuery = spy(maxGuestQuery);
 		
-		when(property1.getCity()).thenReturn("Cordoba");
-		when(property2.getCity()).thenReturn("Cordoba");
-		when(property3.getCity()).thenReturn("Corrientes");
-			
-		when(property1.getMaxGuests()).thenReturn(2);
-		when(property2.getMaxGuests()).thenReturn(4);
-		when(property3.getMaxGuests()).thenReturn(8);
+		minPriceQuery = new MinPrice(1238.0,checkInDate);
+		spyMinPriceQuery =spy(minPriceQuery);
 		
-		LocalDate fechaAux1 = LocalDate.of(2024, 10, 10);
-		LocalDate fechaAux2 = LocalDate.of(2024, 9, 12);
-		LocalDate fechaAux3 = LocalDate.of(2024, 12, 20);
+		checkInQuery = new CheckIn(checkInDate);
+		spyCheckInQuery = spy(checkInQuery);
 		
-		when(bookingTarget1.getCheckIn()).thenReturn(fechaAux1);
-		when(bookingTarget2.getCheckIn()).thenReturn(fechaAux2);
-		when(bookingNoTarget.getCheckIn()).thenReturn(fechaAux3);
 		
-		when(bookingTarget1.price(bookingTarget1.getCheckIn())).thenReturn((double) 15000);
-		when(bookingTarget2.price(bookingTarget2.getCheckIn())).thenReturn((double) 17000);
-		when(bookingNoTarget.price(bookingNoTarget.getCheckIn())).thenReturn((double) 20000);
+		querytest1 = new And(spyCityQuery,spyMaxGuestQuery);
+		querytest2 = new And(spyMinPriceQuery,spyCheckInQuery);
 		
-		filtroCity = mock(City.class);
-		filtroGuest = mock(MaxGuest.class);
-		filtroPrice = mock(MaxPrice.class);
 		
-		when(filtroCity.getCity()).thenReturn("Cordoba");
-		when(filtroGuest.getMaxGuests()).thenReturn(3);
-		when(filtroPrice.getValue()).thenReturn(18000);
+		bookingMock = mock(Booking.class);
+		bookings = new ArrayList<Booking>();
 		
-        aux = new ArrayList<Booking>();
+		house = mock(Property.class);
 		
-		aux.add(bookingNoTarget);
-		aux.add(bookingTarget1);
-		aux.add(bookingTarget2);
+		bookingPeriod = mock(Period.class);
+		startDate = LocalDate.of(2024, 11, 20);
+		checkInDate = LocalDate.of(2024, 11, 19);
 		
-		andFilter = new And(filtroCity,filtroGuest);
+		when(bookingPeriod.start()).thenReturn(startDate); 
 		
-		when(andFilter.search(aux)).thenReturn(new ArrayList<>(Arrays.asList(bookingTarget2)));
+		when(house.getCity()).thenReturn("Buenos Aires");
+		when(house.getMaxGuests()).thenReturn(5);
+		
+		when(bookingMock.getProperty()).thenReturn(house);
+		when(bookingMock.getPeriod()).thenReturn(bookingPeriod);
+		when(bookingMock.price(checkInDate)).thenReturn(1239.0);
+		
+		
 
+		
+		bookings.add(bookingMock);
+		
 		
 	}
 
 	@Test
-	void newAndFilter() {
-		
-
-		And filter = new And(mock1,mock2);
-		assertNotNull(filter);
-	}
-	
+	void newAndQueryTest() {
+		assertNotNull(querytest1);
+		assertNotNull(querytest2);
+	} 
 	@Test
-	void andSearchFilterTest() {
-		
-		assertEquals(andFilter.search(aux).size(),1);
-			
+	void successfulQuerySearchTest() {
+		assertEquals(querytest1.search(bookings).size(),1);
 	}
-	
 	@Test
-	void doubleAndTest() {
-		
-		andFilter2 = new And(filtroPrice,filtroCity);
-		
-		And filterAux = new And(filtroGuest,andFilter2);
-		
-		
-		assertEquals(filterAux.search(aux).size(),1);
-			
-		
+	void failedQuerySearchTest() {
+		assertEquals(querytest2.search(bookings).size(),0);
 	}
 		
 	

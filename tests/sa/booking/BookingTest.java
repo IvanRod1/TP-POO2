@@ -208,6 +208,12 @@ public class BookingTest {
 	public void testGetPeriod() {
 		assertEquals(this.period, this.booking.getPeriod());
 	}
+
+	@Test
+	public void testGetPricer() {
+		assertEquals(this.pricer, this.booking.getPricer());
+	}
+	
 	
 	@Test
 	public void testGetPaymentMethods() {

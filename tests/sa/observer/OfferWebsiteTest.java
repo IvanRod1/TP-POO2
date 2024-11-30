@@ -2,62 +2,61 @@ package sa.observer;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import sa.booking.BookedPeriod;
+
 import sa.booking.Booking;
+import sa.booking.Pricer;
+
+import sa.properties.Property;
+import sa.properties.PropertyType;
 
 class OfferWebsiteTest {
 
-	private OfferWebSite website;
-	private Booking bookingTest;
+	private OfferWebSite observertest;
+	
+	private Booking bookingMock;
+	private ObjectPublisher publisher;
+	
+	private PropertyType type;
+	private Property propertyMock;
+	private Pricer pricer;
+	
 	@BeforeEach
 	void setUp() throws Exception {
-	
 		
-		//SUT
-		website = new OfferWebSite();
+		observertest = new OfferWebSite();
 		
-		//DOC
-		//bookingTest = mock(Booking.class);
 		
+		bookingMock = mock(Booking.class);
+		publisher = mock(ObjectPublisher.class);
+		type = mock(PropertyType.class);
+		propertyMock = mock(Property.class);
+		pricer = mock(Pricer.class);
+		
+		
+		observertest.setPublisher(publisher);
+		
+		
+		when(bookingMock.getProperty()).thenReturn(propertyMock);
+		when(bookingMock.getPricer()).thenReturn(pricer);
+		when(pricer.getBasePrice()).thenReturn(1234.0);
+		when(propertyMock.getPropertyType()).thenReturn(type);
+		when(type.type()).thenReturn("Departamento");
 	}
 
 	@Test
-	void newOfferWebSitetest() {
-		assertNotNull(website);
-	}
-
-	@Test
-	void updateTest() {
-		final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(outContent));
-		website.update(bookingTest);
-		assertEquals("Le paso el booking al objeto colaborativo" + System.lineSeparator(), outContent.toString());
+	void newObserverTest() {
+		assertNotNull(observertest);
 	}
 	
 	@Test
-	void updateOWithBookedPeriodTest() {
-		final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(outContent));
-		BookedPeriod bp = mock(BookedPeriod.class);
-		website.update(bookingTest, bp);
-		assertEquals("Le paso el booking al objeto colaborativo y el bookedperiod en cuestion" + System.lineSeparator(), outContent.toString());
-	}
-	
-	@Test
-	void updateWithDateTest() {
-		final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(outContent));
-		LocalDate date = LocalDate.now();
-		website.update(bookingTest, date);
-		assertEquals("Le paso el booking al objeto colaborativo y el date en cuestion" + System.lineSeparator(), outContent.toString());
+	void observerGettingNotified() {
+		observertest.updateLowerPrice(bookingMock);
 	}
 
 }

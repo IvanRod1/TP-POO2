@@ -1,7 +1,7 @@
 package sa.cancellation;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.atLeastOnce;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,50 +10,54 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import sa.booking.BookedPeriod;
+
 import sa.booking.Booking;
-import sa.properties.Property;
+import sa.booking.Reserve;
+
 
 class CostFreeTest {
 
-	private CostFree costfree;
-	private Booking bookingTest;
-	private Property property;
-	private BookedPeriod bookedPeriodMock;
+	private CostFree cancellationtest;
+	
+	private Reserve reserveMock;
+	private LocalDate dateTest;
+	
+	private Booking bookingMock;
+	
 	@BeforeEach
 	void setUp() throws Exception {
-		costfree = new CostFree();
-		bookingTest = mock(Booking.class);
-		property = mock(Property.class);
-		bookedPeriodMock = mock(BookedPeriod.class);
+		cancellationtest = new CostFree();
 		
-		when(this.bookingTest.getProperty()).thenReturn(property);
-		when(bookedPeriodMock.start()).thenReturn(LocalDate.of(2024, 11, 15));
-		//when(bookingTest.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 15));
-		when(bookingTest.price(bookingTest.getCheckIn())).thenReturn((double) 9000);
+		reserveMock = mock(Reserve.class);
+		dateTest = LocalDate.of(2024, 10, 10);
+		
+		bookingMock = mock(Booking.class);
+		
 		
 	}
 
 	@Test
-	void newCostFree() {
-		costfree = new CostFree();
-		assertNotNull(costfree);
+	void newCancellationTest() {
+		assertNotNull(cancellationtest);
 	}
-	
 	@Test
-	void activateCostFreeTest() {
-		CostFree spy = Mockito.spy(costfree);
-		spy.activate(LocalDate.of(2024, 11, 3),bookingTest,bookedPeriodMock);
-		verify(spy, atLeastOnce()).activate(LocalDate.of(2024, 11, 3), bookingTest,bookedPeriodMock);
+	void cancellation10DaysBeforeCheckIn() {
+		when(reserveMock.getCheckIn()).thenReturn(LocalDate.of(2024, 10, 21));
+		cancellationtest.activate(reserveMock, dateTest);
+		verify(reserveMock).setPrice(0.0);
 	}
-	
 	@Test
-	void activateNoCostFreeTest() {
-		CostFree spy = Mockito.spy(costfree);
-		spy.activate(LocalDate.of(2024, 11, 9),bookingTest,bookedPeriodMock);
-		verify(spy, atLeastOnce()).activate(LocalDate.of(2024, 11, 9), bookingTest,bookedPeriodMock);
+	void cancellation5DaysBeforeCheckIn() {
+		when(reserveMock.getCheckIn()).thenReturn(LocalDate.of(2024, 10, 16));
+		when(reserveMock.getCheckOut()).thenReturn(LocalDate.of(2024, 10, 22));
+		when(reserveMock.getBooking()).thenReturn(bookingMock);
+		
+		when(bookingMock.price(LocalDate.of(2024, 10, 16))).thenReturn(10.5);
+		when(bookingMock.price(LocalDate.of(2024, 10, 17))).thenReturn(10.5);
+		
+		cancellationtest.activate(reserveMock, dateTest);
+		verify(reserveMock).setPrice(21.0);
 	}
 	
 

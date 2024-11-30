@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DynamicTest;
 
 import sa.accomodationsite.AccomodationSite;
-import sa.booking.BookedPeriod;
+
 import sa.booking.Booking;
 //import sa.properties.AmenityType;
 import sa.properties.AmenityType;

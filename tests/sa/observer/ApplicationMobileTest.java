@@ -1,7 +1,10 @@
 package sa.observer;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
@@ -60,6 +63,7 @@ private ApplicationMobile observertest;
 		observertest.updateCancellation(reserveMock);
 		//verify(propertyMock);
 		assertNotNull(observertest.getScreen());
+		verify(observertest.getScreen()).popUp(anyString(), anyString(), anyInt());
 	}
 	
 	@Test

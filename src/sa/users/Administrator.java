@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DynamicTest;
 import sa.accomodationsite.AccomodationSite;
 import sa.booking.BookedPeriod;
 import sa.booking.Booking;
+import sa.booking.Reserve;
 //import sa.properties.AmenityType;
 import sa.properties.AmenityType;
 import sa.properties.Property;
@@ -126,8 +127,20 @@ public class Administrator extends User {
 	    }
 		
 		return ((double) this.getAccomodationSite().getOccupiedReserves().size() /
-				 this.getAccomodationSite().getBookings().size()) * 100;
+				 this.getAccomodationSite().getAllReserves().size()) * 100;
 		
+	}
+
+	@Override
+	protected void reserveRequestedOn(Reserve requestedReserve) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected Reserve getRequestedReserve() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 //	@Override

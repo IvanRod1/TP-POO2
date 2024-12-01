@@ -2,6 +2,7 @@ package sa.observer;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 
@@ -11,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
 import sa.booking.Pricer;
-
+import sa.booking.Reserve;
 import sa.properties.Property;
 import sa.properties.PropertyType;
 
@@ -58,5 +59,22 @@ class OfferWebsiteTest {
 	void observerGettingNotified() {
 		observertest.updateLowerPrice(bookingMock);
 	}
-
+	@Test
+	void unusedMethodUpdateCancellationTest() {
+		Reserve reserveMock = mock(Reserve.class); 
+		when(reserveMock.getBooking()).thenReturn(bookingMock);
+		
+		observertest.updateCancellation(reserveMock);
+		
+		verifyNoInteractions(reserveMock.getBooking());
+	}
+	@Test
+	void unusedMethodUpdateNewReserveTest() {
+		Reserve reserveMock = mock(Reserve.class); 
+		when(reserveMock.getBooking()).thenReturn(bookingMock);
+		
+		observertest.updateNewReserve(reserveMock);
+		verifyNoInteractions(reserveMock.getBooking());
+	}
+ 
 }

@@ -212,6 +212,12 @@ public class AccomodationSite {
 		this.bookings.add(b);
 		
 	}
+	
+	public List<Reserve> getAllReserves() {
+		return this.getBookings().stream()
+								 .flatMap(booking -> booking.getReserves().stream())
+								 .toList();
+	}
 		
 }
 	

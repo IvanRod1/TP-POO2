@@ -3,6 +3,7 @@ package sa.observer;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 
@@ -44,6 +45,19 @@ class ReserveObserverTest {
 		
 		
 		verify(auxProperty).summary();
+	} 
+	@Test
+	void unusedMethodUpdateCancellation() {
+		observertest.updateCancellation(reserveMock);
+		when(reserveMock.getBooking()).thenReturn(bookingMock);
+		verifyNoInteractions(reserveMock.getBooking());
+	}
+	@Test
+	void unusedMethodUpdateLowerPrice() {
+		observertest.updateLowerPrice(bookingMock);
+		Property propertyMock = mock(Property.class);
+		when(bookingMock.getProperty()).thenReturn(propertyMock);
+		verifyNoInteractions(bookingMock.getProperty());
 	}
 
 }

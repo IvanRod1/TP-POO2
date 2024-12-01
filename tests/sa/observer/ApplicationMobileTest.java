@@ -2,8 +2,7 @@ package sa.observer;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 
@@ -61,6 +60,17 @@ private ApplicationMobile observertest;
 		observertest.updateCancellation(reserveMock);
 		//verify(propertyMock);
 		assertNotNull(observertest.getScreen());
+	}
+	
+	@Test
+	void unusedMethodUpdateLowerPrice() {
+		observertest.updateLowerPrice(bookingMock);
+		verifyNoInteractions(bookingMock.getProperty());
+	}
+	@Test
+	void unusedMethodUpdateNewReserve() {
+		observertest.updateNewReserve(reserveMock);
+		verifyNoInteractions(reserveMock.getBooking());
 	}
 	
 	 

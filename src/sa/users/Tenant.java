@@ -1,5 +1,6 @@
 package sa.users;
 
+import sa.booking.Reserve;
 
 public class Tenant extends User {
 	
@@ -21,5 +22,18 @@ public class Tenant extends User {
 	    System.out.println("mail: " + this.mail);
 		
 	}
+
+	@Override
+	protected void reserveRequestedOn(Reserve requestedReserve) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected Reserve getRequestedReserve() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 
 }

@@ -1,52 +1,45 @@
 package sa.cancellation;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.atLeastOnce;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
 
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import sa.booking.BookedPeriod;
-import sa.booking.Booking;
+
+
+import sa.booking.Reserve;
 
 class NoCancellationTest {
 
-	private NoCancellation noCancellation;
+	private NoCancellation cancellationtest;
+	private Reserve reserveMock;
 	
-	private Booking bookingTest;
-	private BookedPeriod bookedPeriodMock;
+	private LocalDate dayTest;
+	
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		//SUT
-		noCancellation = new NoCancellation();
+		cancellationtest = new NoCancellation();
+		dayTest = LocalDate.now();
 		
-		//DOC
-		bookingTest = mock(Booking.class);
-		bookedPeriodMock = mock(BookedPeriod.class);
-		
-		when(bookedPeriodMock.start()).thenReturn(LocalDate.of(2024, 11, 24));
-		when(bookingTest.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 24));
-		when(bookingTest.price(bookingTest.getCheckIn())).thenReturn((double) 120000);
+		reserveMock = mock(Reserve.class);
 	}
 
 	@Test
-	void newNoCancellation() {
-		noCancellation = new NoCancellation();
-		assertNotNull(noCancellation);
+	void newCancellationTest() {
+		assertNotNull(cancellationtest);
 	}
+	
 	@Test
-	void activateNoCancellation() {
-		NoCancellation spy = Mockito.spy(noCancellation);
-		spy.activate(LocalDate.now(),bookingTest,bookedPeriodMock);
-		verify(spy, atLeastOnce()).activate(LocalDate.now(), bookingTest,bookedPeriodMock);
-
+	void activateCancellationTest() {
+		cancellationtest.activate(reserveMock,dayTest);
+		verify(reserveMock).getPrice();
 	}
 
 }

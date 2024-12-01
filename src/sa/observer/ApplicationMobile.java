@@ -1,45 +1,42 @@
 package sa.observer;
 
-import java.time.LocalDate;
 
-import sa.booking.BookedPeriod;
+
+
 import sa.booking.Booking;
+import sa.booking.Reserve;
 import sa.observer.interfaces.INotifyObserver;
+
 
 public class ApplicationMobile implements INotifyObserver{
 
-	private ObjectScreen screen;
-
+private ObjectScreen screen;
+	
 	@Override
-	public void update(Booking booking) {
-		// TODO Auto-generated method stub
-		if(booking.getState().equals("Available")) {
-			System.out.println("Se mando al objeto que publica las notificaciones el booking");
-		}
-		else {
-			System.out.println("No mando nada");
-		}
+	public void updateCancellation(Reserve r) {
+		
+		getScreen().popUp(r.getBooking().getProperty().getPropertyType().type(), "Rojo", 3);
 		
 	}
 	
 	public ObjectScreen getScreen() {
 		return this.screen;
 	}
-	
-	public void setScreen(ObjectScreen screen) {
-		this.screen = screen;
+
+	public void setScreen(ObjectScreen s) {
+		this.screen = s;
 	}
 
 	@Override
-	public void update(Booking b, BookedPeriod bp) {
+	public void updateLowerPrice(Booking b) {
 		// TODO Auto-generated method stub
-		System.out.println("Le paso el booking al objeto colaborativo y el bookedperiod en cuestion");
+		
 	}
 
 	@Override
-	public void update(Booking b, LocalDate date) {
+	public void updateNewReserve(Reserve r) {
 		// TODO Auto-generated method stub
-		System.out.println("Le paso el booking al objeto colaborativo y el date en cuestion");
+		
 	}
 
 }

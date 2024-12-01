@@ -12,7 +12,6 @@ public class Owner extends User {
 	private List<Property> 	properties;
 	private Reserve  		requestedReserve = null;
 
-
 	public Owner(String fullName, int telephone, String mail) {
 	
 		super(fullName, telephone, mail);

@@ -13,7 +13,7 @@ import sa.searcher.simpleQuery.IQuery;
 import sa.properties.AmenityType;
 //import sa.payments.PaymentMethod;
 import sa.booking.*;
-import sa.booking.reserveStates.ReserveAvailable;
+
 import sa.booking.reserveStates.ReserveBooked;
 import sa.properties.Property;
 import sa.properties.PropertyType;

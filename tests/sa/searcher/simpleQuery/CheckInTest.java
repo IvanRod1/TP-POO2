@@ -2,65 +2,82 @@ package sa.searcher.simpleQuery;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-//import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
-//import sa.searcher.simpleQuery.CheckIn;
+import sa.booking.Period;
 
 class CheckInTest {
 
-	private CheckIn checkinTest;
-	
+	private CheckIn querytest1;
+	private CheckIn querytest2;
 	private Booking bookingMock;
-	private ArrayList<Booking> aux;
 	
+	private List<Booking> bookings;
 	
+	private Period bookingPeriod;
 	
+	private LocalDate fechaInicio;
+	private LocalDate fechaFin;
 	
 	@BeforeEach
 	void setUp() throws Exception {
-	   checkinTest = new CheckIn(LocalDate.now());
-	   bookingMock = mock(Booking.class);
-	   aux = new ArrayList<Booking>();
-	    
-	   when(bookingMock.getCheckIn()).thenReturn(LocalDate.of(2024, 12, 20));
-	   aux.add(bookingMock);
 		
-
+		querytest1 = new CheckIn(LocalDate.of(2024, 11, 20));
+		querytest2 = new CheckIn(LocalDate.of(2024, 8, 17));
+		
+		bookingMock = mock(Booking.class);
+		
+		bookingPeriod = mock(Period.class);
+		
+		bookings = new ArrayList<Booking>();
+		 
+		fechaInicio = LocalDate.of(2024, 10, 10);
+		fechaFin = LocalDate.of(2024, 12, 31);
+		
+		when(bookingPeriod.start()).thenReturn(fechaInicio);
+		when(bookingPeriod.end()).thenReturn(fechaFin);
+		when(bookingMock.getPeriod()).thenReturn(bookingPeriod);
+		
+		bookings.add(bookingMock);
 	}
 
 	@Test
 	void newCheckInTest() {
-		checkinTest = new CheckIn(LocalDate.now());
-		assertNotNull(checkinTest);
+		assertNotNull(querytest1);
+		assertNotNull(querytest2);
+	}
+	@Test
+	void getCheckInDateTest() {
+		assertEquals(querytest1.getCheckInDate(),LocalDate.of(2024, 11, 20));
+		assertEquals(querytest2.getCheckInDate(),LocalDate.of(2024, 8, 17));
+		
+	}
+	@Test
+	void successfulQuerySearchTest() {
+		when(bookingMock.isAvaiableDate(LocalDate.of(2024, 11, 20))).thenReturn(true);
+		when(bookingMock.getPeriod().belongs(LocalDate.of(2024, 11, 20))).thenReturn(true);
+		verify(bookingMock).getPeriod();
+		
+		assertEquals(this.querytest1.search(bookings).size(),1);
 	}
 	
 	@Test
-	void setDateTest() {
-		checkinTest.setDate(LocalDate.of(2024, 10, 30));
-		assertEquals(checkinTest.getDate(),LocalDate.of(2024, 10, 30));
-	}
-	@Test
-	void getDateTest() {
-		assertEquals(checkinTest.getDate(), LocalDate.now());
-	}
-	
-	@Test
-	void checkInSearchTest() {
-	
+	void failedQuerySearchTest() {
+		when(bookingMock.isAvaiableDate(LocalDate.of(2024, 8, 17))).thenReturn(false);
+		when(bookingMock.getPeriod().belongs(LocalDate.of(2024, 8, 17))).thenReturn(false);
+		verify(bookingMock).getPeriod();
 		
-		checkinTest.setDate(LocalDate.of(2024, 12, 24));
-		
-		assertEquals(checkinTest.search(aux).size(), 1);
-		
+		assertEquals(this.querytest2.search(bookings).size(),0);
 	} 
 
 }

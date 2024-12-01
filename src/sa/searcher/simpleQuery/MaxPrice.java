@@ -1,34 +1,36 @@
 package sa.searcher.simpleQuery;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import sa.booking.Booking;
 
 public class MaxPrice extends SimpleQuery {
 
-	private int value;
+	private double value;
+	private LocalDate date;
+	
+	public MaxPrice(double value, LocalDate d) {
+		this.date = d;
+		this.value = value;
+	}
 	
 	@Override
-	public ArrayList<Booking> search(ArrayList<Booking> bookings) {
+	public List<Booking> search(List<Booking> bookings) {
+		List<Booking> aux = new ArrayList<Booking>();
 		
-		ArrayList<Booking> aux = new ArrayList<Booking>();
 		for(int i=0;i<bookings.size();i++) {
-			if(bookings.get(i).price(bookings.get(i).getCheckIn()) <= this.getValue()){  //chequear
+			if(bookings.get(i).price(date) <= getMaxPrice()) {
 				aux.add(bookings.get(i));
 			}
 		}
+		
 		return aux;
 	}
-	
-	public MaxPrice(int max) {
-		this.value = max;
-	}
-	
-	public int getValue() {
+
+	public double getMaxPrice() {
+		// TODO Auto-generated method stub
 		return this.value;
-	}
-	
-	public void setValue(int value) {
-		this.value = value;
 	}
 }

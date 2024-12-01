@@ -6,67 +6,55 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
-import sa.searcher.simpleQuery.MinPrice;
 
 class MinPriceTest {
 
-	private MinPrice minPriceFilter;
+	private MinPrice querytest1;
+	private MinPrice querytest2;
+	
+	private LocalDate dateReserve;
 	
 	private Booking bookingMock;
-	private ArrayList<Booking> aux;
-	
+	private List<Booking> bookings;
 	@BeforeEach
 	void setUp() throws Exception {
-		//SUT
-		minPriceFilter = new MinPrice();
+		dateReserve = LocalDate.of(2024, 11, 20);
 		
-		//DOC
+		querytest1 = new MinPrice(1234,dateReserve);
+		querytest2 = new MinPrice(1240,dateReserve); 
+		
+		
 		bookingMock = mock(Booking.class);
-		aux = new ArrayList<Booking>();
+		bookings = new ArrayList<Booking>();
 		
-		LocalDate fechaAuxiliar = LocalDate.of(2024, 11, 20);
-	    when(bookingMock.getCheckIn()).thenReturn(fechaAuxiliar);
-	    
-		when(bookingMock.price(bookingMock.getCheckIn())).thenReturn((double) 1040);
-		aux.add(bookingMock);
+		when(bookingMock.price(dateReserve)).thenReturn((double) 1235);
 		
-		
+		bookings.add(bookingMock);
 	}
 
 	@Test
-	void newMinPrice() {
-		MinPrice minPrice = new MinPrice();
+	void newMinPriceQueryTest() {
+		querytest1 = new MinPrice(4321,dateReserve);
 	}
-	
 	@Test
-	void getValueTest() {
-		//MinPrice minFilterMock = mock(MinPrice.class);
-		//when(minFilterMock.getValue()).thenReturn(123);
-		minPriceFilter.setValue(123);
-		minPriceFilter.getValue();
-		assertEquals(minPriceFilter.getValue(),123);
+	void getMinPriceTest() {
+		assertEquals(querytest1.getMinPrice(),1234);
+		assertEquals(querytest2.getMinPrice(),1240);
 	}
-	
 	@Test
-	void setValueTest() {
-		minPriceFilter.setValue(456);
-		assertEquals(minPriceFilter.getValue(), 456);
+	void successfullQuerySearchTest() {
+		assertEquals(querytest1.search(bookings).size(),1);
+	}
+	@Test
+	void failedQuerySearchTest() {
+		assertEquals(querytest2.search(bookings).size(),0);
 
-	}
-	
-	@Test
-	void minPriceSearchTest() {
-		
-		minPriceFilter.setValue(1020);
-		
-		assertEquals(minPriceFilter.search(aux).size(),1);
-		
-		
 	}
 
 }

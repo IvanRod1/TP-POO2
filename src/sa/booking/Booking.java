@@ -251,7 +251,7 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 	}
 
 	public List<Period> avaiablePeriods(){
-		List<Period> avaiablePeriods = new ArrayList<Period>();
+		List<Period> avaiablePeriods = new ArrayList<Period>(); //FALTA TESTEAR
 		
 		LocalDate startDate = this.getPeriod().start();
 		
@@ -271,7 +271,7 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 		return avaiablePeriods;
 	}
 	
-	public boolean isAvaiableDate(LocalDate checkInDate) {
+	public boolean isAvaiableDate(LocalDate checkInDate) { //FALTA TESTEAR
 		
 		if(checkInDate.equals(null)) {  //SI LA FECHA QUE ME PASARON ES NULA, TIRO ERROR
 			throw new IllegalArgumentException("La fecha no puede ser nulo");	

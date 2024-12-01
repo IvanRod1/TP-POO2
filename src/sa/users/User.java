@@ -11,8 +11,8 @@ public abstract class User implements Rankeable {
 	protected String fullName;
 	protected int telephone;
 	protected String mail;
-	private List<Review> reviews;
-	private List<Reserve> reserves;
+	protected List<Review> reviews;
+	protected List<Reserve> reserves;
 	
 	public User(String fullName, int telephone, String mail) {
 		this.fullName = fullName;
@@ -24,6 +24,10 @@ public abstract class User implements Rankeable {
 	
 	public List<Review> getReviews() {
 		return this.reviews;
+	}
+	
+	public List<Reserve> getReserves() {
+		return this.reserves;
 	}
 	
 	public abstract void summary();
@@ -44,5 +48,8 @@ public abstract class User implements Rankeable {
 
 		
 	}
+
+	protected abstract void reserveRequestedOn(Reserve requestedReserve);
+	protected abstract Reserve getRequestedReserve();
 
 }

@@ -12,6 +12,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import sa.booking.Reserve;
 import sa.properties.Review;
 
 class TenantTest {
@@ -20,6 +21,7 @@ class TenantTest {
 		Review rv2;
 		List<Review> reviews;
 		User tenant;
+		List<Reserve> reserves;
 
 		@BeforeEach
 		void setUp() throws Exception {
@@ -35,6 +37,9 @@ class TenantTest {
 			
 			tenant.getReviews().add(rv1);
 			tenant.getReviews().add(rv2);
+			
+			reserves = new ArrayList<Reserve>();
+		
 			
 		}
 
@@ -53,6 +58,11 @@ class TenantTest {
                  	+  "name: nacho" + System.lineSeparator()
                  	+ "telephone: 123" + System.lineSeparator()
                  	+ "mail: bar@gmail.com" + System.lineSeparator(), outContent.toString());
+	}
+	
+	@Test
+	void getReservesTest() {
+		assertEquals(reserves, tenant.getReserves());
 	}
 
 }

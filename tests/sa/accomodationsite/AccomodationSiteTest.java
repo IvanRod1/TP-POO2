@@ -27,6 +27,9 @@ import sa.booking.reserveStates.ReserveOccupied;
 import sa.properties.AmenityType;
 import sa.properties.Property;
 import sa.properties.PropertyType;
+import sa.searcher.composite.And;
+import sa.searcher.composite.Or;
+import sa.searcher.simpleQuery.IQuery;
 import sa.users.Tenant;
 import sa.booking.Reserve;
 
@@ -61,6 +64,43 @@ public class AccomodationSiteTest {
 	
 	Booking booking3;
 	
+	// todo para el create booking:
+	
+	Property property;
+	Property property2;
+	LocalDate begin;
+	LocalDate end;
+	
+	List<SpecialPeriod> periods;
+	SpecialPeriod period1;
+	SpecialPeriod period2;
+	
+	List<PaymentMethod> paymentsMethods;
+	PaymentMethod payment1;
+	PaymentMethod payment2;
+	
+	AmenityType electricity;
+	AmenityType internet;
+	PropertyType house;
+	AmenityType agua;
+	PropertyType duplex;
+	
+	// todo para el allBookingCities
+	
+	Set<String> visitedCities;
+	List<Reserve> expectedReservesBooking2;
+	
+	// para el getAllReserves:
+	
+	List<Reserve> allReserves;
+	
+	// para el metodo search:
+	
+	IQuery query;
+	IQuery query2;
+	List<Booking> emptyList;
+	
+	
 	// excercise:
 	
 	@BeforeEach
@@ -68,6 +108,7 @@ public class AccomodationSiteTest {
 		
 		// SUT:
 		accomodationSite = new AccomodationSite();
+		
 		
 		booking1 = mock(Booking.class);
 		booking2 = mock(Booking.class);
@@ -80,6 +121,7 @@ public class AccomodationSiteTest {
 		
 		reservesOfTheTenant = new ArrayList<Reserve>();
 		expectedReserves = new ArrayList<Reserve>();
+		expectedReservesBooking2 = new ArrayList<Reserve>();
 		futureReserves = new ArrayList<Reserve>();
 		bookings = new ArrayList<Booking>();
 		
@@ -87,13 +129,23 @@ public class AccomodationSiteTest {
 		accomodationSite.addBooking(booking1);
 		accomodationSite.addBooking(booking2);
 		
-		when(booking1.getReserves()).thenReturn(expectedReserves);
+		
+		
+		expectedReservesBooking2.add(reserve1);
+		expectedReservesBooking2.add(reserve2);
 		
 		expectedReserves.add(reserve1);
 		expectedReserves.add(reserve2);
+		expectedReserves.add(reserve1);
+		expectedReserves.add(reserve2);
+		
 		
 		reservesOfTheTenant.add(reserve1);
 		reservesOfTheTenant.add(reserve2);
+		reservesOfTheTenant.add(reserve1);
+		reservesOfTheTenant.add(reserve2);
+
+		
 		
 		bookings.add(booking1);
 		bookings.add(booking2);
@@ -101,9 +153,11 @@ public class AccomodationSiteTest {
 		
 		when(reserve1.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 25));
 		when(reserve1.getCheckOut()).thenReturn(LocalDate.of(2024, 12, 15));
+		when(reserve1.getBooking()).thenReturn(booking1);
 		
 		when(reserve2.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 27));
 		when(reserve2.getCheckOut()).thenReturn(LocalDate.of(2024, 12, 17));
+		when(reserve2.getBooking()).thenReturn(booking2);
 		
 		when(reserve3.getCheckIn()).thenReturn(LocalDate.of(2024, 12, 24));
 		when(reserve3.getCheckOut()).thenReturn(LocalDate.of(2025, 1, 1));
@@ -111,10 +165,59 @@ public class AccomodationSiteTest {
 		when(reserve1.getTenant()).thenReturn(tenant);
 		when(reserve2.getTenant()).thenReturn(tenant);
 		when(reserve3.getTenant()).thenReturn(tenant);
+		
 		// para getOccupiedReservesTest
 		
+		// para el createBooking:
 		
+		property = mock(Property.class);
+		property2 = mock(Property.class);
+		begin = LocalDate.of(2024, 11, 25);
+		end = LocalDate.of(2024, 12, 31);
 		
+		paymentsMethods = new ArrayList<PaymentMethod>();
+		payment1 = mock(PaymentMethod.class);
+		payment2 = mock(PaymentMethod.class);
+		paymentsMethods.add(payment1);
+		paymentsMethods.add(payment2);
+		
+		periods = new ArrayList<SpecialPeriod>();
+		period1 = mock(SpecialPeriod.class);
+		period2 = mock(SpecialPeriod.class);
+		periods.add(period1);
+		periods.add(period2);
+		
+		house = mock(PropertyType.class);
+		duplex = mock(PropertyType.class);
+		
+		when(booking1.getReserves()).thenReturn(expectedReservesBooking2);
+		when(booking1.getProperty()).thenReturn(property2);
+		when(property2.getCity()).thenReturn("Buenos Aires");
+		
+		when(booking2.getReserves()).thenReturn(expectedReservesBooking2);
+		when(booking2.getProperty()).thenReturn(property);
+		when(property.getCity()).thenReturn("Córdoba");
+		
+		// para allReservesCities:
+		
+		visitedCities = new HashSet<String>();
+		visitedCities.add("Buenos Aires");
+		visitedCities.add("Córdoba");
+		
+		// para el getAllReserves:
+		
+		allReserves = new ArrayList<Reserve>();
+		allReserves.add(reserve1);
+		allReserves.add(reserve2);
+		allReserves.add(reserve1);
+		allReserves.add(reserve2);
+		
+		// para el search:
+		
+		query = mock(And.class);
+		query2 = mock(Or.class);
+		
+		emptyList = new ArrayList<Booking>();
 		
 	}
 	
@@ -152,12 +255,82 @@ public class AccomodationSiteTest {
 	}
 	
 	@Test
+	void queryTestRamaElse() {
+		
+		assertEquals(emptyList, accomodationSite.search(query2));
+	}
+	
+	@Test
 	void addBookingTest() {
 		
 		accomodationSite.addBooking(booking3);
 		
 		assertEquals(3, accomodationSite.getBookings().size());
 	}
+	
+	@Test
+	void createBookingTest() {
+		
+		List<AmenityType> amenities = new ArrayList<AmenityType>();
+		amenities.add(electricity);
+		amenities.add(internet);
+		
+		
+		when(property.getPropertyType()).thenReturn(house);
+		accomodationSite.setAllowedProperties(house);
+		accomodationSite.setAllowedAmenities(electricity);
+		accomodationSite.setAllowedAmenities(internet);
+		
+		when(property.getAmenities()).thenReturn(amenities);
+		
+		
+		accomodationSite.createBooking(property, begin, end, paymentsMethods, 100.0, periods);
+		
+		assertEquals(accomodationSite.getBookings().size(), 3);
+		
+	}
+	
+	@Test
+	void createInvalidBooking() {
+		List<AmenityType> amenities = new ArrayList<AmenityType>();
+		amenities.add(electricity);
+		amenities.add(agua);
+		
+		when(property.getPropertyType()).thenReturn(duplex);
+		accomodationSite.setAllowedProperties(house);
+		accomodationSite.setAllowedAmenities(electricity);
+		accomodationSite.setAllowedAmenities(internet);
+		
+		when(property.getAmenities()).thenReturn(amenities);
+		
+		
+		
+	     assertThrows(RuntimeException.class, () -> {
+	    	 accomodationSite.createBooking(property, begin, end, paymentsMethods, 100.0, periods);
+	        });
+	}
+	
+	@Test
+	void viewPropertyTest() {
+	when(booking1.getProperty()).thenReturn(property);
+	    verifyNoInteractions(booking1);
+	    accomodationSite.viewProperty(booking1);
+	    verify(booking1, times(1)).getProperty();
+	}
+
+	@Test
+	void allReservesCitiesTest() {
+		
+		assertEquals(visitedCities, accomodationSite.allReservesCities(tenant));
+	}
+	
+	@Test
+	void getAllReservesTest() {
+		
+		assertEquals(allReserves, accomodationSite.getAllReserves());
+	}
+	
+	
 	
 	
 }

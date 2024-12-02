@@ -216,6 +216,7 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 		this.getReserves().add(reserve);
 //		reserve.registerToTimer(timer, reserve.getCheckIn());
 		this.getTimer().register(this, reserve, reserve.getCheckIn());
+		
 	}
 
 	private Timer getTimer() {

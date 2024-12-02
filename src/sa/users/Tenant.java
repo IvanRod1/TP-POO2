@@ -21,19 +21,10 @@ public class Tenant extends User {
 	    System.out.println("telephone: " + this.telephone);
 	    System.out.println("mail: " + this.mail);
 		
-	}
+	}	
 
-	@Override
-	protected void reserveRequestedOn(Reserve requestedReserve) {
-		// TODO Auto-generated method stub
-		
+	public void reserveDeclined(Reserve reserve) {
+		// recibe el rechazo de una reserva
+		// TODO: El enunciado no dice nada respecto a los rechazos.
 	}
-
-	@Override
-	protected Reserve getRequestedReserve() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-
 }

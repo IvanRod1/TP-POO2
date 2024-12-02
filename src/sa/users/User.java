@@ -49,7 +49,4 @@ public abstract class User implements Rankeable {
 		
 	}
 
-	protected abstract void reserveRequestedOn(Reserve requestedReserve);
-	protected abstract Reserve getRequestedReserve();
-
 }

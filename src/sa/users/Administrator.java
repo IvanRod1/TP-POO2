@@ -130,24 +130,6 @@ public class Administrator extends User {
 				 this.getAccomodationSite().getAllReserves().size()) * 100;
 		
 	}
-
-	@Override
-	protected void reserveRequestedOn(Reserve requestedReserve) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected Reserve getRequestedReserve() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-//	@Override
-//	public void reserveCancelled(Booking b, BookedPeriod bp) { PREGUNTARLE A MARTIN sobre si este va o no va
-//		// TODO Auto-generated method stub
-//		
-//	}
 	
 }
 

@@ -12,10 +12,6 @@ public class Owner extends User {
 	private List<Property> 	properties;
 	private Reserve  		requestedReserve = null;
 
-	public Owner() {
-		
-	}
-
 	public Owner(String fullName, int telephone, String mail) {
 	
 		super(fullName, telephone, mail);
@@ -34,7 +30,7 @@ public class Owner extends User {
 	}
 
 
-	public void reserveRequestedOn(Reserve r) {
+	public void reserveRequested(Reserve r) {
 		// TODO Auto-generated method stub
 		this.requestedReserve  = r;
 		// Acá el owner puede visualizar datos del tenant

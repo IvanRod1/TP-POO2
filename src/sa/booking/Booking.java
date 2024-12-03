@@ -70,7 +70,7 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 	public void newReserve(Tenant t, LocalDate start, LocalDate end) {
 		// TODO Auto-generated method stub
 //		this.schedule.reserve(t, start, end);
-		this.getProperty().getOwner().reserveRequestedOn(new Reserve(this, t, new Period(start, end)));
+		this.getProperty().getOwner().reserveRequested(new Reserve(this, t, new Period(start, end)));
 //		this.triggerNextRequest();
 	}
 
@@ -246,7 +246,7 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 		if (wr.isPresent()) {
 			Reserve next_r = wr.get();
 			this.getConditionalReserves().remove(next_r);
-			this.getProperty().getOwner().reserveRequestedOn(next_r);
+			this.getProperty().getOwner().reserveRequested(next_r);
 		}
 	}
 

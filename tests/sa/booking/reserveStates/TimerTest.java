@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,7 @@ class TimerTest {
 	private Timer timer;
 	
 	private List<BookingSubscriber> bsubscribers;
+	private HashMap<LocalDate, Set<Reserve>> rsubscribers;
 	private BookingSubscriber suscriber1;
 	private BookingSubscriber suscriber2;
 	

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ForkJoinPool;
 
 import sa.booking.Booking;
 import sa.booking.Reserve;
@@ -68,7 +69,9 @@ public class Timer implements INotifyTimer {
 
 	public List<BookingSubscriber> getSubscribers() {
 		// TODO Auto-generated method stub
-		return this.bsubscribers;
+//		return this.bsubscribers;
+		List<Reserve> rs = new ArrayList<Reserve>();
+		return this.rsubscribers. // FIXME
 	}
 
 	

@@ -83,7 +83,7 @@ public class BookingTest {
 		this.specialPeriod1		= mock(SpecialPeriod.class);
 		this.specialPeriod2		= mock(SpecialPeriod.class);
 		this.specialPeriod3		= mock(SpecialPeriod.class);
-		this.owner				= spy(Owner.class);
+		this.owner				= mock(Owner.class);
 		this.tenant1 	  		= mock(Tenant.class);
 		this.tenant2 	  		= mock(Tenant.class);
 		this.tenant3 	  		= mock(Tenant.class);
@@ -280,7 +280,16 @@ public class BookingTest {
 		r.approve();
 		assertEquals(1, this.booking.getReserves().size());
 	}
-
+	
+	@Test
+	public void testAddReserve() {
+		assertEquals(0, this.booking.getReserves().size());
+		verifyNoInteractions(this.timer);
+		this.booking.addReserve(reserve1);
+		assertEquals(1, this.booking.getReserves().size());
+		verify(this.timer, times(1)).register(this.booking, this.reserve1, this.reserve1.getCheckIn());
+	}
+	
 	@Test
 	public void testNewConditionalReserve() {
 		assertEquals(0, this.booking.getConditionalReserves().size());

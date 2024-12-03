@@ -277,7 +277,7 @@ public class BookingTest {
 		assertEquals(0, this.booking.getReserves().size());
 		verifyNoInteractions(this.owner);
 		this.booking.newReserve(this.tenant1, this.today, this.today.plusDays(1));
-		Reserve r = this.owner.getRequestedReserve();
+		Reserve r = this.owner.getReserveRequested();
 		verify(this.owner, times(1)).reserveRequested(r);
 	}
 	

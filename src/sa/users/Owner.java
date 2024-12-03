@@ -26,14 +26,15 @@ public class Owner extends User {
 		 * aca tambien queda vacío
 		 */
 	}
-	
-	public List<Property> getProperties() {
+
+  public List<Property> getProperties() {
 		return this.properties;
 	}
 	
 	public void reserveRequested(Reserve reserve) {
 		this.setReserveRequested(reserve);
-		reserve.getTenant().summary();
+		// Acá el owner puede visualizar datos del tenant
+    reserve.getTenant().summary();
 	}
 	
 	public void setReserveRequested(Reserve reserve) {

@@ -83,7 +83,7 @@ public class BookingTest {
 		this.specialPeriod1		= mock(SpecialPeriod.class);
 		this.specialPeriod2		= mock(SpecialPeriod.class);
 		this.specialPeriod3		= mock(SpecialPeriod.class);
-		this.owner				= mock(Owner.class);
+		this.owner				= spy(new Owner(null, 0, null));
 		this.tenant1 	  		= mock(Tenant.class);
 //		this.tenant2 	  		= mock(Tenant.class);
 //		this.tenant3 	  		= mock(Tenant.class);
@@ -100,7 +100,7 @@ public class BookingTest {
 		this.bookedperiod1		= mock(Period.class);
 		this.bookedperiod2		= mock(Period.class);
 		this.bookedperiod3		= mock(Period.class);
-		this.timer				= spy(Timer.class);
+		this.timer				= mock(Timer.class);
 		
 		this.specialPeriods.add(specialPeriod1);
 		this.specialPeriods.add(specialPeriod2);
@@ -209,7 +209,12 @@ public class BookingTest {
 	public void testGetPeriod() {
 		assertEquals(this.period, this.booking.getPeriod());
 	}
-	
+
+	@Test
+	public void testGetPricer() {
+		assertEquals(this.pricer, this.booking.getPricer());
+	}
+
 	@Test
 	public void testGetPaymentMethods() {
 		assertEquals(this.paymentMethods, this.booking.getPaymentMethods());
@@ -273,10 +278,18 @@ public class BookingTest {
 		verifyNoInteractions(this.owner);
 		this.booking.newReserve(this.tenant1, this.today, this.today.plusDays(1));
 		Reserve r = this.owner.getRequestedReserve();
-		r.approve();
-		assertEquals(1, this.booking.getReserves().size());
+		verify(this.owner, times(1)).reserveRequested(r);
 	}
-
+	
+	@Test
+	public void testAddReserve() {
+		assertEquals(0, this.booking.getReserves().size());
+		verifyNoInteractions(this.timer);
+		this.booking.addReserve(reserve1);
+		assertEquals(1, this.booking.getReserves().size());
+		verify(this.timer, times(1)).register(this.booking, this.reserve1, this.reserve1.getCheckIn());
+	}
+	
 	@Test
 	public void testNewConditionalReserve() {
 		assertEquals(0, this.booking.getConditionalReserves().size());
@@ -290,7 +303,7 @@ public class BookingTest {
 		this.waitings.add(this.reserve1);
 		assertEquals(1, this.booking.getConditionalReserves().size());
 		this.booking.triggerNextRequest(this.reserve1.getCheckIn());
-		verify(this.owner, times(1)).reserveRequestedOn(this.reserve1);
+		verify(this.owner, times(1)).reserveRequested(this.reserve1);
 		assertEquals(0, this.booking.getConditionalReserves().size());
 	}
 

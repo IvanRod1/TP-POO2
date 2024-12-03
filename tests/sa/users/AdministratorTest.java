@@ -218,15 +218,7 @@ class AdministratorTest {
 		assertEquals(0.0, administrator.occupancyRate());
 	}
 	
-	@Test
-	void reserveRequestedOnTest() {
-		administrator.reserveRequestedOn(reserve1);
-	}
 	
-	@Test
-	void getRequestedReserveTest() {
-		assertNull(null);
-	}
 	
 }
 

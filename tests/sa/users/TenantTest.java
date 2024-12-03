@@ -20,8 +20,9 @@ class TenantTest {
 		Review rv1;
 		Review rv2;
 		List<Review> reviews;
-		User tenant;
+		Tenant tenant;
 		List<Reserve> reserves;
+		Reserve declinedReserve;
 
 		@BeforeEach
 		void setUp() throws Exception {
@@ -40,7 +41,7 @@ class TenantTest {
 			
 			reserves = new ArrayList<Reserve>();
 		
-			
+			declinedReserve = mock(Reserve.class);
 		}
 
 		
@@ -65,4 +66,8 @@ class TenantTest {
 		assertEquals(reserves, tenant.getReserves());
 	}
 
+	@Test
+	void reserveDeclinedTest() {
+		tenant.reserveDeclined(declinedReserve);
+	}
 }

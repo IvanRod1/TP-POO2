@@ -9,8 +9,9 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.DynamicTest;
 
 import sa.accomodationsite.AccomodationSite;
-import sa.booking.BookedPeriod;
+
 import sa.booking.Booking;
+import sa.booking.Reserve;
 //import sa.properties.AmenityType;
 import sa.properties.AmenityType;
 import sa.properties.Property;
@@ -126,15 +127,9 @@ public class Administrator extends User {
 	    }
 		
 		return ((double) this.getAccomodationSite().getOccupiedReserves().size() /
-				 this.getAccomodationSite().getBookings().size()) * 100;
+				 this.getAccomodationSite().getAllReserves().size()) * 100;
 		
 	}
-
-//	@Override
-//	public void reserveCancelled(Booking b, BookedPeriod bp) { PREGUNTARLE A MARTIN sobre si este va o no va
-//		// TODO Auto-generated method stub
-//		
-//	}
 	
 }
 

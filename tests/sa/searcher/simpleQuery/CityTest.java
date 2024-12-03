@@ -2,65 +2,75 @@ package sa.searcher.simpleQuery;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
+
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+
 
 import sa.booking.Booking;
 import sa.properties.Property;
-import sa.searcher.simpleQuery.City;
+
 
 class CityTest {
 	
-	private City filterCity;
-	private Booking bookingTest;
-	private Property property;
-	private ArrayList<Booking> aux;
+	private City querytest1;
+	private City querytest2;
+	
+	private Booking bookingMock;
+	private List<Booking> bookings;
+	
+	private String city1;
+	private String city2;
+	
+	private Property house;
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		filterCity = new City("Ciudad");
-		bookingTest = mock(Booking.class);
-		property = mock(Property.class);
+		city1 = "Buenos Aires";
+		querytest1 = new City(city1);
 		
-		aux = new ArrayList<Booking>();
+		city2 ="Cordoba";
+		querytest2 = new City(city2);
 		
-		when(this.bookingTest.getProperty()).thenReturn(property);
-		when(property.getCity()).thenReturn("Varela");
-		aux.add(bookingTest);
+		house = mock(Property.class);
+		
+		bookingMock = mock(Booking.class);
+		bookings = new ArrayList<Booking>();
+		
+		when(bookingMock.getProperty()).thenReturn(house);
+		when(house.getCity()).thenReturn(city1);
+		
+		bookings.add(bookingMock);
+		
 		
 	}
 
 	@Test
-	void newFilterCityTest() {
-		filterCity = new City("Ciudad");
+	void newCityQuery() {
+		assertNotNull(querytest1);
+		assertNotNull(querytest2);
+	}
+	@Test
+	void getNameCityTest() {
+		assertEquals(querytest1.getNameCity(), "Buenos Aires");
+		assertEquals(querytest2.getNameCity(), "Cordoba");
 	}
 	
 	@Test
-	void getCityFilterTest() {
-		assertEquals("Ciudad", filterCity.getCity());
+	void successfullQuerySearchTest() {
+		assertEquals(querytest1.search(bookings).size(),1);
 	}
-	
+
 	@Test
-	void setCityFilterTest() {
-		filterCity.setCity("Quilmes");
-		assertEquals("Quilmes", filterCity.getCity());
-	}
-	
-	
-	
-	@Test
-	void searchTest() {
-				
-		filterCity.setCity("Varela");
-				
-		assertEquals(filterCity.search(aux).size(),1);
-		
+	void failedQuerySearchTest()
+	{
+		assertEquals(querytest2.search(bookings).size(),0);
+
 	}
 	
 	

@@ -100,9 +100,9 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 		return this.policy;
 	}
 
-	public void applyPolicy(Reserve r) {
+	public void applyPolicy(Reserve r, LocalDate cancellationDate) {
 		// TODO Auto-generated method stub
-		this.policy.activate(r);
+		this.policy.activate(r,cancellationDate);
 	}
 
 	public void setBasePrice(double newPrice) {
@@ -173,7 +173,7 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 		this.obsCancel.stream().forEach(o -> o.updateCancellation(r));
 		// TODO: qué se hace con la reserva cancelada 'r' ?
 		this.reserves.remove(r);
-		this.applyPolicy(r);
+		this.applyPolicy(r, LocalDate.now());
 		this.triggerNextRequest(LocalDate.now());
 	}
 
@@ -216,6 +216,7 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 		this.getReserves().add(reserve);
 //		reserve.registerToTimer(timer, reserve.getCheckIn());
 		this.getTimer().register(this, reserve, reserve.getCheckIn());
+		
 	}
 
 	private Timer getTimer() {
@@ -248,6 +249,49 @@ public class Booking implements INotifyConfiguration, INotifyTimerSubscriber {
 			this.getConditionalReserves().remove(next_r);
 			this.getProperty().getOwner().reserveRequested(next_r);
 		}
+	}
+
+	public List<Period> avaiablePeriods(){
+		List<Period> avaiablePeriods = new ArrayList<Period>(); //FALTA TESTEAR
+		
+		LocalDate startDate = this.getPeriod().start();
+		
+		this.reserves.sort((r1,r2)-> r1.getCheckIn().compareTo(r2.getCheckIn())); //Ordeno la lista de reservas de forma cronologica
+		
+		for(Reserve reserve: reserves) {
+			if(startDate.isBefore(reserve.getCheckIn())) {  //SI LA FECHA DE INICIO DEL ALQUILER ESTA ANTES QUE LA FECHA DE CHECKIN DEL PRIMER ALQUILER REGISTRADO
+				avaiablePeriods.add(new Period(startDate, reserve.getCheckIn().minusDays(1))); //SE CREA UN PERIODO NUEVO CUYO INICIO ES LA FECHA DE INICIO Y EL FIN ES UN DIA ANTES QUE EMPIECE LA PRIMER RESERVA DE LA LISTA. A ESTE PERIODO LO AGREGO A LA LISTA DE PERIODOS DISPONIBLES
+			}
+			startDate = reserve.getCheckOut().plusDays(1);	//HAGO QUE LA FECHA DE INICIO SEA UN DIA DESPUES DEL CHECK OUT DE LA RESERVA ACTUAL	
+		}
+		
+		if(startDate.isBefore(this.getPeriod().end()) || startDate.equals(this.getPeriod().end())) { //VERIFICA QUE DESPUES DE REGISTRAR TODAS LOS ALQUILERES, MI FECHA DE INICIO ESTE ANTES QUE LA FECHA FINAL DEL ALQUILER O QUE SEA IGUAL. EN EL CASO DE QUE SI, SE AGREGA UN PERIODO CUYA FECHA DE INICIO ES LA FECHA INICIAL Y LA FECHA FINAL ES LA FECHA FINAL DEL ALQUILER
+			avaiablePeriods.add(new Period(startDate,this.getPeriod().end()));
+		}
+		
+		return avaiablePeriods;
+	}
+	
+	public boolean isAvaiableDate(LocalDate checkInDate) { //FALTA TESTEAR
+		
+		if(checkInDate.equals(null)) {  //SI LA FECHA QUE ME PASARON ES NULA, TIRO ERROR
+			throw new IllegalArgumentException("La fecha no puede ser nulo");	
+		}
+		
+		List<Period> periodsAvailables = this.avaiablePeriods(); //PIDO LA LISTA DE PERIODOS DISPONIBLES AL BOOKING
+		
+		for(Period p : periodsAvailables) { //RECORRO ESA LISTA DE PERIODOS, UNA VEZ QUE ENCUENTRE QUE LA FECHA DADA PERTENECE A UN PERIODO, DEVUELVO TRUE, SI NO PERTENECE A ALGUN PERIODO RETORNA FALSE
+			if(p.belongs(checkInDate)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public Pricer getPricer() {
+		// TODO Auto-generated method stub
+		return this.pricer;
 	}
 
 }

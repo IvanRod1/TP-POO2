@@ -12,6 +12,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import sa.booking.Reserve;
 import sa.properties.Review;
 
 class TenantTest {
@@ -19,7 +20,9 @@ class TenantTest {
 		Review rv1;
 		Review rv2;
 		List<Review> reviews;
-		User tenant;
+		Tenant tenant;
+		List<Reserve> reserves;
+		Reserve declinedReserve;
 
 		@BeforeEach
 		void setUp() throws Exception {
@@ -36,6 +39,9 @@ class TenantTest {
 			tenant.getReviews().add(rv1);
 			tenant.getReviews().add(rv2);
 			
+			reserves = new ArrayList<Reserve>();
+		
+			declinedReserve = mock(Reserve.class);
 		}
 
 		
@@ -54,5 +60,14 @@ class TenantTest {
                  	+ "telephone: 123" + System.lineSeparator()
                  	+ "mail: bar@gmail.com" + System.lineSeparator(), outContent.toString());
 	}
+	
+	@Test
+	void getReservesTest() {
+		assertEquals(reserves, tenant.getReserves());
+	}
 
+	@Test
+	void reserveDeclinedTest() {
+		tenant.reserveDeclined(declinedReserve);
+	}
 }

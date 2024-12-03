@@ -1,5 +1,6 @@
 package sa.users;
 
+import sa.booking.Reserve;
 
 public class Tenant extends User {
 	
@@ -20,6 +21,10 @@ public class Tenant extends User {
 	    System.out.println("telephone: " + this.telephone);
 	    System.out.println("mail: " + this.mail);
 		
-	}
+	}	
 
+	public void reserveDeclined(Reserve reserve) {
+		// recibe el rechazo de una reserva
+		// TODO: El enunciado no dice nada respecto a los rechazos.
+	}
 }

@@ -56,8 +56,8 @@ public class BookingTest {
 	private Property			property;
 	private Owner				owner;
 	private Tenant				tenant1;
-	private Tenant				tenant2;
-	private Tenant				tenant3;
+//	private Tenant				tenant2;
+//	private Tenant				tenant3;
 	
 	private PaymentMethod		paymentMethod1;
 	private PaymentMethod		paymentMethod2;
@@ -85,8 +85,8 @@ public class BookingTest {
 		this.specialPeriod3		= mock(SpecialPeriod.class);
 		this.owner				= spy(new Owner(null, 0, null));
 		this.tenant1 	  		= mock(Tenant.class);
-		this.tenant2 	  		= mock(Tenant.class);
-		this.tenant3 	  		= mock(Tenant.class);
+//		this.tenant2 	  		= mock(Tenant.class);
+//		this.tenant3 	  		= mock(Tenant.class);
 		this.paymentMethod1 	= mock(PaymentMethod.class);
 		this.paymentMethod2 	= mock(PaymentMethod.class);
 		this.subscriber1	  	= mock(INotifyObserver.class);
@@ -119,6 +119,7 @@ public class BookingTest {
 		this.pricePerDayHighSeason	= 6;
 		this.pricePerDayLongWeekend	= 7;
 
+		
 		when(this.reserve1.getCheckIn()).thenReturn(this.today);
 		when(this.reserve1.getCheckOut()).thenReturn(this.today);
 		when(this.reserve1.getTenant()).thenReturn(this.tenant1);
@@ -244,8 +245,8 @@ public class BookingTest {
 	public void testApplyPolicy() {
 		assertNotNull(this.booking.getPolicy());
 		verifyNoInteractions(this.policy);
-		this.booking.applyPolicy(this.reserve1);
-		verify(this.policy).activate(this.reserve1);
+		this.booking.applyPolicy(this.reserve1,LocalDate.now()); //Se necesita una fecha ahora, verificar 
+		verify(this.policy).activate(this.reserve1,LocalDate.now());  //activate ahora necesita un LocalDate
 	}
 
 	@Test

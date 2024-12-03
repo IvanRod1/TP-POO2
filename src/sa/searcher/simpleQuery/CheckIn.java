@@ -2,6 +2,7 @@ package sa.searcher.simpleQuery;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import sa.booking.Booking;
 
@@ -14,24 +15,21 @@ public class CheckIn extends SimpleQuery{
 		this.date = date;
 	}
 
-	public void setDate(LocalDate date) {
-		this.date = date;
-		
-	}
-
-	public LocalDate getDate() {
-		return this.date;
-	}
-
 	@Override
-	public ArrayList<Booking> search(ArrayList<Booking> bookings) {
-		ArrayList<Booking> aux = new ArrayList<Booking>();
+	public List<Booking> search(List<Booking> bookings) {
+
+		List<Booking> aux = new ArrayList<Booking>();
+		
 		for(int i=0;i<bookings.size();i++) {
-			if(this.getDate().isAfter(bookings.get(i).getCheckIn()) || this.getDate().isEqual(bookings.get(i).getCheckIn())) {
+			if(bookings.get(i).getPeriod().belongs(getCheckInDate()) && bookings.get(i).isAvaiableDate(getCheckInDate())) {
 				aux.add(bookings.get(i));
 			}
 		}
 		return aux;
+	}
+
+	public LocalDate getCheckInDate() {
+		return this.date;
 	}
 
 

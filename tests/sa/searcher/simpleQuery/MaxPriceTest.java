@@ -6,53 +6,54 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
-import sa.searcher.simpleQuery.MaxPrice;
 
 class MaxPriceTest {
 
-	private MaxPrice maxPriceFilter;
+	private MaxPrice querytest1;
+	private MaxPrice querytest2;
 	
 	private Booking bookingMock;
-	private ArrayList<Booking> aux;
+	private List<Booking> bookings;
 	
-	
-	
+	private LocalDate dateReserve;
 	@BeforeEach
 	void setUp() throws Exception {
-		//SUT
-		maxPriceFilter = new MaxPrice(15000);
+		dateReserve = LocalDate.of(2024, 11, 25);
 		
+		querytest1 = new MaxPrice(1234,dateReserve);
+		querytest2 = new MaxPrice(1200,dateReserve); 
 		
-		//DOC
 		bookingMock = mock(Booking.class);
-	    aux = new ArrayList<Booking>();
-	    
-	    LocalDate fechaAuxiliar = LocalDate.of(2024, 11, 20);
-	    when(bookingMock.getCheckIn()).thenReturn(fechaAuxiliar);
-	    when(bookingMock.price(bookingMock.getCheckIn())).thenReturn((double) 100000);
-		aux.add(bookingMock);
+		bookings = new ArrayList<Booking>();
+		
+		when(bookingMock.price(dateReserve)).thenReturn((double) 1233);
+		
+		bookings.add(bookingMock);
 	}
 
 	@Test
-	void newMaxPriceTest() {
-		
-		MaxPrice filter = new MaxPrice(1000);	
+	void newMaxPriceQueryTest() {
+		querytest1 = new MaxPrice(1234,dateReserve);
+	}
+	@Test
+	void getMaxPriceTest() {
+		 assertEquals(querytest1.getMaxPrice(),1234);
+		 assertEquals(querytest2.getMaxPrice(),1200);
+	}
+	@Test 
+	void successfullQuerySearchTest() {
+		assertEquals(querytest1.search(bookings).size(),1);
 	}
 	
 	@Test
-	void maxPriceSearchTest() {
-		
-		assertEquals(maxPriceFilter.search(aux).size(),0);
-	}
-	@Test
-	void getValueTest() {
-		assertEquals(maxPriceFilter.getValue(),15000);
-
+	void failedlQuerySearchTest() {
+		assertEquals(querytest2.search(bookings).size(),0);
 	}
 
 }

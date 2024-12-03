@@ -3,7 +3,7 @@ package sa.users;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +12,13 @@ import org.junit.jupiter.api.Test;
 
 import sa.accomodationsite.AccomodationSite;
 import sa.booking.Booking;
+import sa.booking.Reserve;
 import sa.booking.reserveStates.IReserveState;
-import sa.booking.reserveStates.ReserveAvailable;
+
 import sa.booking.reserveStates.ReserveBooked;
+import sa.properties.AmenityType;
 import sa.properties.Property;
+import sa.properties.PropertyType;
 import sa.users.Tenant;
 
 
@@ -24,40 +27,36 @@ import sa.users.Tenant;
 
 class AdministratorTest {
 
-	Administrator administrator;
 	AccomodationSite accomodationSite;
+	AccomodationSite accomodationSiteEmpty;
+	Administrator administrator;
 	String fullName;
 	int telephone;
 	String mail;
+	PropertyType propertyType;
+	AmenityType amenityType;
 	
 	Tenant tenant1;
 	Tenant tenant2;
+	Tenant tenant3;
 	
-	List<Tenant> tenants;
+	Reserve reserve1;
+	Reserve reserve2;
+	Reserve reserve3;
+	Reserve reserve4;
+	Reserve reserve5;
 	
 	Booking booking1;
 	Booking booking2;
-	Booking booking3;
-	Booking booking4;
-	Booking booking5;
-	Booking booking6;
+	
+	List<Tenant> expectedTenants;
+	List<Tenant> tenants;
+	List<Reserve> reserves;
+	List<Reserve> reserves2;
+	
+	
 
-	List<Tenant> topTenants;
 	
-	Property property1;
-	Property property2;
-	Property property3;
-	
-	List<Property> availableProperties;
-	
-	IReserveState reserveAvailable1;
-	IReserveState reserveAvailable2;
-	IReserveState reserveAvailable3;
-	
-	IReserveState reserveApproved1;
-	IReserveState reserveApproved2;
-	
-	List<Booking> approvedBookings;
 	
 	
 	@BeforeEach
@@ -67,59 +66,81 @@ class AdministratorTest {
 		// acá todo lo relacionado a accomodationSite:
 		
 		accomodationSite = spy(new AccomodationSite());
+		accomodationSiteEmpty = spy(new AccomodationSite());
+		
+		propertyType = mock(PropertyType.class);
+		amenityType =  mock(AmenityType.class);
 		
 		tenant1 = mock(Tenant.class);
 		tenant2 = mock(Tenant.class);
+		tenant3 = mock(Tenant.class);
+		
+		reserve1 = mock(Reserve.class);
+		reserve2 = mock(Reserve.class);
+		reserve3 = mock(Reserve.class);
+		reserve4 = mock(Reserve.class);
+		reserve5 = mock(Reserve.class);
 		
 		booking1 = mock(Booking.class);
 		booking2 = mock(Booking.class);
-		booking3 = mock(Booking.class);
-		booking4 = mock(Booking.class);
-		booking5 = mock(Booking.class);
-		booking6 = mock(Booking.class);
 		
-		property1 = mock(Property.class);
-		property2 = mock(Property.class);
-		property3 = mock(Property.class);
+		tenants = new ArrayList<Tenant>();
 		
+		when(booking1.getReserves()).thenReturn(reserves);
+		
+		reserves = new ArrayList<Reserve>();
+		reserves2 = new ArrayList<Reserve>();
+		
+		reserves.add(reserve1);
+		reserves.add(reserve2);
+		reserves.add(reserve3);
+		// todo esto para el occupiedReservesTest:
+		reserves2.add(reserve4);
+		reserves2.add(reserve5);
+		
+		when(reserve1.getTenant()).thenReturn(tenant1);
+		when(reserve2.getTenant()).thenReturn(tenant2);
+		when(reserve3.getTenant()).thenReturn(tenant3);
+		when(reserve4.getTenant()).thenReturn(tenant1);
+		when(reserve5.getTenant()).thenReturn(tenant1);
+		
+		// todo esto para el occupiedReservesTest:
+		when(reserve1.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 25));
+		when(reserve1.getCheckOut()).thenReturn(LocalDate.of(2024, 12, 15));
+		
+		when(reserve2.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 27));
+		when(reserve2.getCheckOut()).thenReturn(LocalDate.of(2024, 12, 17));
+		
+		when(reserve3.getCheckIn()).thenReturn(LocalDate.of(2024, 12, 24));
+		when(reserve3.getCheckOut()).thenReturn(LocalDate.of(2025, 1, 1));
+		
+		when(reserve4.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 25));
+		when(reserve4.getCheckOut()).thenReturn(LocalDate.of(2024, 12, 31));
+		
+		when(reserve5.getCheckIn()).thenReturn(LocalDate.of(2024, 11, 20));
+		when(reserve5.getCheckOut()).thenReturn(LocalDate.of(2024, 12, 30));
+		
+		when(booking1.getReserves()).thenReturn(reserves);
+		when(booking2.getReserves()).thenReturn(reserves2);
+		// todo esto para el occupiedReservesTest:
+
+		
+		tenants.add(tenant1);
+		tenants.add(tenant2);
+		tenants.add(tenant3);
+		
+		
+		
+		expectedTenants = new ArrayList<Tenant>();
+		
+		expectedTenants.add(tenant1);
+		expectedTenants.add(tenant2);
+		expectedTenants.add(tenant3);
+		
+		// todo esto para el occupiedReservesTest:
+
 		accomodationSite.addBooking(booking1);
 		accomodationSite.addBooking(booking2);
-		accomodationSite.addBooking(booking3);
-		
-		
-		reserveAvailable1 = mock(ReserveAvailable.class);
-		reserveAvailable2 = mock(ReserveAvailable.class);
-		reserveAvailable3 = mock(ReserveAvailable.class);
-		
-		reserveApproved1 = mock(ReserveBooked.class);
-		reserveApproved2 = mock(ReserveBooked.class);
-		
-		approvedBookings = new ArrayList<Booking>();
-		approvedBookings.add(booking4);
-		approvedBookings.add(booking5);
-		approvedBookings.add(booking6);
-	
-		// configuro stubs de booking:
-		
-		when(booking1.getTenant()).thenReturn(tenant1);
-		when(booking2.getTenant()).thenReturn(tenant2);
-		when(booking3.getTenant()).thenReturn(tenant1);
-		
-		when(booking1.getProperty()).thenReturn(property1);
-		when(booking2.getProperty()).thenReturn(property2);
-		when(booking3.getProperty()).thenReturn(property3);
-		
-		when(booking1.getState()).thenReturn(reserveAvailable1);
-		when(booking2.getState()).thenReturn(reserveAvailable2);
-		when(booking3.getState()).thenReturn(reserveAvailable3);
-		
-		when(booking4.getState()).thenReturn(reserveApproved1);
-		when(booking5.getState()).thenReturn(reserveApproved2);
-		when(booking6.getState()).thenReturn(reserveApproved2);
-		
-		when(accomodationSite.getApprovedBookings()).thenReturn(approvedBookings);
-		
-		
 		
 		
 		// acá todo lo relacionado a Administrator:
@@ -133,21 +154,6 @@ class AdministratorTest {
 		
 		administrator = new Administrator(fullName, telephone, mail, accomodationSite);
 		
-		tenants = new ArrayList<Tenant>();
-		
-		tenants.add(tenant1);
-		tenants.add(tenant2);
-		
-		topTenants = new ArrayList<Tenant>();
-		
-		topTenants.add(tenant1);
-		topTenants.add(tenant2);
-		
-		availableProperties = new ArrayList<Property>();
-		availableProperties.add(property1);
-		availableProperties.add(property2);
-		availableProperties.add(property3);
-		
 		
 		
 	}
@@ -157,34 +163,63 @@ class AdministratorTest {
 	// Excercise:
 	
 	@Test
-	void bestTenantsTest() {
+	void getAccomodationSiteTest() {
 		
-		assertEquals(administrator.bestTenants(tenants), topTenants);
-		//assertEquals(1,1);
+		assertEquals(accomodationSite, administrator.getAccomodationSite());
 	}
+	
+	@Test
+	void setAccomodationSiteTest() {
+		
+		administrator.setAccomodationSite(accomodationSite);
+		assertEquals(accomodationSite, administrator.getAccomodationSite());
+	}
+	
+	@Test
+	void summaryTest() {
+		administrator.summary();
+	}
+	
+	@Test
+	void addAllowedPropertyTypeTest() {
+		
+		administrator.addAllowedPropertyTypes(propertyType);
+		assertEquals(accomodationSite.getAllowedProperties().get(0), propertyType);
+	}
+ 	
+	@Test
+	void allowedAmenitiesTest() {
+		
+		administrator.allowedAmenities(amenityType);
+		assertEquals(accomodationSite.getAllowedAmenities().get(0), amenityType);
+	}
+	
 	
 	
 	@Test
-	void propertiesToBeReservedTest() {
+	void bestTenantsTest() {
 		
-		assertEquals(administrator.propertiesToBeReserve(), availableProperties);
-		
+		assertEquals(expectedTenants, administrator.bestTenants(tenants));
 		
 	}
+	
+	
+
 	
 	@Test
 	void occupancyRateTest() {
 		
-		assertEquals(administrator.occupancyRate(), 100.0);
+		assertEquals(80.0, administrator.occupancyRate());
+	}
+	
+	@Test
+	void occupancyRateTestWithoutBookings() {
+		administrator.setAccomodationSite(accomodationSiteEmpty);
+		assertEquals(0.0, administrator.occupancyRate());
 	}
 	
 	
 	
-	
-	
-	
-	
-
 }
 
 

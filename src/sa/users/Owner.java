@@ -1,16 +1,16 @@
 package sa.users;
 
-import sa.booking.Reserve;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import sa.booking.Reserve;
 import sa.properties.Property;
 
 public class Owner extends User {
 	
 	private List<Property> 	properties;
-	private Reserve  		requestedReserve = null;
+	private Reserve reserveRequested;
 
 	public Owner(String fullName, int telephone, String mail) {
 	
@@ -19,25 +19,33 @@ public class Owner extends User {
 		this.properties = new ArrayList<Property>();
 	}
 	
-
 	@Override
 	public void summary() {
 		// TODO Auto-generated method stub
 		/**
 		 * aca tambien queda vacío
 		 */
-		
 	}
 
-
-	public void reserveRequested(Reserve r) {
-		// TODO Auto-generated method stub
-		this.requestedReserve  = r;
-		// Acá el owner puede visualizar datos del tenant
-		r.getTenant().summary();
+  public List<Property> getProperties() {
+		return this.properties;
 	}
 	
-	public Reserve getRequestedReserve() {
-		return this.requestedReserve;
+	public void reserveRequested(Reserve reserve) {
+		this.setReserveRequested(reserve);
+		// Acá el owner puede visualizar datos del tenant
+    reserve.getTenant().summary();
+	}
+	
+	public void setReserveRequested(Reserve reserve) {
+		this.reserveRequested = reserve;
+	}
+	
+	public Reserve getReserveRequested() {
+		return this.reserveRequested;
+	}
+	
+	public void cleanRequestedReserve() {
+		this.reserveRequested = null;
 	}
 }

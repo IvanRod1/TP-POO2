@@ -5,55 +5,60 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
 import sa.properties.Property;
-import sa.searcher.simpleQuery.MaxGuest;
+
 
 class MaxGuestTest {
 
-	private MaxGuest maxGuestFilter;
+	private MaxGuest querytest1;
+	private MaxGuest querytest2;
 	
 	private Booking bookingMock;
-	private Property property;
+	private List<Booking> bookings;
 	
-	private ArrayList<Booking> aux;
+	private Property house;
 	
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		//SUT
-		maxGuestFilter = new MaxGuest(10);
+		querytest1 = new MaxGuest(3);
+		querytest2 = new MaxGuest(5);
 		
-		//DOC
 		bookingMock = mock(Booking.class);
-		property = mock(Property.class);
-		aux = new ArrayList<Booking>();
+		bookings = new ArrayList<Booking>();
+		house = mock(Property.class);
 		
-		when(this.bookingMock.getProperty()).thenReturn(property);
-		when(property.getMaxGuests()).thenReturn(15);
-		aux.add(bookingMock);
+		when(bookingMock.getProperty()).thenReturn(house);
+		when(house.getMaxGuests()).thenReturn(4);
+		
+		bookings.add(bookingMock);
 	}
 
 	@Test
-	void newMaxGuestFilterTest() {
-		MaxGuest newFilter = new MaxGuest(3);
-	}
-	
-	@Test
-	void maxGuestSearchFilterTest() {
-		
-		assertEquals(maxGuestFilter.search(aux).size(),1);
-		
-		
+	void newMaxGuestQuery() {
+		assertNotNull(querytest1);
+		assertNotNull(querytest2);
 	}
 	@Test
-	void getMaxGuestTest() {
-		assertEquals(maxGuestFilter.getMaxGuests(), 10);
+	void getMaxGuestsTest() {
+		assertEquals(querytest1.getMaxGuests(),3);
+		assertEquals(querytest2.getMaxGuests(),5);
 	}
+	@Test
+	void successfullQuerySearchTest() {
+		assertEquals(querytest1.search(bookings).size(),1);
+	}
+	@Test
+	void failedQuerySearchTest() {
+		assertEquals(querytest2.search(bookings).size(),0);
+	}
+
 	
 	
 	

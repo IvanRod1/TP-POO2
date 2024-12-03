@@ -13,7 +13,7 @@ import sa.searcher.simpleQuery.IQuery;
 import sa.properties.AmenityType;
 //import sa.payments.PaymentMethod;
 import sa.booking.*;
-import sa.booking.reserveStates.ReserveAvailable;
+
 import sa.booking.reserveStates.ReserveBooked;
 import sa.properties.Property;
 import sa.properties.PropertyType;
@@ -42,7 +42,7 @@ public class AccomodationSite {
 	}
 	
 	
-	public void createBooking(Property property, LocalDate checkIn, LocalDate checkOut, List<PaymentMethod> paymentMethods,
+	public void createBooking(Property property, LocalDate begin, LocalDate end, List<PaymentMethod> paymentMethods,
 							  double pricePerDayWeekday, List<SpecialPeriod> periods) {
 		/**
 		 * crea un booking nuevo y lo agrega a la lista de bookings. Antes de agregarlo verifica que la propiedad del booking
@@ -50,7 +50,7 @@ public class AccomodationSite {
 		 * 
 		 * */
 		
-		Booking newBooking = new Booking(property, checkIn, checkOut, paymentMethods,
+		Booking newBooking = new Booking(property, begin, end, paymentMethods,
 											pricePerDayWeekday, periods);
 		//
 		if(this.verifyPropertyType(property) && this.verifyAmenityType(property)) {
@@ -181,14 +181,16 @@ public class AccomodationSite {
 	public Set<String> allReservesCities(Tenant tenant) {
 		/**
 		 * primero filtra la lista de bookings y se queda con todos los alquileres del tenant dado, luego transforma esa
-		 * lista en una lista de ciudades por las que alquiló el tenant dado, y sin elementos repetidos
+		 * lista en una lista de ciudades por las que alquiló el tenant dado, y sin elementos repetidos,
+		 * sería reutilizar el filtro de la lista de bookings a la lista de reservas del tenant dado, y esa transformarla
+		 * a una lista de ciudades.
 		 * */
 		  
 		return this.allReservesOfTheTenant(tenant).stream()
-		        								  .map(reserve -> reserve.getBooking())
-		        								  .map(booking -> booking.getProperty())
-		        								  .map(property -> property.getCity())
-		        								  .collect(Collectors.toSet());
+												  .map(reserve -> reserve.getBooking())
+				  								  .map(booking -> booking.getProperty())
+				  								  .map(property -> property.getCity())
+				  								  .collect(Collectors.toSet());
 		
 	}
 	
@@ -211,6 +213,12 @@ public class AccomodationSite {
 	public void addBooking(Booking b) {
 		this.bookings.add(b);
 		
+	}
+	
+	public List<Reserve> getAllReserves() {
+		return this.getBookings().stream()
+								 .flatMap(booking -> booking.getReserves().stream())
+								 .toList();
 	}
 		
 }

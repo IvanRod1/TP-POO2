@@ -43,6 +43,12 @@ public class Reserve {
 		this.getBooking().addReserve(this); // Acá se encarga el booking de gestionar el cobro, la subscripción al Timer y demás
 	}
 	
+	// El Owner rechaza la solicitud de la reserva.
+	public void decline() {
+		this.getTenant().reserveDeclined(this);
+		this.getBooking().getProperty().getOwner().cleanRequestedReserve();
+	}
+	
 	public void cancel() {
 		// TODO Auto-generated method stub
 		this.state.cancel();
@@ -77,5 +83,12 @@ public class Reserve {
 		// TODO Auto-generated method stub
 		this.state.next();
 	}
+
+	public void setPrice(double d) {
+		this.price = d; 
+		
+	}
+	
+	
 
 }

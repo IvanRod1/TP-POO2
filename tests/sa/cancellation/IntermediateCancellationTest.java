@@ -1,8 +1,9 @@
 package sa.cancellation;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.atLeastOnce;
+
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -10,59 +11,57 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import sa.booking.BookedPeriod;
-import sa.booking.Booking;
+
+
+import sa.booking.Reserve;
 
 class IntermediateCancellationTest {
 
-	private IntermediateCancellation intermediateCancellation;
-	private Booking bookingTest;
-	private LocalDate checkInDate;
-	private BookedPeriod bookedPeriodMock;
-
+private IntermediateCancellation cancellationtest;
+	
+	private Reserve reserveMock;
+	private LocalDate dateTest;
 	@BeforeEach
 	void setUp() throws Exception {
-		//DOCS
-		bookingTest = mock(Booking.class);
-		checkInDate = LocalDate.of(2024, 11, 24);
-		bookedPeriodMock = mock(BookedPeriod.class);
 		
-		when(bookedPeriodMock.start()).thenReturn(checkInDate);
-		when(bookingTest.getCheckIn()).thenReturn(checkInDate);
-		when(bookingTest.price(bookingTest.getCheckIn())).thenReturn((double) 123000);
+		reserveMock = mock(Reserve.class);
+		cancellationtest = new IntermediateCancellation();
 		
-		//SUT
-		intermediateCancellation = new IntermediateCancellation();
+		dateTest = LocalDate.of(2024, 10, 1);
 	}
 
 	@Test
-	void newIntermediateCancellationtest() {
-		intermediateCancellation = new IntermediateCancellation();
-		assertNotNull(intermediateCancellation);
-	}
-	@Test
-	void activateIntermediateCancellation22DaysBeforeTest() {
-		
-		IntermediateCancellation spy = Mockito.spy(intermediateCancellation);
-		spy.activate(checkInDate.minusDays(22),bookingTest,bookedPeriodMock);
-		verify(spy, atLeastOnce()).activate(checkInDate.minusDays(22), bookingTest,bookedPeriodMock);
-
+	void newCancellationTest() {
+		assertNotNull(cancellationtest);
 	}
 	
 	@Test
-	void activateIntermediateCancellation15DaysBeforeTest() {
-		
-		IntermediateCancellation spy = Mockito.spy(intermediateCancellation);
-		spy.activate(checkInDate.minusDays(15),bookingTest,bookedPeriodMock);
-		verify(spy, atLeastOnce()).activate(checkInDate.minusDays(15), bookingTest,bookedPeriodMock);
+	void cancelation20DaysBeforeCheckInTest() {
+		when(reserveMock.getCheckIn()).thenReturn(LocalDate.of(2024, 10, 22));
+		cancellationtest.activate(reserveMock, dateTest);
+		verify(reserveMock).setPrice(0.0);
+	}
+	
+	@Test
+	void cancellation19daysBeforeCheckInTest() {
+		when(reserveMock.getCheckIn()).thenReturn(LocalDate.of(2024, 10, 20));
+		cancellationtest.activate(reserveMock, dateTest);
+		verify(reserveMock).setPrice(reserveMock.getPrice() * 0.5);
 	}
 	@Test
-	void activateIntermediateCancellation5DaysBeforeTest() {
-		IntermediateCancellation spy = Mockito.spy(intermediateCancellation);
-		spy.activate(checkInDate.minusDays(5),bookingTest,bookedPeriodMock);
-		verify(spy, atLeastOnce()).activate(checkInDate.minusDays(5), bookingTest,bookedPeriodMock);
+	void cancellation10daysBeforeCheckInTest() {
+		assertTrue(dateTest.isBefore(LocalDate.of(2024, 10, 12).minusDays(10)));
+		when(reserveMock.getCheckIn()).thenReturn(LocalDate.of(2024, 10, 12));
+		cancellationtest.activate(reserveMock, dateTest);
+		verify(reserveMock).setPrice(reserveMock.getPrice() * 0.5);
+	}
+	
+	@Test
+	void cancellation5daysBeforeCheckInTest() {
+		when(reserveMock.getCheckIn()).thenReturn(LocalDate.of(2024, 10, 6));
+		cancellationtest.activate(reserveMock, dateTest);
+		verify(reserveMock,never()).getPrice();
 	}
 	
 

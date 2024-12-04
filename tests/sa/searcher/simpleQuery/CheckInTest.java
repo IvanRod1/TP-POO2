@@ -64,7 +64,7 @@ class CheckInTest {
 	}
 	@Test
 	void successfulQuerySearchTest() {
-		when(bookingMock.isAvaiableDate(LocalDate.of(2024, 11, 20))).thenReturn(true);
+		when(bookingMock.isAvailableDate(LocalDate.of(2024, 11, 20))).thenReturn(true);
 		when(bookingMock.getPeriod().belongs(LocalDate.of(2024, 11, 20))).thenReturn(true);
 		verify(bookingMock).getPeriod();
 		
@@ -73,7 +73,7 @@ class CheckInTest {
 	
 	@Test
 	void failedQuerySearchTest() {
-		when(bookingMock.isAvaiableDate(LocalDate.of(2024, 8, 17))).thenReturn(false);
+		when(bookingMock.isAvailableDate(LocalDate.of(2024, 8, 17))).thenReturn(false);
 		when(bookingMock.getPeriod().belongs(LocalDate.of(2024, 8, 17))).thenReturn(false);
 		verify(bookingMock).getPeriod();
 		

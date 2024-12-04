@@ -84,7 +84,7 @@ class OrTest {
 		when(bookingMock.getProperty()).thenReturn(house);
 		when(bookingMock.getPeriod()).thenReturn(bookingPeriod);
 		when(bookingMock.price(checkInDate)).thenReturn(1230.0);
-		when(bookingMock.isAvaiableDate(checkInDate)).thenReturn(true);
+		when(bookingMock.isAvailableDate(checkInDate)).thenReturn(true);
 		when(bookingPeriod.belongs(checkInDate)).thenReturn(true);
 		
 		bookings.add(bookingMock);

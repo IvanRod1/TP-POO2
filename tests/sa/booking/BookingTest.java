@@ -102,6 +102,8 @@ public class BookingTest {
 		this.bookedperiod3		= mock(Period.class);
 		this.timer				= mock(Timer.class);
 		
+		this.period = mock(Period.class);
+		
 		this.specialPeriods.add(specialPeriod1);
 		this.specialPeriods.add(specialPeriod2);
 		this.specialPeriods.add(specialPeriod3);
@@ -170,6 +172,10 @@ public class BookingTest {
 		when(this.reserve3.getPeriod()).thenReturn(this.bookedperiod3);
 //		when(this.reserve3.getCheckIn()).thenReturn(this.bookedperiod3.start());
 //		when(this.reserve3.getCheckOut()).thenReturn(this.bookedperiod3.end());
+		
+		when(this.period.start()).thenReturn(begin);
+		when(this.period.end()).thenReturn(end);
+		
 
 		// SUT (System Under Test): objeto a testear
 		this.booking = new Booking(   policy
@@ -409,6 +415,23 @@ public class BookingTest {
 		verify(this.specialPeriod1, times(1)).price();
 		verify(this.specialPeriod1, times(1)).setPrice(newPrice);
 		verify(this.subscriber1, times(1)).updateLowerPrice(this.booking);
+	}
+	
+	@Test
+	public void availablePeriodsTest() {
+		//assertTrue(this.booking.availablePeriods().size() != 0);
+		//period = mock(Period.class);
+		//Preguntar como el booking SUT sabe su periodo
+		//No se inicializo el period del booking
+	
+		
+	}
+	
+	@Test
+	public void isAvailablePeriodTest() {
+		LocalDate dateTest1 = LocalDate.of(2024, 11, 10);
+		LocalDate dateTest2 = LocalDate.of(2024, 11, 10);
+		
 	}
 	
 }

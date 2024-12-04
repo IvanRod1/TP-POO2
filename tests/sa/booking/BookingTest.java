@@ -69,9 +69,11 @@ public class BookingTest {
 	private Reserve				reserve1;
 	private Reserve				reserve2;
 	private Reserve				reserve3;
+	private Reserve				reserve4;
 	private Period				bookedperiod1;
 	private Period				bookedperiod2;
 	private Period				bookedperiod3;
+	private Period				bookedperiod4;
 	
 	
 	@BeforeEach
@@ -97,9 +99,11 @@ public class BookingTest {
 		this.reserve1			= mock(Reserve.class);
 		this.reserve2			= mock(Reserve.class);
 		this.reserve3			= mock(Reserve.class);
+		this.reserve4		    = mock(Reserve.class);
 		this.bookedperiod1		= mock(Period.class);
 		this.bookedperiod2		= mock(Period.class);
 		this.bookedperiod3		= mock(Period.class);
+		this.bookedperiod4		= mock(Period.class);
 		this.timer				= mock(Timer.class);
 		
 		this.period = mock(Period.class);
@@ -172,6 +176,15 @@ public class BookingTest {
 		when(this.reserve3.getPeriod()).thenReturn(this.bookedperiod3);
 //		when(this.reserve3.getCheckIn()).thenReturn(this.bookedperiod3.start());
 //		when(this.reserve3.getCheckOut()).thenReturn(this.bookedperiod3.end());
+		
+		//Alquila 2 dias en medio del periodo
+		when(this.bookedperiod4.start()).thenReturn(this.today.plusDays(1));
+		when(this.bookedperiod4.end()).thenReturn(this.today.plusDays(2));
+		when(this.bookedperiod4.belongs(this.today)).thenReturn(false);
+		when(this.bookedperiod4.belongs(this.today.plusDays(1))).thenReturn(true);
+		when(this.bookedperiod4.belongs(this.end)).thenReturn(false);
+		when(this.reserve4.getPeriod()).thenReturn(this.bookedperiod4);
+		
 		
 		when(this.period.start()).thenReturn(begin);
 		when(this.period.end()).thenReturn(end);

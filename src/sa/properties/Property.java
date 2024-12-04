@@ -1,10 +1,10 @@
 package sa.properties;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+
 import java.util.List;
 
-import net.bytebuddy.asm.Advice.This;
+
 import sa.users.Owner;
 
 public class Property implements Rankeable {

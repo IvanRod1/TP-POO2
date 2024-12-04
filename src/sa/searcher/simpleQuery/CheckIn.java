@@ -21,7 +21,7 @@ public class CheckIn extends SimpleQuery{
 		List<Booking> aux = new ArrayList<Booking>();
 		
 		for(int i=0;i<bookings.size();i++) {
-			if(bookings.get(i).getPeriod().belongs(getCheckInDate()) && bookings.get(i).isAvaiableDate(getCheckInDate())) {
+			if(bookings.get(i).getPeriod().belongs(getCheckInDate()) && bookings.get(i).isAvailableDate(getCheckInDate())) {
 				aux.add(bookings.get(i));
 			}
 		}

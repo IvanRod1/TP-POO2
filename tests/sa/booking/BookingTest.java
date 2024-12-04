@@ -178,10 +178,10 @@ public class BookingTest {
 //		when(this.reserve3.getCheckOut()).thenReturn(this.bookedperiod3.end());
 		
 		//Alquila 2 dias en medio del periodo
-		when(this.bookedperiod4.start()).thenReturn(this.today.plusDays(1));
-		when(this.bookedperiod4.end()).thenReturn(this.today.plusDays(2));
+		when(this.bookedperiod4.start()).thenReturn(this.begin.plusDays(1));
+		when(this.bookedperiod4.end()).thenReturn(this.begin.plusDays(2));
 		when(this.bookedperiod4.belongs(this.today)).thenReturn(false);
-		when(this.bookedperiod4.belongs(this.today.plusDays(1))).thenReturn(true);
+		when(this.bookedperiod4.belongs(this.begin.plusDays(1))).thenReturn(true);
 		when(this.bookedperiod4.belongs(this.end)).thenReturn(false);
 		when(this.reserve4.getPeriod()).thenReturn(this.bookedperiod4);
 		

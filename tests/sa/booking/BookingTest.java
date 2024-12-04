@@ -423,14 +423,43 @@ public class BookingTest {
 		//period = mock(Period.class);
 		//Preguntar como el booking SUT sabe su periodo
 		//No se inicializo el period del booking
+		Period periodTest1 = mock(Period.class);
+		Period periodTest2 = mock(Period.class);
+		Period periodTest3 = mock(Period.class);
+		
+		when(periodTest1.start()).thenReturn(begin);
+		when(periodTest1.end()).thenReturn(end);
+		
+		//La lista de reserves del booking esta vacia,por ende el periodo disponible va a ser solo uno, y es equivalente al total de tiempo de alquiler disponible de la propiedad
+		
+		assertEquals(this.booking.availablePeriods().size(),1);
+		assertEquals(this.booking.availablePeriods().get(0).start(),periodTest1.start());
+		assertEquals(this.booking.availablePeriods().get(0).end(),periodTest1.end()); 
+		
+		
+		//Agrego una reserva de 1 dia 
+		
+		when(periodTest2.start()).thenReturn(begin.plusDays(1));
+		when(periodTest2.end()).thenReturn(end);
+		
+		this.reserves.add(reserve1);
+		assertEquals(this.booking.availablePeriods().size(),1);
+		assertEquals(this.booking.availablePeriods().get(0).start(),periodTest2.start());
+		assertEquals(this.booking.availablePeriods().get(0).end(),periodTest2.end()); 
+		
+		//Agrego una reserva de dos dias que esta en medio WIP
+		
+		
+		
+
 	
 		
 	}
 	
 	@Test
 	public void isAvailablePeriodTest() {
-		LocalDate dateTest1 = LocalDate.of(2024, 11, 10);
-		LocalDate dateTest2 = LocalDate.of(2024, 11, 10);
+//		LocalDate dateTest1 = LocalDate.of(2024, 11, 10);
+//		LocalDate dateTest2 = LocalDate.of(2024, 11, 10); WIP
 		
 	}
 	

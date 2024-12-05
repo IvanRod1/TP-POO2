@@ -219,15 +219,25 @@ public class Booking implements INotifyConfiguration {
 	}
 
 	private void triggerNextRequest(LocalDate start, LocalDate end) {
-		for (LocalDate currDate = start; !currDate.equals(end.plusDays(1)); currDate.plusDays(1)) {
-			final LocalDate date = currDate; // Nos tira error en el lambda porque necesita que sea final
-			Optional<Reserve> wr = this.getConditionalReserves().stream()
-									.filter(w -> date.equals(w.getCheckIn()) && end.isBefore(end.plusDays(1)))
-									.findFirst();
-			// Si está en waiting pasa a ser una reserva formal
-			if (wr.isPresent()) {
-				Reserve next_r = wr.get();
-				this.getProperty().getOwner().reserveRequested(next_r);
+//		for (LocalDate currDate = start; !currDate.equals(end.plusDays(1)); currDate.plusDays(1)) {
+//			final LocalDate date = currDate; // Nos tira error en el lambda porque necesita que sea final
+//			Optional<Reserve> wr = this.getConditionalReserves().stream()
+//									.filter(w -> date.equals(w.getCheckIn()) && end.isBefore(end.plusDays(1)))
+//									.findFirst();
+//			// Si está en waiting pasa a ser una reserva formal
+//			if (wr.isPresent()) {
+//				Reserve next_r = wr.get();
+//				this.getProperty().getOwner().reserveRequested(next_r);
+//			}
+//		}
+		
+		Period aux = new Period(start,end);  //armo un periodo auxiliar con las fechas que me dieron para poder usar el metodo belongs
+		List<Reserve> conditionalReserves = this.getConditionalReserves(); // lista de reservas condicionales
+		
+		for(Reserve r : conditionalReserves) { //for iterando en cada elemento de la lista de condicionales
+			if(aux.belongs(r.getCheckIn()) && aux.belongs(r.getCheckOut())) { //verifica que esa reserva condicional este dentro del periodo que se cancelo (aux)
+				this.getProperty().getOwner().reserveRequested(r); //Notifico al owner para que verifique esta reserva
+				break; //rompo el ciclo 
 			}
 		}
 	}

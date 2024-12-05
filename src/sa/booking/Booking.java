@@ -232,7 +232,7 @@ public class Booking implements INotifyConfiguration {
 //		}
 		
 		Period aux = new Period(start,end);  //armo un periodo auxiliar con las fechas que me dieron para poder usar el metodo belongs
-		List<Reserve> conditionalReserves = this.getConditionalReserves(); // lista de reservas condicionales
+		List<Reserve> conditionalReserves = this.getConditionalReserves(); // lista de reservas condicionales. Se podria ahorrar esta linea de codigo poniendo el metodo directamente en el for
 		
 		for(Reserve r : conditionalReserves) { //for iterando en cada elemento de la lista de condicionales
 			if(aux.belongs(r.getCheckIn()) && aux.belongs(r.getCheckOut())) { //verifica que esa reserva condicional este dentro del periodo que se cancelo (aux)

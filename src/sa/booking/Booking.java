@@ -211,6 +211,7 @@ public class Booking implements INotifyConfiguration {
 		// TODO Auto-generated method stub
 		this.getReserves().add(reserve);
 		this.notifySubscribersReserve(reserve);
+		reserve.getState().update();   // Esta linea es nueva, verificar si no se agrego antes
 	}
 
 	public Timer getTimer() {
@@ -218,7 +219,8 @@ public class Booking implements INotifyConfiguration {
 		return this.timer;
 	}
 
-	private void triggerNextRequest(LocalDate start, LocalDate end) {
+	//cambie temporalmente de private a public porque no lo podia testear
+	void triggerNextRequest(LocalDate start, LocalDate end) {
 //		for (LocalDate currDate = start; !currDate.equals(end.plusDays(1)); currDate.plusDays(1)) {
 //			final LocalDate date = currDate; // Nos tira error en el lambda porque necesita que sea final
 //			Optional<Reserve> wr = this.getConditionalReserves().stream()

@@ -47,7 +47,8 @@ public class Reserve {
 		// TODO: el owner debería olvidar esta reserve 
 		this.getBooking().getProperty().getOwner().cleanRequestedReserve();
 		this.getBooking().removeWaiting(this);
-		this.setState(new ReserveBooked(this));
+		//this.setState(new ReserveBooked(this));
+		this.getState().update();
 		this.getBooking().addReserve(this);
 		// TODO: debería cobrarle al Tenant porque ya fue aceptada (no fue modelado porque no lo pide el enunciado)
 		this.getTenant().reserveApproved(this);

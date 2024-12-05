@@ -1,5 +1,6 @@
 package sa.booking;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -249,6 +250,10 @@ public class BookingTest {
 	public void testGetPolicy() {
 		assertEquals(this.policy, this.booking.getPolicy());
 	}
+	@Test
+	public void testGetConditionalReserves() {
+		assertEquals(this.waitings, this.booking.getConditionalReserves());
+	}
 
 
 	@Test
@@ -318,12 +323,35 @@ public class BookingTest {
 	}
 
 	@Test
-	public void testTriggerNextRequest() {
+	public void testTriggerNextRequestApproved() {
+		
+		when(this.reserve1.getBooking()).thenReturn(this.booking);
+		when(property.getOwner()).thenReturn(owner);
+		
+		Reserve spyReserve1 = spy(new Reserve(booking,tenant1,bookedperiod1)); //necesito un spy
+		
+		assertEquals(0, this.booking.getConditionalReserves().size());
+		this.waitings.add(spyReserve1);
+		assertEquals(1, this.booking.getConditionalReserves().size());
+		this.booking.triggerNextRequest(spyReserve1.getCheckIn(),spyReserve1.getCheckOut());
+		verify(this.owner, times(1)).reserveRequested(spyReserve1);
+		
+		spyReserve1.approve();
+		
+		assertTrue(this.booking.getReserves().contains(spyReserve1));
+		
+		verify(owner).cleanRequestedReserve();
+		assertEquals(0, this.booking.getConditionalReserves().size());
+	}
+	
+	@Test
+	public void testTriggerNextRequestDeclined() {
 		assertEquals(0, this.booking.getConditionalReserves().size());
 		this.waitings.add(this.reserve1);
 		assertEquals(1, this.booking.getConditionalReserves().size());
-		this.booking.triggerNextRequest(this.reserve1.getCheckIn());
+		this.booking.triggerNextRequest(this.reserve1.getCheckIn(),this.reserve1.getCheckOut());
 		verify(this.owner, times(1)).reserveRequested(this.reserve1);
+		this.reserve1.cancel();
 		assertEquals(0, this.booking.getConditionalReserves().size());
 	}
 

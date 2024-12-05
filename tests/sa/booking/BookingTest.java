@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import sa.booking.reserveStates.ReserveBooked;
 import sa.booking.reserveStates.Timer;
 import sa.cancellation.CostFree;
 import sa.cancellation.NoCancellation;
@@ -76,7 +77,6 @@ public class BookingTest {
 	private Period				bookedperiod3;
 	private Period				bookedperiod4;
 	
-	
 	@BeforeEach
 	public void setUp() {
 		// DOC (Depended-On-Component): nuestros doubles
@@ -105,8 +105,8 @@ public class BookingTest {
 		this.bookedperiod2		= mock(Period.class);
 		this.bookedperiod3		= mock(Period.class);
 		this.bookedperiod4		= mock(Period.class);
-		this.timer				= mock(Timer.class);
-		
+	    this.timer				= mock(Timer.class);
+	    
 		this.period = mock(Period.class);
 		
 		this.specialPeriods.add(specialPeriod1);
@@ -308,11 +308,23 @@ public class BookingTest {
 	
 	@Test
 	public void testAddReserve() {
+		
+		Reserve spyReserve1 = spy(new Reserve(booking,tenant1,bookedperiod1)); //necesito un spy. Su estado es waiting
+		
+		
 		assertEquals(0, this.booking.getReserves().size());
-		verifyNoInteractions(this.timer);
-		this.booking.addReserve(reserve1);
-		assertEquals(1, this.booking.getReserves().size());
-		verify(this.timer, times(1)).register(this.booking, this.reserve1, this.reserve1.getCheckIn());
+		verifyNoInteractions(this.timer);	
+		
+		ReserveBooked spyReserveBooked = spy(new ReserveBooked(spyReserve1));
+		
+		spyReserve1.setState(spyReserveBooked);
+		this.booking.addReserve(spyReserve1);
+		
+		assertEquals(1, this.booking.getReserves().size()); 
+		
+		
+		verify(this.timer, times(1)).register(spyReserveBooked, spyReserve1.getCheckIn()); //No se porque pero tira error ya que el state de verify no es el mismo que en la implementacion de register
+
 	}
 	
 	@Test

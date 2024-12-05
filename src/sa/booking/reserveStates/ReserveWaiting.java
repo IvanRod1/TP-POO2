@@ -13,7 +13,9 @@ public class ReserveWaiting implements IReserveState {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		// Copie el comportamiento que tiene update de ReserveBooked y lo aplique aca
+		this.getReserve().setState(new ReserveBooked(this.getReserve()));
+		
 
 	}
 

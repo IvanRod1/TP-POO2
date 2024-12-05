@@ -325,7 +325,6 @@ public class BookingTest {
 	@Test
 	public void testTriggerNextRequestApproved() {
 		
-		when(this.reserve1.getBooking()).thenReturn(this.booking);
 		when(property.getOwner()).thenReturn(owner);
 		
 		Reserve spyReserve1 = spy(new Reserve(booking,tenant1,bookedperiod1)); //necesito un spy
@@ -346,12 +345,17 @@ public class BookingTest {
 	
 	@Test
 	public void testTriggerNextRequestDeclined() {
+		
+		when(property.getOwner()).thenReturn(owner);
+		Reserve spyReserve1 = spy(new Reserve(booking,tenant1,bookedperiod1)); //necesito un spy
+		
 		assertEquals(0, this.booking.getConditionalReserves().size());
-		this.waitings.add(this.reserve1);
+		this.waitings.add(spyReserve1);
 		assertEquals(1, this.booking.getConditionalReserves().size());
-		this.booking.triggerNextRequest(this.reserve1.getCheckIn(),this.reserve1.getCheckOut());
-		verify(this.owner, times(1)).reserveRequested(this.reserve1);
-		this.reserve1.cancel();
+		this.booking.triggerNextRequest(spyReserve1.getCheckIn(),spyReserve1.getCheckOut());
+		verify(this.owner, times(1)).reserveRequested(spyReserve1);
+		
+		spyReserve1.decline();
 		assertEquals(0, this.booking.getConditionalReserves().size());
 	}
 

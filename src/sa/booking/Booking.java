@@ -211,7 +211,7 @@ public class Booking implements INotifyConfiguration {
 		// TODO Auto-generated method stub
 		this.getReserves().add(reserve);
 		this.notifySubscribersReserve(reserve);
-		reserve.getState().update();   // Esta linea es nueva, verificar si no se agrego antes
+		//reserve.getState().update();   // No iba
 	}
 
 	public Timer getTimer() {

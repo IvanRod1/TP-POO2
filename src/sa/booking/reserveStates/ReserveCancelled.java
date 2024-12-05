@@ -16,19 +16,7 @@ public class ReserveCancelled implements IReserveState {
 	}
 
 	@Override
-	public void next() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void approve(Reserve r) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void cancel() {
-		// TODO Auto-generated method stub
-	}
+	public void cancel() {}
 
 	@Override
 	public boolean isCancelled() {
@@ -44,5 +32,11 @@ public class ReserveCancelled implements IReserveState {
 
 	public LocalDate cancellationDate() {
 		return this.cancelDate;
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -203,14 +203,15 @@ public class BookingTest {
 									, timer
 									, obsCancel
 									, obsReserve
-									, obsPrice );
+									, obsPrice);
 
 		this.bookingReal = new Booking(   property
 										, begin
 										, end
 										, paymentMethods
 										, pricePerDayWeekday
-										, specialPeriods );
+										, specialPeriods
+										, timer );
 	}
 
 	@Test

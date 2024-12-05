@@ -15,11 +15,9 @@ import sa.subscriptions.INotifyTimerSubscriber;
 public class Timer implements INotifyTimer {
 
 	private HashMap<LocalDate, Set<INotifyTimerSubscriber>> rsubscribers;
-	private List<BookingSubscriber> bsubscribers;
 	
 	public Timer() {
-		this.rsubscribers = new HashMap<LocalDate, Set<Reserve>>();
-		this.bsubscribers = new ArrayList<BookingSubscriber>();
+		this.rsubscribers = new HashMap<LocalDate, Set<INotifyTimerSubscriber>>();
 		this.tick();
 	}
 
@@ -37,7 +35,6 @@ public class Timer implements INotifyTimer {
 	@Override
 	public void register(INotifyTimerSubscriber subscriber, LocalDate date) {
 		// TODO Auto-generated method stub
-//		this.bsubscribers.add(new BookingSubscriber(booking, reserve, date));
 		if (this.rsubscribers.containsKey(date)) {
 			this.rsubscribers.get(date).add(subscriber);
 		} else {
@@ -67,11 +64,9 @@ public class Timer implements INotifyTimer {
 											.forEach(r -> r.getBooking().update(r, date));
 	}
 
-	public List<BookingSubscriber> getSubscribers() {
+	public List<INotifyTimerSubscriber> getSubscribers() {
 		// TODO Auto-generated method stub
-//		return this.bsubscribers;
-		List<Reserve> rs = new ArrayList<Reserve>();
-		return this.rsubscribers. // FIXME
+		return this.rsubscribers.keySet().stream(). // FIXME: tomar los sets de cada key
 	}
 
 	

@@ -10,10 +10,11 @@ import java.util.Set;
 import sa.booking.Booking;
 import sa.booking.Reserve;
 import sa.observer.BookingSubscriber;
+import sa.subscriptions.INotifyTimerSubscriber;
 
 public class Timer implements INotifyTimer {
 
-	private HashMap<LocalDate, Set<Reserve>> rsubscribers;
+	private HashMap<LocalDate, Set<INotifyTimerSubscriber>> rsubscribers;
 	private List<BookingSubscriber> bsubscribers;
 	
 	public Timer() {
@@ -34,26 +35,26 @@ public class Timer implements INotifyTimer {
 	}
 
 	@Override
-	public void register(Booking booking, Reserve reserve, LocalDate date) {
+	public void register(INotifyTimerSubscriber subscriber, LocalDate date) {
 		// TODO Auto-generated method stub
 //		this.bsubscribers.add(new BookingSubscriber(booking, reserve, date));
 		if (this.rsubscribers.containsKey(date)) {
-			this.rsubscribers.get(date).add(reserve);
+			this.rsubscribers.get(date).add(subscriber);
 		} else {
-			HashSet<Reserve> rs = new HashSet<Reserve>();
-			rs.add(reserve);
+			HashSet<INotifyTimerSubscriber> rs = new HashSet<INotifyTimerSubscriber>();
+			rs.add(subscriber);
 			this.rsubscribers.put(date, rs);
 		}		
 	}
 
 	@Override
-	public void unregister(Booking booking, Reserve reserve, LocalDate date) {
+	public void unregister(INotifyTimerSubscriber subscriber, LocalDate date) {
 		// TODO Auto-generated method stub
 //		this.rsubscribers.stream().dropWhile(bs -> bs.getBooking().equals(booking) &&
 //												   bs.getReserve().equals(reserve) && 
 //												   bs.getDate().equals(date)          );
 		if (this.rsubscribers.containsKey(date)) {
-			this.rsubscribers.get(date).remove(reserve);
+			this.rsubscribers.get(date).remove(subscriber);
 		}
 	}
 

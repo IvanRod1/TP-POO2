@@ -61,8 +61,12 @@ public class Timer implements INotifyTimer {
 		// TODO Auto-generated method stub
 //		this.rsubscribers.stream().filter(bs -> date.equals(bs.getDate()))
 //								  .forEach(bs -> bs.getBooking().update(bs.getReserve(), date));
-		this.rsubscribers.get(date).stream().filter(r -> date.equals(r.getCheckIn()) || date.equals(r.getCheckOut()))
-											.forEach(r -> r.getBooking().update(r, date));
+//		this.rsubscribers.get(date).stream().filter(r -> date.equals(r.getCheckIn()) || date.equals(r.getCheckOut()))
+//											.forEach(r -> r.getBooking().update(r, date));
+		
+		for(INotifyTimerSubscriber reserveState: rsubscribers.get(date)) { //recorro la lista de estados que se anotaron para ser avisados
+			reserveState.update();
+		}
 	}
 
 	public Set<INotifyTimerSubscriber> getSubscribers() {

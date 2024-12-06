@@ -91,10 +91,10 @@ public class Reserve {
 		return this.price;
 	}
 	
-	void next() {
-		// TODO Auto-generated method stub
-		this.getState().next();
-	}
+//	void next() {
+//		// TODO Auto-generated method stub
+//		this.getState().next();
+//	}
 
 	public void setPrice(double d) {
 		this.price = d; 

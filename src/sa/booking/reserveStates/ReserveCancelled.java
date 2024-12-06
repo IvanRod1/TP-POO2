@@ -36,7 +36,7 @@ public class ReserveCancelled implements IReserveState {
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 }

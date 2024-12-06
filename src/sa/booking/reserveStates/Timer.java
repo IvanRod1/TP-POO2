@@ -6,11 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import sa.booking.Booking;
-import sa.booking.Reserve;
-import sa.observer.BookingSubscriber;
 import sa.subscriptions.INotifyTimerSubscriber;
 
 public class Timer implements INotifyTimer {
@@ -69,12 +65,20 @@ public class Timer implements INotifyTimer {
 		}
 	}
 
-	public Set<INotifyTimerSubscriber> getSubscribers() {
+	public List<INotifyTimerSubscriber> getSubscribers() {
 	
 		//return this.rsubscribers.keySet().stream(). // FIXME: tomar los sets de cada key
 		//return this.rsubscribers.values().stream().collect(Collectors.toList());
 		
+		
 		//eturn rsubscribers.values().toArray();  PODRIAMOS USAR .VALUES PARA OBTENER TODOS LOS VALORES DEL MAP
+		List<INotifyTimerSubscriber> subscribers = new ArrayList<INotifyTimerSubscriber>();
+		for(LocalDate dateKey : rsubscribers.keySet()) { //Recorro una lista de keys del MAP
+			subscribers.addAll(rsubscribers.get(dateKey)); // Agrego a la lista de susbscribers el valor de la key del for
+		}
+		
+		return subscribers;
+		
 	}
 
 	

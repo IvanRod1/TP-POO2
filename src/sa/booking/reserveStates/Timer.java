@@ -15,7 +15,7 @@ public class Timer implements INotifyTimer {
 	
 	public Timer() {
 		this.rsubscribers = new HashMap<LocalDate, Set<INotifyTimerSubscriber>>();
-		this.tick();
+		//this.tick(); tick esta tirando error
 	}
 
 	private void tick() {

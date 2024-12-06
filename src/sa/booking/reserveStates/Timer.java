@@ -70,7 +70,7 @@ public class Timer implements INotifyTimer {
 		// TODO Auto-generated method stub
 //		return this.bsubscribers;
 		List<Reserve> rs = new ArrayList<Reserve>();
-		return this.rsubscribers. // FIXME
+		return (List<BookingSubscriber>) this.rsubscribers; // FIXED POR NACHOOOOO
 	}
 
 	

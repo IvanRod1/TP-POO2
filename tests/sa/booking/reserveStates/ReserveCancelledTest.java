@@ -34,18 +34,21 @@ class ReserveCancelledTest {
 		assertNotNull(this.stateCancelled);
 	}
 
-	@Test
-	void testNext() {
-		this.stateCancelled.next();
-	}
+//	@Test
+//	void testNext() {
+//		this.stateCancelled.next();	este metodo ya no existe
+//	}
+
+//	@Test
+//	void testApprove() {
+//		this.stateCancelled.approve(this.reserve); este metodo ya no existe
+//	}
 
 	@Test
-	void testApprove() {
-		this.stateCancelled.approve(this.reserve);
+	void testCancel() {
+		this.stateCancelled.cancel();
+		verifyNoInteractions(this.reserve);
 	}
-
-	@Test
-	void testCancel() {this.stateCancelled.cancel();}
 	
 	@Test
 	void testGetReserve() {
@@ -60,5 +63,11 @@ class ReserveCancelledTest {
 	@Test
 	void testCancellationDate() {
 		assertEquals(this.cancelDate, this.stateCancelled.cancellationDate());
+	}
+	
+	@Test
+	void testUpdate() {
+		this.stateCancelled.update();
+		verifyNoInteractions(this.reserve);
 	}
 }

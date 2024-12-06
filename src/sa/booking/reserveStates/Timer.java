@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import sa.booking.Booking;
 import sa.booking.Reserve;
@@ -64,9 +65,12 @@ public class Timer implements INotifyTimer {
 											.forEach(r -> r.getBooking().update(r, date));
 	}
 
-	public List<INotifyTimerSubscriber> getSubscribers() {
-		// TODO Auto-generated method stub
-		return this.rsubscribers.keySet().stream(). // FIXME: tomar los sets de cada key
+	public Set<INotifyTimerSubscriber> getSubscribers() {
+	
+		//return this.rsubscribers.keySet().stream(). // FIXME: tomar los sets de cada key
+		//return this.rsubscribers.values().stream().collect(Collectors.toList());
+		
+		//eturn rsubscribers.values().toArray();  PODRIAMOS USAR .VALUES PARA OBTENER TODOS LOS VALORES DEL MAP
 	}
 
 	

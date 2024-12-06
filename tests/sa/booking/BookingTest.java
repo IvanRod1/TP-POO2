@@ -1,5 +1,6 @@
 package sa.booking;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -536,9 +537,10 @@ public class BookingTest {
 	
 	@Test
 	public void isAvailablePeriodTest() {
-//		LocalDate dateTest1 = LocalDate.of(2024, 11, 10);
-//		LocalDate dateTest2 = LocalDate.of(2024, 11, 10); WIP
+		this.reserves.add(reserve4);// dias ocupados mañana y pasado
 		
+		assertTrue(this.booking.isAvailableDate(today)); // hoy esta disponible
+		assertFalse(this.booking.isAvailableDate(today.plusDays(1))); //mañana no esta disponible
 	}
 	
 }

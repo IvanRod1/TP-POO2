@@ -6,7 +6,6 @@ import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,13 +13,12 @@ import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
 import sa.booking.Reserve;
-import sa.observer.BookingSubscriber;
+
 
 class TimerTest {
 
 	private Timer timer;
 	
-	private List<BookingSubscriber> bsubscribers;
 	private HashMap<LocalDate, Set<Reserve>> rsubscribers;
 	private ReserveBooked    suscriber1;
 	private ReserveOccupied  suscriber2;

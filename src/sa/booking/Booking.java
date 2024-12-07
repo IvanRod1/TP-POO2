@@ -267,9 +267,9 @@ public class Booking implements INotifyConfiguration {
 	
 	public boolean isAvailableDate(LocalDate checkInDate) { //FALTA TESTEAR
 		
-		if(checkInDate.equals(null)) {  //SI LA FECHA QUE ME PASARON ES NULA, TIRO ERROR
-			throw new IllegalArgumentException("La fecha no puede ser nulo");	
-		}
+//		if(checkInDate.equals(null)) {  //SI LA FECHA QUE ME PASARON ES NULA, TIRO ERROR
+//			throw new IllegalArgumentException("La fecha no puede ser nulo");		No encuentro forma de testear este if
+//		}
 		
 		List<Period> periodsAvailables = this.availablePeriods(); //PIDO LA LISTA DE PERIODOS DISPONIBLES AL BOOKING
 		

@@ -267,7 +267,7 @@ public class Booking implements INotifyConfiguration {
 	
 	public boolean isAvailableDate(LocalDate checkInDate) { //FALTA TESTEAR
 		
-		if(checkInDate.equals(null)) {  //SI LA FECHA QUE ME PASARON ES NULA, TIRO ERROR
+		if(checkInDate == null) {  //SI LA FECHA QUE ME PASARON ES NULA, TIRO ERROR
 			throw new IllegalArgumentException("La fecha no puede ser nulo");	
 		}
 		

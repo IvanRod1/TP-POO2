@@ -11,7 +11,11 @@ public class CostFree implements ICancellationPolicy{
 		if(cancellationDate.isBefore(reserve.getCheckIn().minusDays(10))) {
 			System.out.println("La cancelación se asentó correctamente de manera gratuita");
 			reserve.setPrice(0.0);
-		}else {
+		}else if(reserve.getCheckIn().equals(reserve.getCheckOut())) { //si la reserva cancelada duraba 1 dia, se paga el doble del precio de ese dia
+			System.out.println("La cancelación se asentó correctamente, solo se paga el equivalente a dos dias");
+			reserve.setPrice(reserve.getBooking().price(reserve.getCheckIn()) * 2);
+		}
+		else {
 			LocalDate aux = reserve.getCheckIn();
 			int i = 0;
 			double total = 0;

@@ -274,6 +274,7 @@ public class BookingTest {
 	public void testApplyPolicy() {
 		assertNotNull(this.booking.getPolicy());
 		verifyNoInteractions(this.policy);
+		when(this.reserve1.getBooking()).thenReturn(booking);
 		this.booking.applyPolicy(this.reserve1,LocalDate.now()); //Se necesita una fecha ahora, verificar 
 		verify(this.policy).activate(this.reserve1,LocalDate.now());  //activate ahora necesita un LocalDate
 	}

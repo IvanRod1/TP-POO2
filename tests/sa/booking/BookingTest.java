@@ -562,11 +562,11 @@ public class BookingTest {
 	
 	@Test
 	void handleCancellationTest() {
-		INotifyObserver observerSpy = spy(new ApplicationMobile());
-		ICancellationPolicy policySpy = spy(new NoCancellation());
+//		INotifyObserver observerSpy = spy(new ApplicationMobile()); sirven?
+//		ICancellationPolicy policySpy = spy(new NoCancellation());
 		
 		this.booking.handleCancellation(reserve2);
-		assertEquals(0, booking.getReserves().size());
+		assertEquals(0, booking.getReserves().size()); 
 		
 	}
 	

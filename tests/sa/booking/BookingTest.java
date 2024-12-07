@@ -1,6 +1,7 @@
 package sa.booking;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -562,11 +563,17 @@ public class BookingTest {
 		
 		this.booking.handleCancellation(reserve2);
 		assertEquals(0, booking.getReserves().size());
-//		verify(observerSpy, times(0)).updateCancellation(reserve1);
-//		verify(policySpy, times(0)).activate(reserve1, LocalDate.now());
-		
 		
 	}
 	
+	@Test
+	void isAvailableDateTest() {
+	
+		   Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            this.booking.isAvailableDate(null);
+        });
+
+        assertEquals("La fecha no puede ser nulo", exception.getMessage());
+    }
 	
 }

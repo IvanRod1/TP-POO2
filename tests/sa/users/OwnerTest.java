@@ -106,6 +106,11 @@ class OwnerTest {
 		assertNull(owner.getReserveRequested());
 	}
 	
+	@Test
+	void qualifyTenantTest() {
+		owner.qualify(tenant);
+	}
+	
 	
 	
 	

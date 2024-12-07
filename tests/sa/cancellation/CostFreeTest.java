@@ -59,6 +59,16 @@ class CostFreeTest {
 		cancellationtest.activate(reserveMock, dateTest);
 		verify(reserveMock).setPrice(21.0);
 	}
+	@Test
+	void cancellation1DayReserve5DaysBeforeCheckIn() {
+		when(reserveMock.getCheckIn()).thenReturn(LocalDate.of(2024, 10, 16));
+		when(reserveMock.getCheckOut()).thenReturn(LocalDate.of(2024, 10, 16));
+		when(reserveMock.getBooking()).thenReturn(bookingMock);
+		
+		when(bookingMock.price(LocalDate.of(2024, 10, 16))).thenReturn(20.5);
+		cancellationtest.activate(reserveMock, dateTest);
+		verify(reserveMock).setPrice(41.0);
+	}
 	
 
 }

@@ -1,7 +1,6 @@
 package sa.observer;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,7 @@ class ObjectPublisherTest {
 	
 	@Test
 	void publisherMethodTest() {
-		test.publish(anyString());
+		test.publish("Publicacion");
 	}
 
 }

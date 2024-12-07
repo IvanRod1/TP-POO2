@@ -32,6 +32,7 @@ import sa.searcher.composite.Or;
 import sa.searcher.simpleQuery.IQuery;
 import sa.users.Tenant;
 import sa.booking.Reserve;
+import sa.booking.reserveStates.Timer;
 
 
 public class AccomodationSiteTest {
@@ -84,6 +85,7 @@ public class AccomodationSiteTest {
 	PropertyType house;
 	AmenityType agua;
 	PropertyType duplex;
+	Timer timer;
 	
 	// todo para el allBookingCities
 	
@@ -187,6 +189,8 @@ public class AccomodationSiteTest {
 		periods.add(period1);
 		periods.add(period2);
 		
+		timer = mock(Timer.class);
+		
 		house = mock(PropertyType.class);
 		duplex = mock(PropertyType.class);
 		
@@ -284,7 +288,7 @@ public class AccomodationSiteTest {
 		when(property.getAmenities()).thenReturn(amenities);
 		
 		
-		accomodationSite.createBooking(property, begin, end, paymentsMethods, 100.0, periods);
+		accomodationSite.createBooking(property, begin, end, paymentsMethods, 100.0, periods, timer);
 		
 		assertEquals(accomodationSite.getBookings().size(), 3);
 		
@@ -306,7 +310,7 @@ public class AccomodationSiteTest {
 		
 		
 	     assertThrows(RuntimeException.class, () -> {
-	    	 accomodationSite.createBooking(property, begin, end, paymentsMethods, 100.0, periods);
+	    	 accomodationSite.createBooking(property, begin, end, paymentsMethods, 100.0, periods, timer);
 	        });
 	}
 	

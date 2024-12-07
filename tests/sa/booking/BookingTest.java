@@ -17,8 +17,10 @@ import java.util.List;
 import sa.booking.reserveStates.ReserveBooked;
 import sa.booking.reserveStates.Timer;
 import sa.cancellation.CostFree;
+import sa.cancellation.ICancellationPolicy;
 import sa.cancellation.NoCancellation;
 import sa.properties.Property;
+import sa.observer.ApplicationMobile;
 import sa.observer.interfaces.INotifyObserver;
 import sa.users.Owner;
 import sa.users.Tenant;
@@ -132,6 +134,8 @@ public class BookingTest {
 		when(this.reserve1.getCheckOut()).thenReturn(this.today);
 		when(this.reserve1.getTenant()).thenReturn(this.tenant1);
 		
+		when(this.reserve2.getCheckIn()).thenReturn(LocalDate.of(2024, 12, 31));
+		
 		when(this.specialPeriod1.price()).thenReturn(pricePerDayHighSeason);
 		when(this.specialPeriod1.start()).thenReturn(this.begin.plusDays(2));
 		when(this.specialPeriod1.end()).thenReturn(this.begin.plusDays(3));
@@ -157,7 +161,7 @@ public class BookingTest {
 		when(this.reserve1.getPeriod()).thenReturn(this.bookedperiod1);
 //		when(this.reserve1.getCheckIn()).thenReturn(this.bookedperiod1.start());
 //		when(this.reserve1.getCheckOut()).thenReturn(this.bookedperiod1.end());
-
+		when(this.reserve1.getBooking()).thenReturn(booking);
 
 		// Alquila 2 día
 		when(this.bookedperiod2.start()).thenReturn(this.today);
@@ -543,5 +547,26 @@ public class BookingTest {
 		assertTrue(this.booking.isAvailableDate(today)); // hoy esta disponible
 		assertFalse(this.booking.isAvailableDate(today.plusDays(1))); //mañana no esta disponible
 	}
+	
+	@Test
+	void removeReserveTest() {
+		booking.addReserve(reserve1);
+		booking.removeReserve(reserve1);
+		assertEquals(0, booking.getReserves().size());
+	}
+	
+	@Test
+	void handleCancellationTest() {
+		INotifyObserver observerSpy = spy(new ApplicationMobile());
+		ICancellationPolicy policySpy = spy(new NoCancellation());
+		
+		this.booking.handleCancellation(reserve2);
+		assertEquals(0, booking.getReserves().size());
+//		verify(observerSpy, times(0)).updateCancellation(reserve1);
+//		verify(policySpy, times(0)).activate(reserve1, LocalDate.now());
+		
+		
+	}
+	
 	
 }

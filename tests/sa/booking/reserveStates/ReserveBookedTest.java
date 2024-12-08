@@ -26,6 +26,8 @@ class ReserveBookedTest {
 	private Tenant				tenant;
 	private Owner				owner;
 	
+	private Timer				timer;
+	
 	@BeforeEach
 	void setUp() throws Exception {
 		// DOC (Depended-On-Component): nuestros doubles
@@ -36,11 +38,16 @@ class ReserveBookedTest {
 		this.property		= mock(Property.class);
 		this.tenant			= mock(Tenant.class);
 		this.owner			= mock(Owner.class);
+		this.timer			= mock(Timer.class);
 
 		when(this.booking.getProperty()).thenReturn(this.property);
 		when(this.reserve.getTenant()).thenReturn(this.tenant);
 		when(this.reserve.getBooking()).thenReturn(this.booking);
 		when(this.property.getOwner()).thenReturn(this.owner);
+		
+		//when(this.stateBooked.getReserve()).thenReturn(reserve);
+		when(this.booking.getTimer()).thenReturn(timer);
+		
 		
 		
 		// SUT (System Under Test): objeto a testear
@@ -82,5 +89,13 @@ class ReserveBookedTest {
 	@Test
 	void testIsCancelled() {
 		assertEquals(false, this.stateBooked.isCancelled());
+	}
+	
+	@Test
+	void testUpdate() {
+		this.stateBooked.update();
+		verify(reserve,times(2)).getBooking();  //Se usan dos veces, una en el metodo update, y la otra en el constructor de reserveOccupied
+		verify(booking,times(2)).getTimer();
+		
 	}
 }

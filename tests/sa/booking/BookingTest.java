@@ -550,6 +550,16 @@ public class BookingTest {
 		assertFalse(this.booking.isAvailableDate(today.plusDays(1))); //mañana no esta disponible
 	}
 	
+	@Test
+	void isAvailableNullDateTest() {
+	
+		   Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            this.booking.isAvailableDate(null);
+        });
+
+        assertEquals("La fecha no puede ser nulo", exception.getMessage());
+    }
+	
 
 	
 
@@ -562,23 +572,13 @@ public class BookingTest {
 	
 	@Test
 	void handleCancellationTest() {
-//		INotifyObserver observerSpy = spy(new ApplicationMobile()); sirven?
-//		ICancellationPolicy policySpy = spy(new NoCancellation());
 		
 		this.booking.handleCancellation(reserve2);
 		assertEquals(0, booking.getReserves().size()); 
 		
 	}
 	
-	@Test
-	void isAvailableNullDateTest() {
-	
-		   Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            this.booking.isAvailableDate(null);
-        });
 
-        assertEquals("La fecha no puede ser nulo", exception.getMessage());
-    }
 
 	
 }

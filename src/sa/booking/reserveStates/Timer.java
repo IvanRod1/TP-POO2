@@ -86,8 +86,6 @@ public class Timer implements INotifyTimer {
 		}
 		
 		return subscribers;
-		
-	}
 
-	
+	}
 }

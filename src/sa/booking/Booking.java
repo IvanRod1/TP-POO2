@@ -34,10 +34,10 @@ public class Booking implements INotifyConfiguration {
 
 
 	public Booking(Property property, LocalDate begin, LocalDate end, List<PaymentMethod> paymentMethods,
-			double pricePerDayWeekday, List<SpecialPeriod> periods, Timer timer) {
+			double pricePerDayWeekday, List<SpecialPeriod> periods, Timer timer) { //Hay que poner la politica que desee el propietario
 		// TODO Auto-generated constructor stub
 		this.pricer		 		= new Pricer(pricePerDayWeekday, periods);
-		this.policy				= new CostFree();
+		this.policy				= new CostFree(); //estamos decidiendo algo que no debemos
 		this.paymentMethods		= paymentMethods;
 		this.setPeriod(new Period(begin, end));
 		this.property			= property;

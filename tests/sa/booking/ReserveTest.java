@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import sa.booking.reserveStates.IReserveState;
 import sa.booking.reserveStates.ReserveBooked;
+import sa.booking.reserveStates.Timer;
 import sa.properties.Property;
 import sa.users.Owner;
 import sa.users.Tenant;
@@ -24,6 +25,7 @@ class ReserveTest {
 	private double price;
 	private Owner owner;
 	private Property property;
+	private Timer timer;
 
 	private IReserveState stateBooked;
 	
@@ -38,6 +40,8 @@ class ReserveTest {
 		this.period		= mock(Period.class);
 		this.owner		= mock(Owner.class);
 		this.property	= mock(Property.class);
+		
+		this.timer 		= mock(Timer.class);
 
 		this.stateBooked	= mock(ReserveBooked.class);
 		
@@ -49,6 +53,8 @@ class ReserveTest {
 		when(this.booking.priceBetween(this.today, this.today.plusDays(1))).thenReturn(this.price);
 		when(this.booking.getProperty()).thenReturn(this.property);
 		when(this.property.getOwner()).thenReturn(this.owner);
+		
+		when(booking.getTimer()).thenReturn(timer);
 		
 		
 		// SUT
@@ -87,29 +93,29 @@ class ReserveTest {
 
 	@Test
 	public void testSetState() {
-		assertNull(this.reserve.getState());
-		this.reserve.setState(this.stateBooked);
+		assertNotNull(this.reserve.getState()); //la reserva esta en waiting
+		this.reserve.setState(this.stateBooked); // cambiamos el estado de la reserva a booked
 		assertEquals(this.stateBooked, this.reserve.getState());
-	}
+	} 
 
 	@Test
 	public void testFromCreatedToBooked() {
-		assertNull(this.reserve.getState());
-		this.reserve.setState(this.stateBooked);
+		assertNotNull(this.reserve.getState()); 
+		this.reserve.setState(this.stateBooked);				//es literalmente el mismo codigo que el test anterior
 		assertEquals(this.stateBooked, this.reserve.getState());
 	}
 
-	@Test
-	public void testNext() {
-		assertNull(this.reserve.getState());
-		this.reserve.setState(this.stateBooked);
-		this.reserve.next();
-		verify(this.stateBooked, times(1)).next();
-	}
+//	@Test
+//	public void testNext() {
+//		assertNull(this.reserve.getState());
+//		this.reserve.setState(this.stateBooked);
+//		this.reserve.next();						reserve ya no tiene el metodo next
+//		verify(this.stateBooked, times(1)).next();
+//	}
 
 	@Test
 	public void testCancel() {
-		assertNull(this.reserve.getState());
+		assertNotNull(this.reserve.getState());
 		this.reserve.setState(this.stateBooked);
 		this.reserve.cancel();
 		verify(this.stateBooked, times(1)).cancel();
@@ -117,19 +123,19 @@ class ReserveTest {
 
 	@Test
 	public void testApprove() {
-		assertNull(this.reserve.getState());
-		this.reserve.approve();
 		assertNotNull(this.reserve.getState());
+		this.reserve.approve();
 		verify(this.booking, times(1)).addReserve(this.reserve);
 	}
 
 	@Test
 	public void testDecline() {
-		assertNull(this.reserve.getState());
+		assertNotNull(this.reserve.getState());
 		verify(this.owner, times(0)).cleanRequestedReserve();
 		verify(this.tenant, times(0)).reserveDeclined(this.reserve);
-		this.reserve.decline();
-		assertNull(this.reserve.getState());
+		this.reserve.setState(this.stateBooked); //necesito cambiarle el estado ya que un waiting no sabe ser rechazado, solamente cancelado
+		this.reserve.decline(); 
+		//assertNull(this.reserve.getState());  no tiene sentido en nuestra implementacion
 		verify(this.owner, times(1)).cleanRequestedReserve();
 		verify(this.tenant, times(1)).reserveDeclined(this.reserve);
 	}

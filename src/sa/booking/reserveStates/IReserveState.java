@@ -1,11 +1,10 @@
 package sa.booking.reserveStates;
 
 import sa.booking.Reserve;
+import sa.subscriptions.INotifyTimerSubscriber;
 
-public interface IReserveState {
+public interface IReserveState extends INotifyTimerSubscriber {
 
-	public void next();
-	public void approve(Reserve r);
 	public void cancel();
 	public boolean isCancelled();
 	public Reserve getReserve();

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import sa.booking.Reserve;
+import sa.properties.Property;
 import sa.properties.Review;
 
 class TenantTest {
@@ -23,6 +24,9 @@ class TenantTest {
 		Tenant tenant;
 		List<Reserve> reserves;
 		Reserve declinedReserve;
+		Reserve reserve;
+		Property property;
+		Owner owner;
 
 		@BeforeEach
 		void setUp() throws Exception {
@@ -42,6 +46,12 @@ class TenantTest {
 			reserves = new ArrayList<Reserve>();
 		
 			declinedReserve = mock(Reserve.class);
+			
+			reserve = mock(Reserve.class);
+			
+			property = mock(Property.class);
+			
+			owner = mock(Owner.class);
 		}
 
 		
@@ -69,5 +79,21 @@ class TenantTest {
 	@Test
 	void reserveDeclinedTest() {
 		tenant.reserveDeclined(declinedReserve);
+	}
+	
+	@Test
+	void reserveApprovedTest() {
+		tenant.reserveApproved(reserve);
+		assertEquals(1, tenant.getReserves().size());
+	}
+	
+	@Test
+	void qualifyPropertyTest() {
+		tenant.qualify(property);
+	}
+	
+	@Test
+	void qualifyOwnerTest() {
+	tenant.qualify(owner);
 	}
 }

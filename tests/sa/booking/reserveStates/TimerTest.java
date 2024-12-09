@@ -6,7 +6,6 @@ import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,16 +13,16 @@ import org.junit.jupiter.api.Test;
 
 import sa.booking.Booking;
 import sa.booking.Reserve;
-import sa.observer.BookingSubscriber;
+
 
 class TimerTest {
 
 	private Timer timer;
 	
-	private List<BookingSubscriber> bsubscribers;
 	private HashMap<LocalDate, Set<Reserve>> rsubscribers;
-	private BookingSubscriber suscriber1;
-	private BookingSubscriber suscriber2;
+	private ReserveBooked    suscriber1;
+	private ReserveOccupied  suscriber2;
+	private ReserveBooked    suscriber3;
 	
 	private Booking	booking1;
 	private Booking	booking2;
@@ -37,8 +36,11 @@ class TimerTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		// DOC
-		this.suscriber1	= mock(BookingSubscriber.class);
-		this.suscriber2	= mock(BookingSubscriber.class);
+		//this.suscriber1	= mock(BookingSubscriber.class); // El timer recibe como suscriptores a los estados, no a un bookingSubscriber
+		//this.suscriber2	= mock(BookingSubscriber.class);  // El timer recibe como suscriptores a los estados, no a un bookingSubscriber
+		this.suscriber1 = mock(ReserveBooked.class);
+		this.suscriber2 = mock(ReserveOccupied.class);
+		this.suscriber3 = mock(ReserveBooked.class);
 		this.booking1 	= mock(Booking.class);
 		this.booking2 	= mock(Booking.class);
 		this.reserve1 	= mock(Reserve.class);
@@ -47,7 +49,8 @@ class TimerTest {
 		this.date2		= this.date1.plusDays(2);
 		
 		// SUT
-		this.timer = new Timer();
+		this.timer = new Timer(3);  //Modelamos el pasaje por X milisegundos
+		
 	}
 
 	@Test
@@ -58,26 +61,32 @@ class TimerTest {
 	@Test
 	void testRegister() {
 		assertEquals(0, this.timer.getSubscribers().size());
-		this.timer.register(booking1, reserve1, date1);
+		this.timer.register(suscriber1, date1);
 		assertEquals(1, this.timer.getSubscribers().size());
 	}
 
 	@Test
 	void testUnRegister() {
 		assertEquals(0, this.timer.getSubscribers().size());
-		this.timer.register(booking1, reserve1, date1);
+		this.timer.register(suscriber1, date1);
 		assertEquals(1, this.timer.getSubscribers().size());
-		this.timer.unregister(booking1, reserve1, date1); 
+		this.timer.register(suscriber3, date1);
+		assertEquals(2, this.timer.getSubscribers().size());
+		this.timer.unregister(suscriber1, date1); 
+		this.timer.unregister(suscriber3, date1);
 		assertEquals(0, this.timer.getSubscribers().size()); // No tienen override de equals() y hashCode()
 	}
 
 	@Test
 	void testNotify() {
 		assertEquals(0, this.timer.getSubscribers().size());
-		this.timer.register(booking1, reserve1, date1); 
+		this.timer.register(suscriber1, date1); 
 		assertEquals(1, this.timer.getSubscribers().size());
 		this.timer.notify(date1); 
-		verify(this.booking1, times(1)).update(reserve1, date1);
+		//verify(this.booking1, times(1)).update(reserve1, date1); quedo viejo
+		verify(suscriber1,times(1)).update();
+		
+		
 	}
 
 }

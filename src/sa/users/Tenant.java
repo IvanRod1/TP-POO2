@@ -1,6 +1,8 @@
 package sa.users;
 
 import sa.booking.Reserve;
+import sa.properties.Property;
+import sa.properties.Review;
 
 public class Tenant extends User {
 	
@@ -26,5 +28,26 @@ public class Tenant extends User {
 	public void reserveDeclined(Reserve reserve) {
 		// recibe el rechazo de una reserva
 		// TODO: El enunciado no dice nada respecto a los rechazos.
+	}
+
+	public void reserveApproved(Reserve reserve) {
+		// TODO Auto-generated method stub
+		this.getReserves().add(reserve);
+	}
+
+	public void qualify(Property property) {
+		// TODO Auto-generated method stub
+		// La PERSONA inquilina debería calificar a:
+		// - la propiedad por medio de un Review
+		// Luego se adjuntan cada Review a su respectivo historial de Reviews donde
+		// finalmente se calcula cada ranking.
+	}
+
+	public void qualify(Owner owner) {
+		// TODO Auto-generated method stub
+		// La PERSONA inquilina debería calificar al:
+		// - propietario de la propiedad por medio de un Review (property.getOwner())
+		// Luego se adjuntan su Review a su respectivo historial de Reviews donde
+		// finalmente se calcula su ranking.
 	}
 }

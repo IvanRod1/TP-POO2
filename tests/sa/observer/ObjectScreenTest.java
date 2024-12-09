@@ -1,8 +1,7 @@
 package sa.observer;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,7 @@ class ObjectScreenTest {
 	}
 	@Test
 	void screenMethodTest() {
-		test.popUp(anyString(), anyString(), anyInt());
+		test.popUp("Mensaje", "Rojo", 15);
 	}
 
 }

@@ -27,14 +27,14 @@ public class Owner extends User {
 		 */
 	}
 
-  public List<Property> getProperties() {
+	public List<Property> getProperties() {
 		return this.properties;
 	}
 	
 	public void reserveRequested(Reserve reserve) {
 		this.setReserveRequested(reserve);
 		// Acá el owner puede visualizar datos del tenant
-    reserve.getTenant().summary();
+		reserve.getTenant().summary();
 	}
 	
 	public void setReserveRequested(Reserve reserve) {
@@ -47,5 +47,12 @@ public class Owner extends User {
 	
 	public void cleanRequestedReserve() {
 		this.reserveRequested = null;
+	}
+
+	public void qualify(Tenant tenant) {
+		// TODO Auto-generated method stub
+		// La PERSONA propietaria debería calificar al inquilino por medio de un Review
+		// Luego se adjunta el Review al historial de Reviews del Tenant donde
+		// finalmente se calcula su ranking.
 	}
 }

@@ -4,6 +4,10 @@ import java.time.LocalDate;
 
 import sa.booking.reserveStates.IReserveState;
 import sa.booking.reserveStates.ReserveBooked;
+import sa.booking.reserveStates.ReserveCancelled;
+import sa.booking.reserveStates.ReserveWaiting;
+import sa.booking.reserveStates.Timer;
+import sa.subscriptions.INotifyTimerSubscriber;
 import sa.users.Tenant;
 
 public class Reserve {
@@ -20,6 +24,7 @@ public class Reserve {
 		this.period	 = p;
 		this.tenant	 = t;
 		this.price	 = this.booking.priceBetween(this.getCheckIn(), this.getCheckOut());
+		this.state	 = new ReserveWaiting(this);
 	}
 
 	public void setState(IReserveState state) {
@@ -37,16 +42,23 @@ public class Reserve {
 		return this.tenant;
 	}
 
-	public void approve() { // El Owner aprueba al Tenant solicitado.
+	public void approve() { // El Owner aprueba la solicitud de la reserva.
 		// TODO Auto-generated method stub
-		this.setState(new ReserveBooked(this));
-		this.getBooking().addReserve(this); // Acá se encarga el booking de gestionar el cobro, la subscripción al Timer y demás
-	}
-	
-	// El Owner rechaza la solicitud de la reserva.
-	public void decline() {
-		this.getTenant().reserveDeclined(this);
+		// TODO: el owner debería olvidar esta reserve 
 		this.getBooking().getProperty().getOwner().cleanRequestedReserve();
+		this.getBooking().removeWaiting(this);
+		//this.setState(new ReserveBooked(this));
+		this.getState().update();
+		this.getBooking().addReserve(this);
+		// TODO: debería cobrarle al Tenant porque ya fue aceptada (no fue modelado porque no lo pide el enunciado)
+		this.getTenant().reserveApproved(this);
+	}
+
+	public void decline() { // El Owner rechaza la solicitud de la reserva.
+		// TODO: el owner debería olvidar esta reserve
+		this.getBooking().getProperty().getOwner().cleanRequestedReserve();
+		this.getBooking().removeWaiting(this);
+		this.getTenant().reserveDeclined(this);
 	}
 	
 	public void cancel() {
@@ -79,16 +91,35 @@ public class Reserve {
 		return this.price;
 	}
 	
-	void next() {
-		// TODO Auto-generated method stub
-		this.state.next();
-	}
+//	void next() {
+//		// TODO Auto-generated method stub
+//		this.getState().next();
+//	}
 
 	public void setPrice(double d) {
 		this.price = d; 
 		
 	}
-	
-	
 
+	public void finished() {
+		// TODO Auto-generated method stub
+		// Pasos a realizar:
+		// 1. Sacar de reserves que administra Booking
+		// 2. Tenant tiene que calificar al Owner y Property
+		// 3. Owner tiene que calificar al Tenant
+		this.getBooking().removeReserve(this);
+		this.triggerQualification();
+	}
+
+	private void triggerQualification() {
+		// TODO Auto-generated method stub
+		this.getTenant().qualify(this.getBooking().getProperty());
+		this.getTenant().qualify(this.getBooking().getProperty().getOwner());
+		this.getBooking().getProperty().getOwner().qualify(this.getTenant());
+	}
+
+	public void cancelled() {
+		// TODO Auto-generated method stub
+		this.getBooking().handleCancellation(this);
+	}
 }

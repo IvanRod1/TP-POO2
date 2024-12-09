@@ -28,7 +28,7 @@ public class Timer implements INotifyTimer {
 			
 			try {Thread.sleep(this.miliseconds);}
 			catch (InterruptedException e) { 	
-				Thread.currentThread().interrupt();
+				//Thread.currentThread().interrupt();
 				e.printStackTrace();}
 			
 			currDate = LocalDate.now();

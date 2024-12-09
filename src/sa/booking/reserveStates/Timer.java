@@ -12,20 +12,27 @@ import sa.subscriptions.INotifyTimerSubscriber;
 public class Timer implements INotifyTimer {
 
 	private HashMap<LocalDate, Set<INotifyTimerSubscriber>> rsubscribers;
+	private long miliseconds;
 	
-	public Timer() {
+	public Timer(long miliseconds) {
 		this.rsubscribers = new HashMap<LocalDate, Set<INotifyTimerSubscriber>>();
-		//this.tick(); tick esta tirando error
+		this.miliseconds = miliseconds;
+		this.tick(); 
 	}
 
 	private void tick() {
 		// TODO Auto-generated method stub
 		LocalDate currDate = LocalDate.now(); 
-		while (true) {
+		for(int i=0; i <2;i++) {  //2 ticks maximo
 			this.notify(currDate);
-			try { wait(8492400); }
-			catch (InterruptedException e) { e.printStackTrace();}
+			
+			try {Thread.sleep(this.miliseconds);}
+			catch (InterruptedException e) { 	
+				Thread.currentThread().interrupt();
+				e.printStackTrace();}
+			
 			currDate = LocalDate.now();
+		
 		}
 	}
 
@@ -59,9 +66,10 @@ public class Timer implements INotifyTimer {
 //								  .forEach(bs -> bs.getBooking().update(bs.getReserve(), date));
 //		this.rsubscribers.get(date).stream().filter(r -> date.equals(r.getCheckIn()) || date.equals(r.getCheckOut()))
 //											.forEach(r -> r.getBooking().update(r, date));
-		
-		for(INotifyTimerSubscriber reserveState: rsubscribers.get(date)) { //recorro la lista de estados que se anotaron para ser avisados
-			reserveState.update();
+		if(rsubscribers.containsKey(date)) {
+			for(INotifyTimerSubscriber reserveState: rsubscribers.get(date)) { //recorro la lista de estados que se anotaron para ser avisados
+				reserveState.update();
+			}
 		}
 	}
 

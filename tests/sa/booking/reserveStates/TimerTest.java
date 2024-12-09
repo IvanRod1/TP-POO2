@@ -49,7 +49,7 @@ class TimerTest {
 		this.date2		= this.date1.plusDays(2);
 		
 		// SUT
-		this.timer = new Timer();  //tick esta tirando error cuando se lo menciona en el constructor
+		this.timer = new Timer(3);  //Modelamos el pasaje por X milisegundos
 		
 	}
 

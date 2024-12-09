@@ -73,7 +73,7 @@ public class Booking implements INotifyConfiguration {
 		// El owner tiene que evaluar si aceptarla o no.
 		Reserve newReserve = new Reserve(this, t, new Period(start, end));
 		this.getConditionalReserves().add(newReserve);
-		this.getProperty().getOwner().reserveRequested(newReserve);
+		this.getProperty().getOwner().reserveRequested(newReserve); //cada vez que se crea una nueva reserva, tiene que llamar al owner para saber si lo aprueba o no?
 	}
 
 	public void newConditionalReserve(Tenant t, LocalDate start, LocalDate end) {

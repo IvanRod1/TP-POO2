@@ -216,7 +216,8 @@ public class BookingTest {
 									, obsReserve
 									, obsPrice);
 
-		this.bookingReal = new Booking(   property
+		this.bookingReal = new Booking(   policy
+										, property
 										, begin
 										, end
 										, paymentMethods
@@ -260,20 +261,10 @@ public class BookingTest {
 	public void testGetPolicy() {
 		assertEquals(this.policy, this.booking.getPolicy());
 	}
+
 	@Test
 	public void testGetConditionalReserves() {
 		assertEquals(this.waitings, this.booking.getConditionalReserves());
-	}
-
-
-	@Test
-	public void testSetCancellationPolicy() {
-		assertNotNull(this.booking.getPolicy());
-		verifyNoInteractions(this.policy);
-		NoCancellation noCPolicy = mock(NoCancellation.class);
-		this.booking.setCancellationPolicy(noCPolicy);
-		assertEquals(noCPolicy, this.booking.getPolicy());
-		verifyNoInteractions(noCPolicy);
 	}
 
 	@Test

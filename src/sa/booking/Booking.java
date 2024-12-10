@@ -33,11 +33,11 @@ public class Booking implements INotifyConfiguration {
 	private List<INotifyObserver> 	obsPrice;
 
 
-	public Booking(Property property, LocalDate begin, LocalDate end, List<PaymentMethod> paymentMethods,
+	public Booking(ICancellationPolicy policy, Property property, LocalDate begin, LocalDate end, List<PaymentMethod> paymentMethods,
 			double pricePerDayWeekday, List<SpecialPeriod> periods, Timer timer) { //Hay que poner la politica que desee el propietario
 		// TODO Auto-generated constructor stub
 		this.pricer		 		= new Pricer(pricePerDayWeekday, periods);
-		this.policy				= new CostFree(); //estamos decidiendo algo que no debemos
+		this.policy				= policy;
 		this.paymentMethods		= paymentMethods;
 		this.setPeriod(new Period(begin, end));
 		this.property			= property;
@@ -89,11 +89,6 @@ public class Booking implements INotifyConfiguration {
 	public List<PaymentMethod> getPaymentMethods() {
 		// TODO Auto-generated method stub
 		return this.paymentMethods;
-	}
-
-	public void setCancellationPolicy(ICancellationPolicy policy) {
-		// TODO Auto-generated method stub
-		this.policy = policy;
 	}
 
 	public ICancellationPolicy getPolicy() {

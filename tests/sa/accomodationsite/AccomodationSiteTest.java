@@ -33,6 +33,7 @@ import sa.searcher.simpleQuery.IQuery;
 import sa.users.Tenant;
 import sa.booking.Reserve;
 import sa.booking.reserveStates.Timer;
+import sa.cancellation.ICancellationPolicy;
 
 
 public class AccomodationSiteTest {
@@ -86,6 +87,7 @@ public class AccomodationSiteTest {
 	AmenityType agua;
 	PropertyType duplex;
 	Timer timer;
+	ICancellationPolicy policy;
 	
 	// todo para el allBookingCities
 	
@@ -288,7 +290,7 @@ public class AccomodationSiteTest {
 		when(property.getAmenities()).thenReturn(amenities);
 		
 		
-		accomodationSite.createBooking(property, begin, end, paymentsMethods, 100.0, periods, timer);
+		accomodationSite.createBooking(property, begin, end, paymentsMethods, 100.0, periods, timer, policy);
 		
 		assertEquals(accomodationSite.getBookings().size(), 3);
 		
@@ -310,7 +312,7 @@ public class AccomodationSiteTest {
 		
 		
 	     assertThrows(RuntimeException.class, () -> {
-	    	 accomodationSite.createBooking(property, begin, end, paymentsMethods, 100.0, periods, timer);
+	    	 accomodationSite.createBooking(property, begin, end, paymentsMethods, 100.0, periods, timer, policy);
 	        });
 	}
 	

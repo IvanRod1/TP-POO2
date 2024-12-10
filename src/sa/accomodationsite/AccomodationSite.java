@@ -21,6 +21,7 @@ import sa.users.Administrator;
 import sa.users.Owner;
 import sa.users.Tenant;
 import sa.booking.reserveStates.Timer;
+import sa.cancellation.ICancellationPolicy;
 
 
 public class AccomodationSite {
@@ -44,7 +45,7 @@ public class AccomodationSite {
 	
 	
 	public void createBooking(Property property, LocalDate begin, LocalDate end, List<PaymentMethod> paymentMethods,
-							  double pricePerDayWeekday, List<SpecialPeriod> periods, Timer timer) {
+							  double pricePerDayWeekday, List<SpecialPeriod> periods, Timer timer, ICancellationPolicy policy) {
 		/**
 		 * crea un booking nuevo y lo agrega a la lista de bookings. Antes de agregarlo verifica que la propiedad del booking
 		 * tenga un tipo de propiedad valido y unos tipos de servicios validos para sitio web, dados por el administrador.
@@ -52,7 +53,7 @@ public class AccomodationSite {
 		 * */
 		
 		Booking newBooking = new Booking(property, begin, end, paymentMethods,
-											pricePerDayWeekday, periods, timer);
+											pricePerDayWeekday, periods, timer, policy);
 		//
 		if(this.verifyPropertyType(property) && this.verifyAmenityType(property)) {
 			

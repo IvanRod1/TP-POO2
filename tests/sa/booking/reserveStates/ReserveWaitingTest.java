@@ -2,8 +2,7 @@ package sa.booking.reserveStates;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +17,7 @@ class ReserveWaitingTest {
 	private Reserve reserve;
 	private Booking booking;
 	private Timer timer;
+
 	@BeforeEach
 	void setUp() throws Exception {
 		reserve = mock(Reserve.class);
@@ -39,13 +39,19 @@ class ReserveWaitingTest {
 	@Test
 	void cancelTest() {
 		stateReserve.cancel();
-		verify(this.booking,times(1)).removeWaiting(this.stateReserve.getReserve());
+		verifyNoInteractions(this.reserve);
 	}
+
 	@Test
 	void updateTest() {
 		stateReserve.update();
-		//assertEquals(reserve.getState(),any(ReserveBooked.class));
-		//verify(this.reserve,times(1)).setState(new ReserveBooked(this.stateReserve.getReserve())); falta verificar esta linea si es posible
+		verifyNoInteractions(this.reserve);	
 	}
+
+	@Test
+	void testGetReserve() {
+		assertEquals(this.reserve, this.stateReserve.getReserve());
+	}
+
 
 }

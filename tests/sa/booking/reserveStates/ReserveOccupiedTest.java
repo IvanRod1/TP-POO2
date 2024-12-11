@@ -59,16 +59,6 @@ class ReserveOccupiedTest {
 		assertNotNull(this.stateOccupied2);
 	}
 
-//	@Test
-//	void testNext() {
-//		this.stateOccupied.next();		no existe mas este metodo
-//	}
-
-//	@Test
-//	void testApprove() {
-//		this.stateOccupied.approve(this.reserve); no existe mas este metodo
-//	}
-//
 	@Test
 	void testCancel() {
 		verify(this.booking, times(0)).notifySubscribersCancelled(this.spyReserve);

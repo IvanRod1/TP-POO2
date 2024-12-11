@@ -33,11 +33,11 @@ public class Booking implements INotifyConfiguration {
 	private List<INotifyObserver> 	obsPrice;
 
 
-	public Booking(Property property, LocalDate begin, LocalDate end, List<PaymentMethod> paymentMethods,
-			double pricePerDayWeekday, List<SpecialPeriod> periods, Timer timer) { //Hay que poner la politica que desee el propietario
+	public Booking(ICancellationPolicy policy, Property property, LocalDate begin, LocalDate end, List<PaymentMethod> paymentMethods,
+			double pricePerDayWeekday, List<SpecialPeriod> periods, Timer timer) {
 		// TODO Auto-generated constructor stub
 		this.pricer		 		= new Pricer(pricePerDayWeekday, periods);
-		this.policy				= new CostFree(); //estamos decidiendo algo que no debemos
+		this.policy				= policy;
 		this.paymentMethods		= paymentMethods;
 		this.setPeriod(new Period(begin, end));
 		this.property			= property;
@@ -81,6 +81,50 @@ public class Booking implements INotifyConfiguration {
 		this.getConditionalReserves().add(new Reserve(this, t, new Period(start, end)));
 	}
 
+	public Period getPeriod() {
+		return this.period;
+	}
+
+	private void setPeriod(Period p) {
+		this.period = p;
+	}
+
+	public List<Period> availablePeriods(){
+		List<Period> avaiablePeriods = new ArrayList<Period>();
+		
+		LocalDate startDate = this.getPeriod().start();
+		
+		this.reserves.sort((r1,r2)-> r1.getCheckIn().compareTo(r2.getCheckIn())); //Ordeno la lista de reservas de forma cronologica
+		
+		for(Reserve reserve: reserves) {
+			if(startDate.isBefore(reserve.getCheckIn())) {  //SI LA FECHA DE INICIO DEL ALQUILER ESTA ANTES QUE LA FECHA DE CHECKIN DEL PRIMER ALQUILER REGISTRADO
+				avaiablePeriods.add(new Period(startDate, reserve.getCheckIn().minusDays(1))); //SE CREA UN PERIODO NUEVO CUYO INICIO ES LA FECHA DE INICIO Y EL FIN ES UN DIA ANTES QUE EMPIECE LA PRIMER RESERVA DE LA LISTA. A ESTE PERIODO LO AGREGO A LA LISTA DE PERIODOS DISPONIBLES
+			}
+			startDate = reserve.getCheckOut().plusDays(1);	//HAGO QUE LA FECHA DE INICIO SEA UN DIA DESPUES DEL CHECK OUT DE LA RESERVA ACTUAL	
+		}
+		
+		if(startDate.isBefore(this.getPeriod().end()) || startDate.equals(this.getPeriod().end())) { //VERIFICA QUE DESPUES DE REGISTRAR TODAS LOS ALQUILERES, MI FECHA DE INICIO ESTE ANTES QUE LA FECHA FINAL DEL ALQUILER O QUE SEA IGUAL. EN EL CASO DE QUE SI, SE AGREGA UN PERIODO CUYA FECHA DE INICIO ES LA FECHA INICIAL Y LA FECHA FINAL ES LA FECHA FINAL DEL ALQUILER
+			avaiablePeriods.add(new Period(startDate,this.getPeriod().end()));
+		}
+		
+		return avaiablePeriods;
+	}
+	
+	public boolean isAvailableDate(LocalDate checkInDate) {
+		if(checkInDate == null) {  //SI LA FECHA QUE ME PASARON ES NULA, TIRO ERROR
+			throw new IllegalArgumentException("La fecha no puede ser nulo");	
+		}
+		
+		List<Period> periodsAvailables = this.availablePeriods();
+		
+		for(Period p : periodsAvailables) {
+			if(p.belongs(checkInDate)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public Property getProperty() {
 		// TODO Auto-generated method stub
 		return this.property;
@@ -89,11 +133,6 @@ public class Booking implements INotifyConfiguration {
 	public List<PaymentMethod> getPaymentMethods() {
 		// TODO Auto-generated method stub
 		return this.paymentMethods;
-	}
-
-	public void setCancellationPolicy(ICancellationPolicy policy) {
-		// TODO Auto-generated method stub
-		this.policy = policy;
 	}
 
 	public ICancellationPolicy getPolicy() {
@@ -134,6 +173,77 @@ public class Booking implements INotifyConfiguration {
 	public double priceBetween(LocalDate startDate, LocalDate endDate) {
 		// TODO Auto-generated method stub
 		return this.pricer.priceBetween(startDate, endDate);
+	}
+
+	public List<Reserve> getReserves() {
+		// TODO Auto-generated method stub
+		return this.reserves;
+	}
+
+	public List<Reserve> getConditionalReserves() {
+		// TODO Auto-generated method stub
+		return this.waitings;
+	}
+
+	void addReserve(Reserve reserve) {
+		// TODO Auto-generated method stub
+		this.getReserves().add(reserve);
+		this.notifySubscribersReserve(reserve);
+		//reserve.getState().update();   // No iba
+	}
+
+	public Timer getTimer() {
+		// TODO Auto-generated method stub
+		return this.timer;
+	}
+
+	//cambie temporalmente de private a public porque no lo podia testear
+	void triggerNextRequest(LocalDate start, LocalDate end) {
+//		for (LocalDate currDate = start; !currDate.equals(end.plusDays(1)); currDate.plusDays(1)) {
+//			final LocalDate date = currDate; // Nos tira error en el lambda porque necesita que sea final
+//			Optional<Reserve> wr = this.getConditionalReserves().stream()
+//									.filter(w -> date.equals(w.getCheckIn()) && end.isBefore(end.plusDays(1)))
+//									.findFirst();
+//			// Si está en waiting pasa a ser una reserva formal
+//			if (wr.isPresent()) {
+//				Reserve next_r = wr.get();
+//				this.getProperty().getOwner().reserveRequested(next_r);
+//			}
+//		}
+		
+		Period aux = new Period(start,end);  //armo un periodo auxiliar con las fechas que me dieron para poder usar el metodo belongs
+		List<Reserve> conditionalReserves = this.getConditionalReserves(); // lista de reservas condicionales. Se podria ahorrar esta linea de codigo poniendo el metodo directamente en el for
+		
+		for(Reserve r : conditionalReserves) { //for iterando en cada elemento de la lista de condicionales
+			if(aux.belongs(r.getCheckIn()) && aux.belongs(r.getCheckOut())) { //verifica que esa reserva condicional este dentro del periodo que se cancelo (aux)
+				this.getProperty().getOwner().reserveRequested(r); //Notifico al owner para que verifique esta reserva
+				break; //rompo el ciclo 
+			}
+		}
+	}
+
+	public Pricer getPricer() {
+		// TODO Auto-generated method stub
+		return this.pricer;
+	}
+
+	void removeReserve(Reserve reserve) {
+		// TODO Auto-generated method stub
+		this.reserves.remove(reserve);
+	}
+
+	public void removeWaiting(Reserve reserve) {
+		// TODO Auto-generated method stub
+		this.getConditionalReserves().remove(reserve);
+	}
+
+	public void handleCancellation(Reserve reserve) {
+		// TODO Auto-generated method stub
+		this.removeReserve(reserve);
+		this.notifySubscribersCancelled(reserve);
+		// TODO: qué se hace con la reserva cancelada 'r' ?
+		this.applyPolicy(reserve, LocalDate.now());
+		this.triggerNextRequest(LocalDate.now(), reserve.getCheckOut());
 	}
 
 	@Override
@@ -188,130 +298,4 @@ public class Booking implements INotifyConfiguration {
 		// TODO Auto-generated method stub
 		this.obsReserve.remove(o);
 	}
-
-	public Period getPeriod() {
-		return this.period;
-	}
-
-	private void setPeriod(Period p) {
-		this.period = p;
-	}
-
-	public List<Reserve> getReserves() {
-		// TODO Auto-generated method stub
-		return this.reserves;
-	}
-
-	public List<Reserve> getConditionalReserves() {
-		// TODO Auto-generated method stub
-		return this.waitings;
-	}
-
-	void addReserve(Reserve reserve) {
-		// TODO Auto-generated method stub
-		this.getReserves().add(reserve);
-		this.notifySubscribersReserve(reserve);
-		//reserve.getState().update();   // No iba
-	}
-
-	public Timer getTimer() {
-		// TODO Auto-generated method stub
-		return this.timer;
-	}
-
-	//cambie temporalmente de private a public porque no lo podia testear
-	void triggerNextRequest(LocalDate start, LocalDate end) {
-//		for (LocalDate currDate = start; !currDate.equals(end.plusDays(1)); currDate.plusDays(1)) {
-//			final LocalDate date = currDate; // Nos tira error en el lambda porque necesita que sea final
-//			Optional<Reserve> wr = this.getConditionalReserves().stream()
-//									.filter(w -> date.equals(w.getCheckIn()) && end.isBefore(end.plusDays(1)))
-//									.findFirst();
-//			// Si está en waiting pasa a ser una reserva formal
-//			if (wr.isPresent()) {
-//				Reserve next_r = wr.get();
-//				this.getProperty().getOwner().reserveRequested(next_r);
-//			}
-//		}
-		
-		Period aux = new Period(start,end);  //armo un periodo auxiliar con las fechas que me dieron para poder usar el metodo belongs
-		List<Reserve> conditionalReserves = this.getConditionalReserves(); // lista de reservas condicionales. Se podria ahorrar esta linea de codigo poniendo el metodo directamente en el for
-		
-		for(Reserve r : conditionalReserves) { //for iterando en cada elemento de la lista de condicionales
-			if(aux.belongs(r.getCheckIn()) && aux.belongs(r.getCheckOut())) { //verifica que esa reserva condicional este dentro del periodo que se cancelo (aux)
-				this.getProperty().getOwner().reserveRequested(r); //Notifico al owner para que verifique esta reserva
-				break; //rompo el ciclo 
-			}
-		}
-	}
-
-	public List<Period> availablePeriods(){
-		List<Period> avaiablePeriods = new ArrayList<Period>(); //FALTA TESTEAR
-		
-		LocalDate startDate = this.getPeriod().start();
-		
-		this.reserves.sort((r1,r2)-> r1.getCheckIn().compareTo(r2.getCheckIn())); //Ordeno la lista de reservas de forma cronologica
-		
-		for(Reserve reserve: reserves) {
-			if(startDate.isBefore(reserve.getCheckIn())) {  //SI LA FECHA DE INICIO DEL ALQUILER ESTA ANTES QUE LA FECHA DE CHECKIN DEL PRIMER ALQUILER REGISTRADO
-				avaiablePeriods.add(new Period(startDate, reserve.getCheckIn().minusDays(1))); //SE CREA UN PERIODO NUEVO CUYO INICIO ES LA FECHA DE INICIO Y EL FIN ES UN DIA ANTES QUE EMPIECE LA PRIMER RESERVA DE LA LISTA. A ESTE PERIODO LO AGREGO A LA LISTA DE PERIODOS DISPONIBLES
-			}
-			startDate = reserve.getCheckOut().plusDays(1);	//HAGO QUE LA FECHA DE INICIO SEA UN DIA DESPUES DEL CHECK OUT DE LA RESERVA ACTUAL	
-		}
-		
-		if(startDate.isBefore(this.getPeriod().end()) || startDate.equals(this.getPeriod().end())) { //VERIFICA QUE DESPUES DE REGISTRAR TODAS LOS ALQUILERES, MI FECHA DE INICIO ESTE ANTES QUE LA FECHA FINAL DEL ALQUILER O QUE SEA IGUAL. EN EL CASO DE QUE SI, SE AGREGA UN PERIODO CUYA FECHA DE INICIO ES LA FECHA INICIAL Y LA FECHA FINAL ES LA FECHA FINAL DEL ALQUILER
-			avaiablePeriods.add(new Period(startDate,this.getPeriod().end()));
-		}
-		
-		return avaiablePeriods;
-	}
-	
-	public boolean isAvailableDate(LocalDate checkInDate) { //FALTA TESTEAR
-		
-
-//		if(checkInDate.equals(null)) {  //SI LA FECHA QUE ME PASARON ES NULA, TIRO ERROR
-//			throw new IllegalArgumentException("La fecha no puede ser nulo");		No encuentro forma de testear este if
-//		}
-
-		if(checkInDate == null) {  //SI LA FECHA QUE ME PASARON ES NULA, TIRO ERROR
-			throw new IllegalArgumentException("La fecha no puede ser nulo");	
-		}
-
-		
-		List<Period> periodsAvailables = this.availablePeriods(); //PIDO LA LISTA DE PERIODOS DISPONIBLES AL BOOKING
-		
-		for(Period p : periodsAvailables) { //RECORRO ESA LISTA DE PERIODOS, UNA VEZ QUE ENCUENTRE QUE LA FECHA DADA PERTENECE A UN PERIODO, DEVUELVO TRUE, SI NO PERTENECE A ALGUN PERIODO RETORNA FALSE
-			if(p.belongs(checkInDate)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
-	public Pricer getPricer() {
-		// TODO Auto-generated method stub
-		return this.pricer;
-	}
-
-
-	void removeReserve(Reserve reserve) {
-		// TODO Auto-generated method stub
-		this.reserves.remove(reserve);
-	}
-
-
-	public void removeWaiting(Reserve reserve) {
-		// TODO Auto-generated method stub
-		this.getConditionalReserves().remove(reserve);
-	}
-
-	public void handleCancellation(Reserve reserve) {
-		// TODO Auto-generated method stub
-		this.removeReserve(reserve);
-		this.notifySubscribersCancelled(reserve);
-		// TODO: qué se hace con la reserva cancelada 'r' ?
-		this.applyPolicy(reserve, LocalDate.now());
-		this.triggerNextRequest(LocalDate.now(), reserve.getCheckOut());
-	}
-
 }

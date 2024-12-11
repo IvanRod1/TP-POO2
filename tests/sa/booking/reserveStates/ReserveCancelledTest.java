@@ -34,16 +34,6 @@ class ReserveCancelledTest {
 		assertNotNull(this.stateCancelled);
 	}
 
-//	@Test
-//	void testNext() {
-//		this.stateCancelled.next();	este metodo ya no existe
-//	}
-
-//	@Test
-//	void testApprove() {
-//		this.stateCancelled.approve(this.reserve); este metodo ya no existe
-//	}
-
 	@Test
 	void testCancel() {
 		this.stateCancelled.cancel();

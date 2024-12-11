@@ -47,8 +47,7 @@ public class Reserve {
 		// TODO: el owner debería olvidar esta reserve 
 		this.getBooking().getProperty().getOwner().cleanRequestedReserve();
 		this.getBooking().removeWaiting(this);
-		//this.setState(new ReserveBooked(this));
-		this.getState().update();
+		this.setState(new ReserveBooked(this));
 		this.getBooking().addReserve(this);
 		// TODO: debería cobrarle al Tenant porque ya fue aceptada (no fue modelado porque no lo pide el enunciado)
 		this.getTenant().reserveApproved(this);
@@ -91,11 +90,6 @@ public class Reserve {
 		return this.price;
 	}
 	
-//	void next() {
-//		// TODO Auto-generated method stub
-//		this.getState().next();
-//	}
-
 	public void setPrice(double d) {
 		this.price = d; 
 		

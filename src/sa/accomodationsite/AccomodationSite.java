@@ -44,16 +44,16 @@ public class AccomodationSite {
 	}
 	
 	
-	public void createBooking(Property property, LocalDate begin, LocalDate end, List<PaymentMethod> paymentMethods,
-							  double pricePerDayWeekday, List<SpecialPeriod> periods, Timer timer, ICancellationPolicy policy) {
+	public void createBooking(ICancellationPolicy policy, Property property, LocalDate begin, LocalDate end, List<PaymentMethod> paymentMethods,
+							  double pricePerDayWeekday, List<SpecialPeriod> periods, Timer timer) {
 		/**
 		 * crea un booking nuevo y lo agrega a la lista de bookings. Antes de agregarlo verifica que la propiedad del booking
 		 * tenga un tipo de propiedad valido y unos tipos de servicios validos para sitio web, dados por el administrador.
 		 * 
 		 * */
 		
-		Booking newBooking = new Booking(property, begin, end, paymentMethods,
-											pricePerDayWeekday, periods, timer, policy);
+		Booking newBooking = new Booking(policy, property, begin, end, paymentMethods,
+											pricePerDayWeekday, periods, timer);
 		//
 		if(this.verifyPropertyType(property) && this.verifyAmenityType(property)) {
 			

@@ -290,7 +290,7 @@ public class AccomodationSiteTest {
 		when(property.getAmenities()).thenReturn(amenities);
 		
 		
-		accomodationSite.createBooking(property, begin, end, paymentsMethods, 100.0, periods, timer, policy);
+		accomodationSite.createBooking(policy, property, begin, end, paymentsMethods, 100.0, periods, timer);
 		
 		assertEquals(accomodationSite.getBookings().size(), 3);
 		
@@ -312,7 +312,7 @@ public class AccomodationSiteTest {
 		
 		
 	     assertThrows(RuntimeException.class, () -> {
-	    	 accomodationSite.createBooking(property, begin, end, paymentsMethods, 100.0, periods, timer, policy);
+	    	 accomodationSite.createBooking(policy, property, begin, end, paymentsMethods, 100.0, periods, timer);
 	        });
 	}
 	

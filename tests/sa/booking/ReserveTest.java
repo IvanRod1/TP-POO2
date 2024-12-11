@@ -105,14 +105,6 @@ class ReserveTest {
 		assertEquals(this.stateBooked, this.reserve.getState());
 	}
 
-//	@Test
-//	public void testNext() {
-//		assertNull(this.reserve.getState());
-//		this.reserve.setState(this.stateBooked);
-//		this.reserve.next();						reserve ya no tiene el metodo next
-//		verify(this.stateBooked, times(1)).next();
-//	}
-
 	@Test
 	public void testCancel() {
 		assertNotNull(this.reserve.getState());

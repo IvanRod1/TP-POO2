@@ -23,8 +23,4 @@ public class SpecialPeriod extends Period {
 		this.price = newPrice;
 	}
 
-	@Override
-	public LocalDate start() {
-		return super.start();
-	}
 }

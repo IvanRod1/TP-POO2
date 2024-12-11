@@ -7,26 +7,13 @@ import sa.booking.Reserve;
 
 public class ReserveBooked implements IReserveState {
 
-	private IReserveState	nextState = null;
-	private IReserveState	cancelState;
 	private Reserve			reserve;
-	
 
 	public ReserveBooked(Reserve reserve) {
 		// TODO Auto-generated constructor stub
 		this.reserve  	  = reserve;
-//		this.nextState 	  = new ReserveOccupied(this.reserve);
 		this.getReserve().getBooking().getTimer().register(this, this.getReserve().getCheckIn());
 	}
-
-	// Para hacer DOC del state approved
-	public ReserveBooked(ReserveOccupied stateNext, ReserveCancelled stateCancel, Reserve reserve) {
-		// TODO Auto-generated constructor stub
-		this.nextState 	 = stateNext;
-		this.cancelState = stateCancel;
-		this.reserve 	 = reserve;
-	}
-
 
 	@Override
 	public void cancel() {

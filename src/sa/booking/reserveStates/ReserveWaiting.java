@@ -12,18 +12,10 @@ public class ReserveWaiting implements IReserveState {
 	}
 
 	@Override
-	public void update() {
-		// Copie el comportamiento que tiene update de ReserveBooked y lo aplique aca
-		this.getReserve().setState(new ReserveBooked(this.getReserve()));
-		
-
-	}
+	public void update() {}
 
 	@Override
-	public void cancel() {
-		// TODO Auto-generated method stub
-		this.getReserve().getBooking().removeWaiting(this.getReserve());
-	}
+	public void cancel() {}
 
 	@Override
 	public boolean isCancelled() {

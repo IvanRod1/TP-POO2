@@ -1,8 +1,6 @@
 package sa.booking;
 import sa.observer.interfaces.INotifyObserver;
 
-
-
 public interface INotifyConfiguration {
 
 	public void registerPriceObserver(INotifyObserver o);

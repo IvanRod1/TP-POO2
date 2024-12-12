@@ -564,9 +564,10 @@ public class BookingTest {
 	@Test
 	void handleCancellationTest() {
 		
+		verifyNoInteractions(this.owner);
 		this.booking.handleCancellation(reserve2);
-		assertEquals(0, booking.getReserves().size()); 
-		
+		assertEquals(0, booking.getReserves().size());
+		verify(this.owner, times(1)).sendEmail(reserve2, "Se acaba de cencelar la reserva.");
 	}
 	
 

@@ -83,7 +83,7 @@ public class AccomodationSite {
 		return this.getAllowedProperties().contains(property.getPropertyType());
 	}
 
-	public ArrayList<Booking> getBookings() {
+	public List<Booking> getBookings() {
 		return (ArrayList<Booking>) this.bookings;
 	}
 	

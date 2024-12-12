@@ -295,7 +295,7 @@ public class AccomodationSiteTest {
 		when(property.getAmenities()).thenReturn(amenityTypes);
 
 	     assertThrows(RuntimeException.class, () -> {
-	    	 accomodationSite.createBooking(policy, property, begin, end, paymentsMethods, 100.0, periods, timer);
+	    	 accomodationSiteReal.createBooking(policy, property, begin, end, paymentsMethods, 100.0, periods, timer);
 	        });
 	}
 	

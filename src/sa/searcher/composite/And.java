@@ -19,7 +19,7 @@ public class And extends CompositeQuery {
 	@Override
 	public List<Booking> search(List<Booking> bookings) {
 		
-		return sndQuery.search(fstQuery.search(bookings)); 
+		return query2.search(query1.search(bookings)); 
 	}
 
 }

@@ -23,8 +23,8 @@ public class Or extends CompositeQuery {
 	public List<Booking> search(List<Booking> bookings) {
 		Set<Booking> totalBookings = new LinkedHashSet<Booking>();
 		
-		totalBookings.addAll(fstQuery.search(bookings));
-		totalBookings.addAll(sndQuery.search(bookings));
+		totalBookings.addAll(query1.search(bookings));
+		totalBookings.addAll(query2.search(bookings));
 		
 		return new ArrayList<Booking>(totalBookings);
 	}

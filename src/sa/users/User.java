@@ -29,7 +29,10 @@ public abstract class User implements Rankeable {
 	public List<Reserve> getReserves() {
 		return this.reserves;
 	}
-	
+
+	public abstract void sendEmail(Reserve reserve, String message );
+	// TODO: debería enviarse un mail con la data pasada por argumento
+
 	public abstract void summary();
 	
 	@Override

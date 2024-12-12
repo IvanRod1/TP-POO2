@@ -189,7 +189,6 @@ public class Booking implements INotifyConfiguration {
 		// TODO Auto-generated method stub
 		this.getReserves().add(reserve);
 		this.notifySubscribersReserve(reserve);
-		//reserve.getState().update();   // No iba
 	}
 
 	public Timer getTimer() {
@@ -243,6 +242,7 @@ public class Booking implements INotifyConfiguration {
 		this.notifySubscribersCancelled(reserve);
 		// TODO: qué se hace con la reserva cancelada 'r' ?
 		this.applyPolicy(reserve, LocalDate.now());
+		this.getProperty().getOwner().sendEmail(reserve, "Se acaba de cencelar la reserva.");
 		this.triggerNextRequest(LocalDate.now(), reserve.getCheckOut());
 	}
 

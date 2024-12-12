@@ -116,8 +116,10 @@ class ReserveTest {
 	@Test
 	public void testApprove() {
 		assertNotNull(this.reserve.getState());
+		verifyNoInteractions(this.tenant);
 		this.reserve.approve();
 		verify(this.booking, times(1)).addReserve(this.reserve);
+		verify(this.tenant, times(1)).sendEmail(reserve, "Se acaba de aceptar tu reserva.");
 	}
 
 	@Test

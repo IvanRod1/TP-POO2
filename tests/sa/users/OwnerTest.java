@@ -111,14 +111,8 @@ class OwnerTest {
 		owner.qualify(tenant);
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@Test
+	void sendEmailTest() {
+	tenant.sendEmail(requestedReserve, "mensaje");
+	}
 }

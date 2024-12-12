@@ -50,4 +50,11 @@ public class Tenant extends User {
 		// Luego se adjuntan su Review a su respectivo historial de Reviews donde
 		// finalmente se calcula su ranking.
 	}
+
+
+	@Override
+	public void sendEmail(Reserve reserve, String message) {
+		// TODO Auto-generated method stub
+		// envío mensaje y reserva por mail al Tenant
+	}
 }

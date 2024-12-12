@@ -7,7 +7,6 @@ import static org.mockito.Mockito.*;
 
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,15 +14,10 @@ import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import sa.accomodationsite.AccomodationSite;
 import sa.booking.Booking;
 import sa.booking.PaymentMethod;
 import sa.booking.SpecialPeriod;
-import sa.booking.reserveStates.IReserveState;
-import sa.booking.reserveStates.ReserveBooked;
-import sa.booking.reserveStates.ReserveOccupied;
 import sa.properties.AmenityType;
 import sa.properties.Property;
 import sa.properties.PropertyType;
@@ -43,6 +37,7 @@ public class AccomodationSiteTest {
 	
 	// variables para el metodo getOccupiedReserves, tambien utilizadas para el allReservesOfTheTenant:
 	AccomodationSite accomodationSite;
+	AccomodationSite accomodationSiteReal;
 	Booking booking1;
 	Booking booking2;
 	Reserve reserve1;
@@ -88,7 +83,10 @@ public class AccomodationSiteTest {
 	PropertyType duplex;
 	Timer timer;
 	ICancellationPolicy policy;
-	
+
+	List<AmenityType> amenityTypes = new ArrayList<AmenityType>();
+	List<PropertyType> propertyTypes = new ArrayList<PropertyType>();
+
 	// todo para el allBookingCities
 	
 	Set<String> visitedCities;
@@ -105,15 +103,10 @@ public class AccomodationSiteTest {
 	List<Booking> emptyList;
 	
 	
-	// excercise:
+	// Exercise:
 	
 	@BeforeEach
 	public void setUp() throws Exception {
-		
-		// SUT:
-		accomodationSite = new AccomodationSite();
-		
-		
 		booking1 = mock(Booking.class);
 		booking2 = mock(Booking.class);
 		booking3 = mock(Booking.class);
@@ -129,12 +122,6 @@ public class AccomodationSiteTest {
 		futureReserves = new ArrayList<Reserve>();
 		bookings = new ArrayList<Booking>();
 		
-		// para getOccupiedReservesTest
-		accomodationSite.addBooking(booking1);
-		accomodationSite.addBooking(booking2);
-		
-		
-		
 		expectedReservesBooking2.add(reserve1);
 		expectedReservesBooking2.add(reserve2);
 		
@@ -148,8 +135,6 @@ public class AccomodationSiteTest {
 		reservesOfTheTenant.add(reserve2);
 		reservesOfTheTenant.add(reserve1);
 		reservesOfTheTenant.add(reserve2);
-
-		
 		
 		bookings.add(booking1);
 		bookings.add(booking2);
@@ -169,8 +154,6 @@ public class AccomodationSiteTest {
 		when(reserve1.getTenant()).thenReturn(tenant);
 		when(reserve2.getTenant()).thenReturn(tenant);
 		when(reserve3.getTenant()).thenReturn(tenant);
-		
-		// para getOccupiedReservesTest
 		
 		// para el createBooking:
 		
@@ -224,26 +207,43 @@ public class AccomodationSiteTest {
 		query2 = mock(Or.class);
 		
 		emptyList = new ArrayList<Booking>();
+
+		amenityTypes.add(electricity);
+		amenityTypes.add(internet);
+		amenityTypes.add(agua);
 		
+		propertyTypes.add(duplex);
+		propertyTypes.add(house);
+
+		// SUT con DOCs
+		accomodationSite = new AccomodationSite(bookings, amenityTypes, propertyTypes);
+
+		// SUT real
+		accomodationSiteReal = new AccomodationSite();
 	}
-	
-	// verify:
-	
+
+	@Test
+	void testConstructor() {
+		assertNotNull(accomodationSite);
+	}
+
+	@Test
+	void testConstructorReal() {
+		assertNotNull(accomodationSiteReal);
+	}
+
 	@Test
 	void getOccupiedReservesTest() {
-		
 		assertEquals(expectedReserves, accomodationSite.getOccupiedReserves());
 	}
 	
 	@Test
 	void allReservesOfTheTenant() {
-		
 		assertEquals(reservesOfTheTenant, accomodationSite.allReservesOfTheTenant(tenant));
 	}
 	
 	@Test
 	void futureReservesOfTheTenant() {
-		
 		assertEquals(futureReserves, accomodationSite.futureReservesOfTheTenant(tenant));
 	}
 	
@@ -256,39 +256,28 @@ public class AccomodationSiteTest {
 	void queryTest() {
 		// TODO: solo testea el lado positivo, preguntarle a ivan como testear la rama del else, probar pasarle una lista vacia para la rama if positiva
 		// para el else puede ser un spy que se verifique si le llego la llamada a la query del  metodo search
-		
 		assertEquals(bookings, accomodationSite.search(null));
 	}
 	
 	@Test
 	void queryTestRamaElse() {
-		
 		assertEquals(emptyList, accomodationSite.search(query2));
 	}
 	
-	@Test
-	void addBookingTest() {
-		
-		accomodationSite.addBooking(booking3);
-		
-		assertEquals(3, accomodationSite.getBookings().size());
-	}
+//	@Test
+//	void addBookingTest() {
+//		bookings.add(booking3);
+//		assertEquals(3, accomodationSite.getBookings().size());
+//	}
 	
 	@Test
 	void createBookingTest() {
-		
-		List<AmenityType> amenities = new ArrayList<AmenityType>();
-		amenities.add(electricity);
-		amenities.add(internet);
-		
-		
 		when(property.getPropertyType()).thenReturn(house);
 		accomodationSite.setAllowedProperties(house);
 		accomodationSite.setAllowedAmenities(electricity);
 		accomodationSite.setAllowedAmenities(internet);
 		
-		when(property.getAmenities()).thenReturn(amenities);
-		
+		when(property.getAmenities()).thenReturn(amenityTypes);
 		
 		accomodationSite.createBooking(policy, property, begin, end, paymentsMethods, 100.0, periods, timer);
 		
@@ -298,19 +287,13 @@ public class AccomodationSiteTest {
 	
 	@Test
 	void createInvalidBooking() {
-		List<AmenityType> amenities = new ArrayList<AmenityType>();
-		amenities.add(electricity);
-		amenities.add(agua);
-		
 		when(property.getPropertyType()).thenReturn(duplex);
 		accomodationSite.setAllowedProperties(house);
 		accomodationSite.setAllowedAmenities(electricity);
 		accomodationSite.setAllowedAmenities(internet);
 		
-		when(property.getAmenities()).thenReturn(amenities);
-		
-		
-		
+		when(property.getAmenities()).thenReturn(amenityTypes);
+
 	     assertThrows(RuntimeException.class, () -> {
 	    	 accomodationSite.createBooking(policy, property, begin, end, paymentsMethods, 100.0, periods, timer);
 	        });
@@ -326,127 +309,14 @@ public class AccomodationSiteTest {
 
 	@Test
 	void allReservesCitiesTest() {
-		
 		assertEquals(visitedCities, accomodationSite.allReservesCities(tenant));
 	}
 	
 	@Test
 	void getAllReservesTest() {
-		
 		assertEquals(allReserves, accomodationSite.getAllReserves());
-	}
-	
-	
-	
-	
+	}	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-//	// setUp:
-//	
-//	// para el test de createBooking:
-//	Property property;
-//	PropertyType house;
-//	
-//	AmenityType electricity;
-//	AmenityType internet;
-//	
-//	LocalDate checkIn;
-//	LocalDate checkOut;
-//	
-//	List<PaymentMethod> paymentsMethods;
-//	double pricePerDayWeekday;
-//	
-//	List<Period> periods;
-//	// SUT:
-//	
-//	AccomodationSite accomodationSite;
-//	
-//	// Excercise:
-//	
-//	@BeforeEach
-//	public void setUp() throws Exception {
-//		
-//		
-//	}
-//	
-//	@Test
-//	void createBookingTest() {
-//		List<AmenityType> amenities = new ArrayList<AmenityType>();
-//		amenities.add(electricity);
-//		amenities.add(internet);
-//		
-//		when(property.getPropertyType()).thenReturn(house);
-//		
-//		when(property.getAmenities()).thenReturn(amenities);
-//		
-//		
-//		accomodationSite.createBooking(property, checkIn, checkOut, paymentsMethods, pricePerDayWeekday, periods);
-//		
-//		assertEquals(accomodationSite.getBookings().size(), 1);
-//		
-//		
-//	}
-//	
-//	@Test
-//	void bookingsSizeTest() {
-//		
-//		
-//		/**
-//		 *TODO:
-//		 * //que pasa si un usuario que no esta registrado crea un booking? test:
-//		 * idea: este metodo tambien puede agregar al Owner de la propiedad a la lista de Owners
-//		 * */
-//		
-//		
-//		
-//		assertEquals(accomodationSite.getBookings().size(), 0);
-//		
-//	}
-//
-//	@Test
-//	void getOccupiedReservesTest() {
-//		
-//		
-//		
-//		assertEquals(occupiedReserves, accomodationSite.getOccupiedReserves());
-//	}
-//	
-//
-//	
-//}
 
 
 

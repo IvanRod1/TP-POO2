@@ -5,7 +5,6 @@ import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +16,7 @@ import sa.users.Owner;
 class PropertyTest {
 
 	private Property property;
+	private Property propertyReal;
 	private double area;
 	private String country;
 	private String city;
@@ -24,7 +24,6 @@ class PropertyTest {
 	private int maxGuests;
 	private String description;
 	private int maxPicture;
-	private List<LocalDate> bookedDays;
 	private List<AmenityType> amenities;
 	private PropertyType type;
 	private List<Picture> pictures;
@@ -49,12 +48,21 @@ class PropertyTest {
 		when(rv1.getRating()).thenReturn(2);
 		when(rv2.getRating()).thenReturn(3);
 		
-		this.property = new Property(area, country, city, address, maxGuests, description, amenities, maxPicture, type, owner, bookedDays, pictures, reviews2);
+		// SUT con DOCs
+		this.property = new Property(area, country, city, address, maxGuests, description, amenities, maxPicture, type, owner, pictures, reviews2);
+		
+		// SUT real
+		this.propertyReal = new Property(area, country, city, address, maxGuests, description, amenities, maxPicture, type, owner);
 	}
 
 	@Test
 	void testConstructor() {
 		assertNotNull(property);
+	}
+
+	@Test
+	void testConstructorReal() {
+		assertNotNull(propertyReal);
 	}
 
 	@Test
@@ -73,7 +81,6 @@ class PropertyTest {
 					 "Type: null" + System.lineSeparator() +
 					 "Owner: null" + System.lineSeparator() +
 					 "Amenities: null" + System.lineSeparator() +
-					 "Booked Days: null" + System.lineSeparator() +
 					 "Pictures: null" + System.lineSeparator() +
 					 "Reviews: []"
 					 + System.lineSeparator(), outContent.toString());
@@ -137,11 +144,6 @@ class PropertyTest {
 	@Test
 	void getMaxPictureTest() {
 		assertEquals(this.maxPicture, property.getMaxPicture());
-	}
-	
-	@Test
-	void getBookedDaysTest() {
-		assertEquals(this.bookedDays, property.getBookedDays());
 	}
 	
 	@Test

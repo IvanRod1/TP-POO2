@@ -1,7 +1,6 @@
 package sa.properties;
 
-import java.time.LocalDate;
-
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,7 +15,6 @@ public class Property implements Rankeable {
 	private int maxGuests;
 	private String description;
 	private int maxPicture;
-	private List<LocalDate> bookedDays;
 	private List<AmenityType> amenities;
 	private PropertyType type;
 	private List<Picture> pictures;
@@ -24,27 +22,25 @@ public class Property implements Rankeable {
 	private List<Review> reviews;
 	
 	
-//	public Property(double area, String country, String city, String address, int maxGuests, String description, List<AmenityType> amenities, int maxPicture,
-//				   PropertyType type, Owner owner) {
-//		this.area = area;
-//		this.country = country;
-//		this.city = city;
-//		this.address = address;
-//		this.maxGuests = maxGuests;
-//		this.description = description;
-//		this.maxPicture = maxPicture;
-//		this.type = type;
-//		this.owner = owner;
-//		this.amenities = amenities;
-//		this.bookedDays = new ArrayList<LocalDate>();
-//		this.pictures = new ArrayList<Picture>();
-//		this.reviews = new ArrayList<Review>();
-//		
-//	}
+	public Property(double area, String country, String city, String address, int maxGuests, String description,
+			List<AmenityType> amenities, int maxPicture, PropertyType type, Owner owner) {
+		this.area = area;
+		this.country = country;
+		this.city = city;
+		this.address = address;
+		this.maxGuests = maxGuests;
+		this.description = description;
+		this.maxPicture = maxPicture;
+		this.type = type;
+		this.owner = owner;
+		this.amenities = amenities;
+		this.pictures = new ArrayList<Picture>();
+		this.reviews = new ArrayList<Review>();
+	}
 
 	// Para hacer DOC
 	public Property(double area, String country, String city, String address, int maxGuests, String description, List<AmenityType> amenities, int maxPicture,
-			   PropertyType type, Owner owner, List<LocalDate> bookedDays, List<Picture> pictures, List<Review> reviews) {
+			   PropertyType type, Owner owner, List<Picture> pictures, List<Review> reviews) {
 	this.area = area;
 	this.country = country;
 	this.city = city;
@@ -55,7 +51,6 @@ public class Property implements Rankeable {
 	this.type = type;
 	this.owner = owner;
 	this.amenities = amenities;
-	this.bookedDays = bookedDays;
 	this.pictures = pictures;
 	this.reviews = reviews;
 	
@@ -79,10 +74,6 @@ public class Property implements Rankeable {
 
 	public int getMaxPicture() {
 		return maxPicture;
-	}
-
-	public List<LocalDate> getBookedDays() {
-		return bookedDays;
 	}
 
 	public PropertyType getType() {
@@ -110,7 +101,6 @@ public class Property implements Rankeable {
 	    System.out.println("Type: " + this.type);
 	    System.out.println("Owner: " + this.owner);
 	    System.out.println("Amenities: " + this.amenities);
-	    System.out.println("Booked Days: " + this.bookedDays);
 	    System.out.println("Pictures: " + this.pictures);
 	    System.out.println("Reviews: " + this.reviews);
 		

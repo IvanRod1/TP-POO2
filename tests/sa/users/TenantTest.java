@@ -96,4 +96,9 @@ class TenantTest {
 	void qualifyOwnerTest() {
 	tenant.qualify(owner);
 	}
+
+	@Test
+	void sendEmailTest() {
+	tenant.sendEmail(reserve, "mensaje");
+	}
 }

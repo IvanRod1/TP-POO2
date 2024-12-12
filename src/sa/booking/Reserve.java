@@ -51,6 +51,7 @@ public class Reserve {
 		this.getBooking().addReserve(this);
 		// TODO: debería cobrarle al Tenant porque ya fue aceptada (no fue modelado porque no lo pide el enunciado)
 		this.getTenant().reserveApproved(this);
+		this.getTenant().sendEmail(this, "Se acaba de aceptar tu reserva.");
 	}
 
 	public void decline() { // El Owner rechaza la solicitud de la reserva.

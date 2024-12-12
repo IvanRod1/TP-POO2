@@ -4,12 +4,12 @@ import sa.searcher.simpleQuery.IQuery;
 
 
 public abstract class CompositeQuery implements IQuery{
-	protected IQuery fstQuery;
-	protected IQuery sndQuery;
+	protected IQuery query1;
+	protected IQuery query2;
 	
 	protected CompositeQuery(IQuery firstQuery, IQuery secondQuery) {
-		this.fstQuery = firstQuery;
-		this.sndQuery = secondQuery;
+		this.query1 = firstQuery;
+		this.query2 = secondQuery;
 	}
 
 }

@@ -84,7 +84,7 @@ public class AccomodationSite {
 	}
 
 	public List<Booking> getBookings() {
-		return (ArrayList<Booking>) this.bookings;
+		return this.bookings;
 	}
 	
 	public List<PropertyType> getAllowedProperties() {

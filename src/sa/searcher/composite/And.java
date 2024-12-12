@@ -8,12 +8,13 @@ import sa.searcher.simpleQuery.IQuery;
 
 public class And extends CompositeQuery {
 	
-	private IQuery fstQuery;
-	private IQuery sndQuery;
+//	private IQuery fstQuery;
+//	private IQuery sndQuery;
 	
 	public And(IQuery firstQuery,IQuery secondQuery) {
-		this.fstQuery = firstQuery;
-		this.sndQuery = secondQuery;
+//		this.fstQuery = firstQuery;
+//		this.sndQuery = secondQuery;
+		super(firstQuery,secondQuery);
 	}
 	@Override
 	public List<Booking> search(List<Booking> bookings) {

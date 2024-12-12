@@ -11,12 +11,13 @@ import sa.searcher.simpleQuery.IQuery;
 public class Or extends CompositeQuery {
 	
 	
-	private IQuery fstQuery;
-	private IQuery sndQuery;
+//	private IQuery fstQuery;
+//	private IQuery sndQuery;
 	
 	public Or(IQuery firstQuery, IQuery secondQuery) {
-		this.fstQuery = firstQuery;
-		this.sndQuery = secondQuery;
+//		this.fstQuery = firstQuery;
+//		this.sndQuery = secondQuery;
+		super(firstQuery,secondQuery);
 	}
 	@Override
 	public List<Booking> search(List<Booking> bookings) {

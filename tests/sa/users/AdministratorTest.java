@@ -13,15 +13,8 @@ import org.junit.jupiter.api.Test;
 import sa.accomodationsite.AccomodationSite;
 import sa.booking.Booking;
 import sa.booking.Reserve;
-import sa.booking.reserveStates.IReserveState;
-
-import sa.booking.reserveStates.ReserveBooked;
 import sa.properties.AmenityType;
-import sa.properties.Property;
 import sa.properties.PropertyType;
-import sa.users.Tenant;
-
-
 	
 
 
@@ -54,7 +47,7 @@ class AdministratorTest {
 	List<Reserve> reserves;
 	List<Reserve> reserves2;
 	
-	
+	List<Booking> bookings;
 
 	
 	
@@ -85,6 +78,7 @@ class AdministratorTest {
 		booking2 = mock(Booking.class);
 		
 		tenants = new ArrayList<Tenant>();
+		bookings  = new ArrayList<Booking>();
 		
 		when(booking1.getReserves()).thenReturn(reserves);
 		
@@ -124,12 +118,9 @@ class AdministratorTest {
 		when(booking2.getReserves()).thenReturn(reserves2);
 		// todo esto para el occupiedReservesTest:
 
-		
 		tenants.add(tenant1);
 		tenants.add(tenant2);
 		tenants.add(tenant3);
-		
-		
 		
 		expectedTenants = new ArrayList<Tenant>();
 		
@@ -139,9 +130,8 @@ class AdministratorTest {
 		
 		// todo esto para el occupiedReservesTest:
 
-		accomodationSite.addBooking(booking1);
-		accomodationSite.addBooking(booking2);
-		
+		bookings.add(booking1);
+		bookings.add(booking2);
 		
 		// acá todo lo relacionado a Administrator:
 		fullName = "Nacho";
@@ -151,26 +141,21 @@ class AdministratorTest {
 		
 		
 		// SUT: Administrator
-		
 		administrator = new Administrator(fullName, telephone, mail, accomodationSite);
-		
-		
 		
 	}
 	
 	
 
-	// Excercise:
+	// Exercise:
 	
 	@Test
 	void getAccomodationSiteTest() {
-		
 		assertEquals(accomodationSite, administrator.getAccomodationSite());
 	}
 	
 	@Test
 	void setAccomodationSiteTest() {
-		
 		administrator.setAccomodationSite(accomodationSite);
 		assertEquals(accomodationSite, administrator.getAccomodationSite());
 	}
@@ -182,14 +167,12 @@ class AdministratorTest {
 	
 	@Test
 	void addAllowedPropertyTypeTest() {
-		
 		administrator.addAllowedPropertyTypes(propertyType);
 		assertEquals(accomodationSite.getAllowedProperties().get(0), propertyType);
 	}
  	
 	@Test
 	void allowedAmenitiesTest() {
-		
 		administrator.allowedAmenities(amenityType);
 		assertEquals(accomodationSite.getAllowedAmenities().get(0), amenityType);
 	}
@@ -198,17 +181,12 @@ class AdministratorTest {
 	
 	@Test
 	void bestTenantsTest() {
-		
 		assertEquals(expectedTenants, administrator.bestTenants(tenants));
-		
 	}
-	
-	
-
 	
 	@Test
 	void occupancyRateTest() {
-		
+		when(accomodationSite.getBookings()).thenReturn(bookings);
 		assertEquals(80.0, administrator.occupancyRate());
 	}
 	
@@ -216,53 +194,5 @@ class AdministratorTest {
 	void occupancyRateTestWithoutBookings() {
 		administrator.setAccomodationSite(accomodationSiteEmpty);
 		assertEquals(0.0, administrator.occupancyRate());
-	}
-	
-	
-	
+	}	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

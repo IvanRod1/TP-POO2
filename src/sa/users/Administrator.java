@@ -4,10 +4,7 @@ package sa.users;
 import java.util.List;
 
 import sa.accomodationsite.AccomodationSite;
-
-
 import sa.properties.AmenityType;
-
 import sa.properties.PropertyType;
 
 
@@ -120,27 +117,5 @@ public class Administrator extends User {
 		
 		return ((double) this.getAccomodationSite().getOccupiedReserves().size() /
 				 this.getAccomodationSite().getAllReserves().size()) * 100;
-		
 	}
-	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

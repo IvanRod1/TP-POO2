@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,11 +13,8 @@ import sa.properties.AmenityType;
 //import sa.payments.PaymentMethod;
 import sa.booking.*;
 
-import sa.booking.reserveStates.ReserveBooked;
 import sa.properties.Property;
 import sa.properties.PropertyType;
-import sa.users.Administrator;
-import sa.users.Owner;
 import sa.users.Tenant;
 import sa.booking.reserveStates.Timer;
 import sa.cancellation.ICancellationPolicy;
@@ -27,18 +23,17 @@ import sa.cancellation.ICancellationPolicy;
 public class AccomodationSite {
 	
 	private List<Booking> bookings;
-	private List<Tenant> tenants;
-	private List<Owner> owners;
 	private List<PropertyType> allowedProperties;
 	private List<AmenityType> allowedAmenities;
-	private IQuery searcher;
 	
-	private Administrator administrator;
+	public AccomodationSite(List<Booking> bs, List<AmenityType> as, List<PropertyType> ps) {
+		this.bookings = bs;
+		this.allowedAmenities = as;
+		this.allowedProperties = ps;
+	}
 	
 	public AccomodationSite() {
 		this.bookings = new ArrayList<Booking>();
-		this.tenants = new ArrayList<Tenant>();
-		this.owners = new ArrayList<Owner>();
 		this.allowedAmenities = new ArrayList<AmenityType>();
 		this.allowedProperties = new ArrayList<PropertyType>();
 	}
@@ -139,14 +134,7 @@ public class AccomodationSite {
 	}
 	
 	
-	
-	
-	
-	
-	
 	public List<Reserve> allReservesOfTheTenant(Tenant tenant) {
-		
-		
 		
 		/*
 		 * Recorre la lista de bookings y la filtra por el tenant dado, y retorna una lista de bookings del tenant dado
@@ -157,8 +145,6 @@ public class AccomodationSite {
 		         				 .flatMap(booking -> booking.getReserves().stream())
 		         				 .filter(actualReserve -> actualReserve.getTenant().equals(tenant))
 		         				 .toList();
-		
-		
 	}
 	
 		
@@ -207,15 +193,6 @@ public class AccomodationSite {
 			return this.getBookings();} else {
 			return query.search(this.getBookings());}
 		}
-	
-	
-
-// ESTE METODO SOLO SE TENDRIA QUE USAR PARA EL SUT DEL ACCOMODATION SITE
-	
-	public void addBooking(Booking b) {
-		this.bookings.add(b);
-		
-	}
 	
 	public List<Reserve> getAllReserves() {
 		return this.getBookings().stream()
